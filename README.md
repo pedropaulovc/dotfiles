@@ -76,9 +76,13 @@ sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply pedropaulovc/dotfiles
 ```
 
 ```powershell
-# Windows PowerShell (separate home; run separately from WSL)
-iex "&{$(irm get.chezmoi.io)} init --apply pedropaulovc/dotfiles"
+# Windows PowerShell (separate home; run separately from WSL).
+# The `--` hands the args to chezmoi; without it the installer swallows them.
+iex "&{$(irm 'https://get.chezmoi.io/ps1')} -- init --apply pedropaulovc/dotfiles"
 ```
+
+Prefer to preview before the first write? Drop `--apply`, then
+`chezmoi diff` (should be empty), then `chezmoi apply`.
 
 The WSL Linux home (`/home/pedro`) and the Windows home (`C:\Users\pedro`) are
 separate. Run chezmoi once in each; the `.platform` branches keep each render
