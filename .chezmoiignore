@@ -10,9 +10,11 @@ LICENSE
 .inputrc
 .tmux.conf
 .config/nvtop
+reminder-update-claude-ai.sh
 {{ else }}
 # Windows-only targets — skip on Linux/WSL.
 OneDrive
 .local/share/swsettings
 open-swsettings.ps1
+reminder-update-claude-ai.ps1
 {{ end }}

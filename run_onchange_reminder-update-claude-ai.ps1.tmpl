@@ -1,0 +1,10 @@
+{{ if eq .platform "windows" -}}
+# Fires whenever the canonical CLAUDE.md changes:
+# CLAUDE.md sha256: {{ include "dot_claude/CLAUDE.md" | sha256sum }}
+Write-Host ""
+Write-Host "  CLAUDE.md changed - this only updates Claude Code + the cowork workspace." -ForegroundColor Yellow
+Write-Host "  Claude.ai / Claude Desktop chat custom instructions are account-level and" -ForegroundColor Yellow
+Write-Host "  are NOT managed by chezmoi. Update them by hand to match:" -ForegroundColor Yellow
+Write-Host "  https://claude.ai/settings/profile  ->  Personal preferences" -ForegroundColor Yellow
+Write-Host ""
+{{ end -}}
