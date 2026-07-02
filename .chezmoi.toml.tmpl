@@ -1,0 +1,11 @@
+{{/* Machine-level config, evaluated once at `chezmoi init`. */}}
+{{/* Derives a machine "role" from the hostname so templates can branch on it. */}}
+{{- $role := "workstation" -}}
+{{- if eq .chezmoi.hostname "amet" -}}
+{{-   $role = "amet" -}}
+{{- else if .chezmoi.kernel.osrelease | lower | contains "microsoft" -}}
+{{-   $role = "wsl" -}}
+{{- end -}}
+
+[data]
+    role = {{ $role | quote }}

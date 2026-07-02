@@ -1,0 +1,35 @@
+# ~/.bashrc — managed by chezmoi. Edit the source template, not this file.
+#   chezmoi edit ~/.bashrc   # opens dot_bashrc.tmpl
+#   chezmoi apply            # re-renders and installs
+
+# Bail on non-interactive shells.
+case $- in
+    *i*) ;;
+    *) return ;;
+esac
+
+# --- Environment (rendered from .chezmoidata/env.yaml) ---
+{{ range $k, $v := .env }}export {{ $k }}={{ $v | quote }}
+{{ end }}
+# --- Path-like vars that genuinely differ by OS ---
+{{ if eq .chezmoi.os "windows" -}}
+export CACHE="$LOCALAPPDATA/cache"
+{{- else -}}
+export CACHE="$HOME/.cache"
+{{- end }}
+
+# --- History ---
+HISTCONTROL=ignoreboth
+HISTSIZE=100000
+HISTFILESIZE=200000
+shopt -s histappend checkwinsize
+
+# --- Machine role ({{ .role }}) ---
+{{ if eq .role "amet" -}}
+# amet: GeForce RTX 3090 host — steer ML tooling at the GPU by default.
+export CUDA_VISIBLE_DEVICES=0
+{{- end }}
+
+# --- Aliases ---
+alias ll='ls -alF'
+alias la='ls -A'

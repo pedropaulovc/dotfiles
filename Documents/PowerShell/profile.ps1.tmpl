@@ -1,0 +1,20 @@
+# PowerShell profile — managed by chezmoi. Edit the source template, not this file.
+#   chezmoi edit $PROFILE
+#   chezmoi apply
+
+# --- Environment (rendered from .chezmoidata/env.yaml) ---
+{{ range $k, $v := .env }}$env:{{ $k }} = {{ $v | quote }}
+{{ end }}
+# --- Path-like vars that genuinely differ by OS ---
+{{ if eq .chezmoi.os "windows" -}}
+$env:CACHE = "$env:LOCALAPPDATA\cache"
+{{- else -}}
+$env:CACHE = "$HOME/.cache"
+{{- end }}
+
+# --- Machine role ({{ .role }}) ---
+{{ if eq .role "amet" -}}
+$env:CUDA_VISIBLE_DEVICES = '0'
+{{- end }}
+
+Set-Alias ll Get-ChildItem
