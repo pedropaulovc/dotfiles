@@ -5,7 +5,8 @@
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_NO_FLICKER": "1",
     "CLAUDE_CODE_WORKFLOWS": "1",
-    "COLORTERM": "truecolor"
+    "COLORTERM": "truecolor",
+    "CLAUDE_AFK_TIMEOUT_MS": "86400000"
   },
   "permissions": {
     "defaultMode": "auto"
