@@ -2,3 +2,7 @@
 # This keeps the source byte-identical across Linux/WSL and Windows clones,
 # so `chezmoi apply` stays a noop on both (overrides Windows core.autocrlf).
 * text=auto eol=lf
+
+# Stored artifacts (kept in the repo, never applied) — preserve exact bytes,
+# including their native CRLF. Overrides the eol=lf rule above.
+*.sldreg binary
