@@ -10,6 +10,7 @@ LICENSE
 .inputrc
 .tmux.conf
 .config/nvtop
+.config/ccstatusline
 reminder-update-claude-ai.sh
 {{ else }}
 # Windows-only targets — skip on Linux/WSL.
