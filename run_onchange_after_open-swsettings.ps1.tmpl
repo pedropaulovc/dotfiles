@@ -1,0 +1,9 @@
+{{ if eq .platform "windows" -}}
+# Opens the SolidWorks settings snapshot with its associated app (the SOLIDWORKS
+# Settings/Copy Settings Wizard), the pwsh equivalent of `start swSettings.sldreg`.
+# Re-runs only when the .sldreg content changes (hash below pins the re-run):
+# {{ include "dot_local/share/swsettings/swSettings.sldreg" | sha256sum }}
+$sldreg = Join-Path $HOME '.local\share\swsettings\swSettings.sldreg'
+Write-Host "Launching SOLIDWORKS Settings Wizard for $sldreg"
+Start-Process -FilePath $sldreg
+{{ end -}}

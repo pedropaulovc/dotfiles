@@ -10,3 +10,8 @@
 [data]
     platform = {{ $platform | quote }}
     hostname = {{ .chezmoi.hostname | quote }}
+
+# Run .ps1 scripts (e.g. the SolidWorks settings opener) with PowerShell 7.
+[interpreters.ps1]
+    command = "pwsh"
+    args = ["-NoLogo"]

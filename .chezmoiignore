@@ -13,4 +13,6 @@ LICENSE
 {{ else }}
 # Windows-only targets — skip on Linux/WSL.
 OneDrive
+.local/share/swsettings
+open-swsettings.ps1
 {{ end }}
