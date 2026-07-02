@@ -41,7 +41,7 @@ Email: pedro@vezza.com.br
 - The main dev environment (`amet`) has a GeForce RTX 3090 available. Use it for ML tasks, audio/video processing and transcription.
 
 ## Introspection
-- If you ever need to review past chat logs (`~/.claude/projects`) write TypeScript code and use NPM package `claude-code-types`. It has all type definitions needed to parse complex logs. 
+- If you ever need to review past chat logs (`~/.claude/projects`) write TypeScript code and use NPM package `claude-code-types`. It has all type definitions needed to parse complex logs.
 
 ## Research style
 - REPLACE the Fetch tool with Firecrawl + Browserbase MCP tools — far more reliable against sites blocking automated access. Route by task:
@@ -101,6 +101,36 @@ Email: pedro@vezza.com.br
 
     return execute();
     ```
+- **Unbuffer so output streams live.** A program block-buffers its stdout when the far end
+  isn't a TTY (i.e. whenever it's piped/captured), so a running cmd looks frozen. Kill the
+  buffering at the source, and don't reintroduce it with a buffering pipe stage.
+  - bash: `stdbuf -oL -eL <cmd>` (or `unbuffer <cmd>` / `script -qefc '<cmd>' /dev/null` for
+    TTY-only programs).
+  - pwsh: no `stdbuf`; rely on the program's own unbuffer switch and avoid buffering cmdlets
+    in the pipeline. Lang switches work in either shell: `PYTHONUNBUFFERED=1` / `python -u`, etc.
+- **Foreground >5s ⇒ stream the FULL output to a log file, show only the tail in context,
+  surface the real exit code.** Full output on disk = live-inspectable; context stays small.
+  - bash: `set -o pipefail; stdbuf -oL -eL <cmd> 2>&1 | tee .logs/$(date +%s).log | tail -n 20; echo exit=${PIPESTATUS[0]}`
+  - pwsh: `& <cmd> -u 2>&1 | Tee-Object -FilePath $log | Select-Object -Last 20; "exit=$LASTEXITCODE"`
+    (`Tee-Object` is the live `tee`; `$LASTEXITCODE` is the last native exe's code — trailing
+    cmdlets don't change it, the analog of `${PIPESTATUS[0]}`).
+  - Any "last-N" stage (`tail -n N`, `Select-Object -Last N`) only emits at EOF: good for
+    trimming *finished* output, useless for watching a *running* one — read the log file
+    instead (`tail -f` / `Get-Content -Wait` likewise just buffer).
+- **Backgrounded ⇒ DON'T redirect OR filter into your own sink.** Print straight to
+  stdout/stderr — the harness auto-captures the FULL output to a logfile readable from the
+  TUI / via BashOutput. A manual `>log 2>&1 &`, or piping through `tail`/`Select-Object`/
+  `Select-String`/`grep`, is redundant and DISCARDS most of the log (the harness then captures
+  only your filter's tail, emitted at the very end). Keep it unbuffered AND unfiltered; grep/
+  skim the captured file afterwards. (bash: `stdbuf -oL -eL <cmd> &`; pwsh: `<cmd> -u` with
+  `run_in_background`.)
+- **Don't block — watch.** Background it + **Monitor tool** (each line = streamed event;
+  watch loop in `command`, diff state so it's silent until change; `persistent:true`). Not
+  `sleep` loops. `/loop` (omit interval to self-pace); a **Haiku subagent** skims the
+  captured output → "advancing/stalled/done".
+- **Soft timeout = progress, not clock.** Healthy = new output still arriving (lines/mtime/
+  counter). Kill on idle gap (~90s no new output), not total runtime.
+
 
 ## Engineering wisdom
 

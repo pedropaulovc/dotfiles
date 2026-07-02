@@ -1,0 +1,36 @@
+{{ if eq .platform "windows" -}}
+[core]
+	autocrlf = true
+	safecrlf = false
+	hooksPath = C:/Users/pedro/.config/git/hooks
+[user]
+	email = pedro@vezza.com.br
+	name = Pedro Paulo Vezza Campos
+[init]
+	defaultBranch = main
+[credential "https://github.com"]
+	helper = 
+	helper = !'C:\\Program Files\\GitHub CLI\\gh.exe' auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !'C:\\Program Files\\GitHub CLI\\gh.exe' auth git-credential
+{{ else -}}
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[user]
+	name = Pedro Paulo Vezza Campos
+	email = pedro@vezza.com.br
+[init]
+	defaultBranch = main
+[push]
+	autoSetupRemote = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+{{ end -}}

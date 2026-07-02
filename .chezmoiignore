@@ -1,3 +1,16 @@
-# Files that live in the source repo but should NOT be applied to $HOME.
+# Repo-only files, never applied to $HOME.
 README.md
 LICENSE
+
+# Platform-scoped: each OS ignores the other's files so `apply` is a noop.
+{{ if eq .platform "windows" }}
+# Linux/WSL-only targets — skip on Windows.
+.bashrc
+.profile
+.inputrc
+.tmux.conf
+.config/nvtop
+{{ else }}
+# Windows-only targets — skip on Linux/WSL.
+OneDrive
+{{ end }}

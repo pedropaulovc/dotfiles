@@ -4,11 +4,14 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
     "CLAUDE_CODE_NO_FLICKER": "1",
-    "CLAUDE_CODE_WORKFLOWS": "1"
+    "CLAUDE_CODE_WORKFLOWS": "1",
+    "COLORTERM": "truecolor"
   },
   "permissions": {
-    "defaultMode": "acceptEdits"
+    "defaultMode": "auto"
   },
+  "model": "opus",
+  "advisorModel": "fable",
   "skillOverrides": {
     "benchmark": "name-only",
     "benchmark-models": "name-only",
@@ -56,20 +59,30 @@
     "refreshInterval": 10
   },
   "enabledPlugins": {
-    "command-chain-separator@personal-marketplace": true,
-    "gh-issue@personal-marketplace": true,
-    "mediocrity-detector@personal-marketplace": true,
-    "no-fetch@personal-marketplace": true,
-    "playwright-cli-headed@personal-marketplace": true,
-    "pr-comments@personal-marketplace": true,
+    "command-chain-separator@agent-plugins": true,
+    "gh-issue@agent-plugins": true,
+    "mediocrity-detector@agent-plugins": true,
+    "no-fetch@agent-plugins": true,
+    "playwright-cli-headed@agent-plugins": true,
+    "pr-comments@agent-plugins": true,
+    "unrelated-issue-detector@agent-plugins": true,
+    "worktree-reset@agent-plugins": true,
+    "memory-to-repo@agent-plugins": true,
+    "alt-text@agent-plugins": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
-    "unrelated-issue-detector@personal-marketplace": true,
-    "worktree-reset@personal-marketplace": true,
-    "cloudflare@cloudflare": true,
-    "memory-to-repo@personal-marketplace": true
+    "pyright-lsp@claude-plugins-official": true,
+    "codex@openai-codex": true,
+    "cloudflare@cloudflare": true
   },
   "extraKnownMarketplaces": {
+    "agent-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "pedropaulovc/agent-plugins"
+      },
+      "autoUpdate": true
+    },
     "openai-codex": {
       "source": {
         "source": "github",
@@ -85,7 +98,11 @@
   },
   "effortLevel": "high",
   "autoCompactWindow": 300000,
+  "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true,
+  "switchModelsOnFlag": false,
+  "theme": "dark",
   "verbose": true,
   "preferredNotifChannel": "terminal_bell",
   "teammateMode": "auto",
