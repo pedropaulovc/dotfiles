@@ -1,0 +1,94 @@
+{
+  "respectGitignore": true,
+  "cleanupPeriodDays": 999999,
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_NO_FLICKER": "1",
+    "CLAUDE_CODE_WORKFLOWS": "1"
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "skillOverrides": {
+    "benchmark": "name-only",
+    "benchmark-models": "name-only",
+    "browse": "off",
+    "careful": "name-only",
+    "connect-chrome": "off",
+    "context-restore": "name-only",
+    "context-save": "name-only",
+    "design-consultation": "name-only",
+    "design-html": "name-only",
+    "design-shotgun": "name-only",
+    "document-generate": "name-only",
+    "document-release": "name-only",
+    "freeze": "name-only",
+    "gstack": "off",
+    "gstack-upgrade": "name-only",
+    "guard": "name-only",
+    "health": "name-only",
+    "humanizer": "name-only",
+    "ios-clean": "off",
+    "ios-fix": "off",
+    "ios-qa": "off",
+    "ios-sync": "off",
+    "learn": "name-only",
+    "make-pdf": "name-only",
+    "open-gstack-browser": "off",
+    "pair-agent": "name-only",
+    "power-search": "name-only",
+    "scrape": "name-only",
+    "setup-browser-cookies": "off",
+    "setup-gbrain": "user-invocable-only",
+    "ship": "user-invocable-only",
+    "skill-creator": "name-only",
+    "skillify": "off",
+    "sync-gbrain": "user-invocable-only",
+    "unfreeze": "name-only"
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "ccstatusline",
+    "padding": 0,
+    "refreshInterval": 10
+  },
+  "enabledPlugins": {
+    "command-chain-separator@personal-marketplace": true,
+    "gh-issue@personal-marketplace": true,
+    "mediocrity-detector@personal-marketplace": true,
+    "no-fetch@personal-marketplace": true,
+    "playwright-cli-headed@personal-marketplace": true,
+    "pr-comments@personal-marketplace": true,
+    "rust-analyzer-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "unrelated-issue-detector@personal-marketplace": true,
+    "worktree-reset@personal-marketplace": true,
+    "cloudflare@cloudflare": true,
+    "memory-to-repo@personal-marketplace": true
+  },
+  "extraKnownMarketplaces": {
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    },
+    "cloudflare": {
+      "source": {
+        "source": "github",
+        "repo": "cloudflare/skills"
+      }
+    }
+  },
+  "effortLevel": "high",
+  "autoCompactWindow": 300000,
+  "skipDangerousModePermissionPrompt": true,
+  "verbose": true,
+  "preferredNotifChannel": "terminal_bell",
+  "teammateMode": "auto",
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}

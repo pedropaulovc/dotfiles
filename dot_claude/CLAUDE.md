@@ -1,23 +1,120 @@
-# CLAUDE.md — global instructions
+## User info
+Full name: Pedro Paulo Vezza Campos
+Email: pedro@vezza.com.br
 
-This file is managed by chezmoi and rendered identically on every machine
-(Linux `~/.claude/CLAUDE.md`, Windows `%USERPROFILE%\.claude\CLAUDE.md`).
+## Git workflow
+- When force-pushing feature branches (not main/master), just do it — no need to ask for confirmation. Use `--force-with-lease`.
+- Unless instructed otherwise, always set PRs to auto-merge via `gh pr --merge --auto`. Do not use squash merges. 
+- Right after creating a new PR (`gh pr create`), always cover its whole lifecycle — CI settling green/red **on every push** (not just the first one), the PR needing a **rebase** — either falling **behind `main`** (BEHIND) or hitting **merge conflicts** (DIRTY) — **new code reviews** landing, **and** the PR reaching MERGED/CLOSED — with a single Monitor call. Don't poll with `sleep` loops or repeated `gh pr view`. Don't use Bash `run_in_background` + a separate Monitor attached to it — Monitor runs its own command and ends the watch automatically when that command exits, so put the lifecycle script directly in Monitor's `command`. The loop must diff state across iterations so a green→push→red cycle, a fresh review, or a clean→behind transition each emit events (a one-shot `gh pr checks --watch` would go silent after the first settle).
+  ```
+  Monitor:
+    persistent: true            # PR lifecycle can take hours; no timeout
+    description: "PR <PR> lifecycle"
+    command: |
+      prev=""
+      while true; do
+        state=$(gh pr view <PR> --json state -q .state)
+        meta=$(gh pr view <PR> --json mergeStateStatus,reviews 2>/dev/null || echo '{}')
+        s=$(gh pr checks <PR> --json name,bucket 2>/dev/null || echo '[]')
+        cur=$( {
+          jq -r '.[] | "check \(.name): \(.bucket)"' <<<"$s"
+          jq -r 'select(.mergeStateStatus=="BEHIND" or .mergeStateStatus=="DIRTY") | "rebase: \(.mergeStateStatus) — git pull --rebase origin main (BEHIND=fast-forward, DIRTY=resolve conflicts)"' <<<"$meta"
+          jq -r '.reviews[] | "review \(.author.login): \(.state) @\(.submittedAt)"' <<<"$meta"
+        } | sort )
+        diff_lines=$(comm -13 <(echo "$prev") <(echo "$cur"))
+        [[ -n "$diff_lines" ]] && echo "$diff_lines"
+        prev=$cur
+        if [[ "$state" =~ ^(MERGED|CLOSED)$ ]]; then
+          [[ "$state" == "MERGED" ]] && { echo "merged — running git fetch"; git fetch --all --prune; }
+          break
+        fi
+        sleep 30
+      done
+      echo "PR <PR> finished: $state"
+  ```
+  Each iteration emits only the rows that changed since last poll: a re-run shows up as `check test: pending` then `check test: failure` (or `success`); a `rebase: BEHIND …` or `rebase: DIRTY …` line both mean run `git pull --rebase origin main` (BEHIND fast-forwards cleanly, DIRTY also needs conflict resolution during the rebase); a new `review <login>: …` line means a reviewer just submitted (the `@submittedAt` stamp keeps prior reviews stable so only fresh ones diff in). Silent when nothing changes and PR is just waiting for auto-merge. Self-terminates on MERGED/CLOSED — nothing to stop manually. On MERGED it runs `git fetch --all --prune` before exiting so the local repo immediately sees the merged commit on `main` and the remote-tracking branch is cleaned up.
 
-Because it is plain Markdown with no per-target differences, it lives as a
-plain managed file (`dot_claude/CLAUDE.md`) — no `.tmpl` extension, no
-templating. Edit it directly:
+## Shell usage
+- ALWAYS use uv commands when interacting with python and ALWAYS work in venv (do not use --system)
+- REPLACE if possible `find` with `locate` unless you are traversing `/mnt/c`
+- Install any tools or libraries needed to perform your work. The user will help you if the command requires `sudo` or login. Only pivot to alternatives IF acknowledged by the user. Having the right tools is key to avoid inefficient processes.
+- The main dev environment (`amet`) has a GeForce RTX 3090 available. Use it for ML tasks, audio/video processing and transcription.
 
-    chezmoi edit ~/.claude/CLAUDE.md
-    chezmoi apply
+## Introspection
+- If you ever need to review past chat logs (`~/.claude/projects`) write TypeScript code and use NPM package `claude-code-types`. It has all type definitions needed to parse complex logs. 
 
-If you later want per-machine sections (e.g. a note that only applies to a
-GPU box), rename it to `CLAUDE.md.tmpl` and branch on `.chezmoi.hostname`
-or the `.role` variable set in `.chezmoi.toml.tmpl`:
+## Research style
+- REPLACE the Fetch tool with Firecrawl + Browserbase MCP tools — far more reliable against sites blocking automated access. Route by task:
+  - **Read** (one page, search, crawl, schema extraction) → Firecrawl: `firecrawl_{scrape,search,map,crawl,check_crawl_status,extract,search_feedback}`. Use `firecrawl_scrape` with JSON+schema for specific fields, markdown for whole pages. When `scrape` returns thin content, try `firecrawl_map` with a `search` term to find the real URL — cheaper than reaching for an agent.
+  - **Interact** (login, multi-step click/fill, persistent page state) → Browserbase: `browserbase_{start,navigate,observe,act,extract,end}`. For just a couple of clicks after a read, Firecrawl `scrape` → `interact` → `interact_stop` works too.
+  - `firecrawl_browser_{create,delete,list}` are deprecated — use scrape + interact.
+- Fallback chain when both fail: Playwright via `/playwright-cli` skill (ALWAYS use `--headed`) → Claude in Chrome . If Chrome is not accessible, ask the user to open it and retry.
+- Specific alternatives: Reddit - redlib instances (redlib.{us,de}.catsarch.com), teddit, libreddit; for Twitter/X - nitter instances (xcancel.com); YouTube - piped/invidious; Public archive - `https://web.archive.org/web/2026/<url>`,  archive.today mirrors (`https://archive.{today,ph,is,li,md,vn,fo}/<url>`)
+- Do NOT silently accept failed fetch/scrape operations (401, 403, 429, anti-bot walls, CAPTCHA, paywalls, etc.). This is also applicable for tools where you know you are missing credentials or additional security roles such as `az`, `gh`, `wrangler`, etc. Surface the failure with the specific error — don't immediately pivot to weaker sources or fabricate around the gap. User can often fetch the data directly (authenticated session, browser, paid API access) and paste it back.
 
-    {{ if eq .role "amet" }}
-    ## amet
-    This machine has an RTX 3090 — prefer it for ML/transcode work.
-    {{ end }}
 
-> Replace this placeholder with your real instructions. Keep secrets out of
-> it — this is a public repo.
+## Communication style
+ - Don't ask the user to perform manual steps that you can do via CLI/API/simple Playwright script (no auth). You should run the steps. Manual intervention is the last option when there's no way to programmatically perform an operation. Exception: irreversible operations such as close an account, delete critical resource, etc.
+ - Don't include follow up questions at the end of an answer unless it can be answered with yes / no and you have high confidence the user will reply yes.
+ - When writing cover documents for external human consumption such as README (not internal documentation), GitHub issues, pull request descriptions, first emails, etc, brevity is key. Draft the document with the audience in mind. A GitHub issue will be read by a maintainer who has deep knowledge of their software so don't try to do their job and  conclusively point to the root cause. Show your preliminary investigation results, use GitHub flavored markdown <details> to hide details sections. To reduce AI writing slop, use /humanizer.
+
+
+## Coding style
+ - Unless told otherwise, do NOT add provisions for backwards compatibility. Make any sweeping changes you think are advisable to keep a clean codebase, closest to what vanilla libraries / frameworks expect. git/backups/etc remain as a safeguard for easy rollback.
+ - When fixing a bug, exercise critical thinking to understand if the bug report contradicts some existing test case. If the test case purpose is to test a use case related to the bug, dont blindly change the test assertions so you can close the bug. Raise this contradiction to the bug reporter so they can decide if the bug report should be amended with more/different repro steps or should not be fixed because it's by design.
+ - Booleans scope should be limited to single functions. If you need to transmit state to other parts of the codebase, use enums. This ensures that it is easy to add new states as needed. E.g.
+
+    ```
+    // NO
+    showComments: boolean
+    isBubbleMode: boolean
+
+    // YES
+    commentStyle = 'hidden' | 'bubble' | 'interlinear'
+    ```
+
+ - Nested is bad, flat is good. Ideally don't go over a single level of indentation unless it degrades readability
+ - Avoid else blocks, prefer early return
+
+    ```
+    // NO
+    if (userIsAdmin) {
+        if (isSystemReady) {
+            return execute();
+        }
+        else {
+            return 'not_ready'
+        }
+    }
+    else {
+        return 'denied';
+    }
+
+    // YES
+    if (!isUserAdmin) {
+        return 'denied'
+    }
+
+    if (!isSystemReady) {
+        return 'not_ready'
+    }
+
+    return execute();
+    ```
+
+## Engineering wisdom
+
+### Performance
+ * One second of CPU time is an ETERNITY, do not settle for poor performance.
+ * The worst type of performance bug is when the system is homogeneously slow. Don;t let it get to that state.
+
+## Distributed systems
+ * No HTTP call may last more than 1s. If it does, it is a sign you should replace your API with an async API that quickly returns a job ID that can be polled.
+
+## Reliability
+ * Long-running operations like batch jobs must store periodic checkpoints so they can be resumed without significant data loss.
+
+## Development environments
+ * Take very good care of your dev inner loop. It must be as fast as possible. Compiling, deploying assets, unit tests, etc must be optimized for fast iteration.
+ * It must be trivial to nuke your entire dev environment and start fresh. A couple commands should be enough to clear any caches, delete binaries, wipe databases, etc and then recover them to a known-good state.
+ * Your test suite must be trustworthy. Corollary 1: There are no flaky tests, only broken tests. Corollary 2: There are **no unrelated** changes. If you see something, do something. If you catch a flaky test, bad merge, etc, spin off a subagent on a separate worktree to fix the issue.

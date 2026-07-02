@@ -1,0 +1,14 @@
+# PowerShell-style Tab completion
+# Tab cycles through completions inline instead of listing all matches
+TAB: menu-complete
+# Shift+Tab cycles backward
+"\e[Z": menu-complete-backward
+# Show completions on first Tab press (not second)
+# Case-insensitive completion
+set completion-ignore-case on
+# Treat hyphens and underscores as equivalent
+set completion-map-case on
+# Color files by type in completion list (like ls --color)
+set colored-stats on
+# No bell
+set bell-style none

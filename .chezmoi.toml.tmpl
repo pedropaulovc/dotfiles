@@ -1,11 +1,12 @@
-{{/* Machine-level config, evaluated once at `chezmoi init`. */}}
-{{/* Derives a machine "role" from the hostname so templates can branch on it. */}}
-{{- $role := "workstation" -}}
-{{- if eq .chezmoi.hostname "amet" -}}
-{{-   $role = "amet" -}}
-{{- else if .chezmoi.kernel.osrelease | lower | contains "microsoft" -}}
-{{-   $role = "wsl" -}}
+{{/* Evaluated once at `chezmoi init`; writes ~/.config/chezmoi/chezmoi.toml. */}}
+{{/* .platform distinguishes native Windows from WSL from native Linux.        */}}
+{{/*   - chezmoi.os is "windows" on native Windows, "linux" on both WSL & Linux */}}
+{{/*   - WSL is detected by "microsoft" in the kernel osrelease string          */}}
+{{- $platform := .chezmoi.os -}}
+{{- if and (eq .chezmoi.os "linux") (.chezmoi.kernel.osrelease | lower | contains "microsoft") -}}
+{{-   $platform = "wsl" -}}
 {{- end -}}
 
 [data]
-    role = {{ $role | quote }}
+    platform = {{ $platform | quote }}
+    hostname = {{ .chezmoi.hostname | quote }}
