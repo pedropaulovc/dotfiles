@@ -12,7 +12,6 @@
     "defaultMode": "auto"
   },
   "model": "opus",
-  "advisorModel": "fable",
   "skillOverrides": {
     "benchmark": "name-only",
     "benchmark-models": "name-only",
@@ -73,7 +72,6 @@
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "codex@openai-codex": true,
     "cloudflare@cloudflare": true
   },
   "extraKnownMarketplaces": {
@@ -84,12 +82,6 @@
       },
       "autoUpdate": true
     },
-    "openai-codex": {
-      "source": {
-        "source": "github",
-        "repo": "openai/codex-plugin-cc"
-      }
-    },
     "cloudflare": {
       "source": {
         "source": "github",
@@ -99,14 +91,15 @@
   },
   "effortLevel": "high",
   "autoCompactWindow": 300000,
+  "advisorModel": "fable",
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
-  "skipAutoPermissionPrompt": true,
-  "switchModelsOnFlag": false,
   "theme": "dark",
   "verbose": true,
   "preferredNotifChannel": "terminal_bell",
+  "switchModelsOnFlag": false,
   "teammateMode": "auto",
   "inputNeededNotifEnabled": true,
-  "agentPushNotifEnabled": true
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
