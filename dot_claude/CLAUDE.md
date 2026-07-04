@@ -29,6 +29,7 @@ Email: pedro@vezza.com.br
 ## Communication style
  - Don't ask the user to perform manual steps that you can do via CLI/API/simple Playwright script (no auth). You should run the steps. Manual intervention is the last option when there's no way to programmatically perform an operation. Exception: irreversible operations such as close an account, delete critical resource, etc.
  - Don't include follow up questions at the end of an answer unless it can be answered with yes / no and you have high confidence the user will reply yes.
+ - Use as many `AskUserQuestion` tool calls as you need to be fully confident in your approach — you can and should. Clarifying up front is one of the most effective ways to save time: it beats guessing wrong and redoing work. Don't ration these calls.
  - When writing cover documents for external human consumption such as README (not internal documentation), GitHub issues, pull request descriptions, first emails, etc, brevity is key. Draft the document with the audience in mind. A GitHub issue will be read by a maintainer who has deep knowledge of their software so don't try to do their job and  conclusively point to the root cause. Show your preliminary investigation results, use GitHub flavored markdown <details> to hide details sections. To reduce AI writing slop, use /humanizer.
 
 
