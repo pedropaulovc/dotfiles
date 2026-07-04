@@ -10,6 +10,7 @@ Email: pedro@vezza.com.br
 ## Shell usage
 - ALWAYS use uv commands when interacting with python and ALWAYS work in venv (do not use --system)
 - REPLACE if possible `find` with `locate` unless you are traversing `/mnt/c`
+- REPLACE standard `grep` with the builtin search tool (Grep) or ripgrep (`rg`) — faster, respects `.gitignore`, and integrates with the permission UI
 - Install any tools or libraries needed to perform your work. The user will help you if the command requires `sudo` or login. Only pivot to alternatives IF acknowledged by the user. Having the right tools is key to avoid inefficient processes.
 - The main dev environment (`amet`) has a GeForce RTX 3090 available. Use it for ML tasks, audio/video processing and transcription.
 
