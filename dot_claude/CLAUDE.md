@@ -4,7 +4,7 @@ Email: pedro@vezza.com.br
 
 ## Git workflow
 - When force-pushing feature branches (not main/master), just do it — no need to ask for confirmation. Use `--force-with-lease`.
-- Unless instructed otherwise, always set PRs to auto-merge via `gh pr --merge --auto`. Do not use squash merges. 
+- Do not use squash merges.
 - Right after creating a new PR (`gh pr create`), babysit its whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` launches one persistent Monitor call that streams each state change — CI settling on every push (green/red checks, BEHIND/DIRTY rebase-needed against the PR's base), new reviews and comments (with the comment body printed inline), Codex 👀→👍 reactions on both the PR body and `@codex review` comments, and MERGED/CLOSED (fetches on merge) — and you act on each: fix red CI, `git pull --rebase`, or drive the reply flow. Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle) — the skill's script diffs state across polls so every change re-emits. See the skill for the mechanics.
 
 ## Shell usage
