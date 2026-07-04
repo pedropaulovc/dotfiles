@@ -69,6 +69,7 @@
     "worktree-reset@agent-plugins": true,
     "memory-to-repo@agent-plugins": true,
     "alt-text@agent-plugins": true,
+    "watch-pr@agent-plugins": true,
     "rust-analyzer-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
