@@ -2261,7 +2261,7 @@ REGEDIT4
 "Set Arc/Circle status for Measure Dialog"=dword:00000000
 "Set Arc/Circle first selection status for Measure Dialog"=dword:00000001
 "Set Arc/Circle second selection status for Measure Dialog"=dword:00000001
-"View Rotate About Vertical"=dword:00000000
+"View Rotate About Vertical"=dword:00000001
 "Enable No Solid Data Warning"=dword:00000001
 "Show In Context View Box With View Orientation Dialog"=dword:00000001
 "Auto LDR Update"=dword:00000000
