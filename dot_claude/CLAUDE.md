@@ -5,35 +5,7 @@ Email: pedro@vezza.com.br
 ## Git workflow
 - When force-pushing feature branches (not main/master), just do it — no need to ask for confirmation. Use `--force-with-lease`.
 - Unless instructed otherwise, always set PRs to auto-merge via `gh pr --merge --auto`. Do not use squash merges. 
-- Right after creating a new PR (`gh pr create`), always cover its whole lifecycle — CI settling green/red **on every push** (not just the first one), the PR needing a **rebase** — either falling **behind `main`** (BEHIND) or hitting **merge conflicts** (DIRTY) — **new code reviews** landing (GitHub reviewers **and** PR **reactions** — Codex auto-reviews every push, dropping a 👀 while it reviews and a 👍 when it finds nothing), **and** the PR reaching MERGED/CLOSED — with a single Monitor call. Don't poll with `sleep` loops or repeated `gh pr view`. Don't use Bash `run_in_background` + a separate Monitor attached to it — Monitor runs its own command and ends the watch automatically when that command exits, so put the lifecycle script directly in Monitor's `command`. The loop must diff state across iterations so a green→push→red cycle, a fresh review, or a clean→behind transition each emit events (a one-shot `gh pr checks --watch` would go silent after the first settle).
-  ```
-  Monitor:
-    persistent: true            # PR lifecycle can take hours; no timeout
-    description: "PR <PR> lifecycle"
-    command: |
-      prev=""
-      while true; do
-        state=$(gh pr view <PR> --json state -q .state)
-        meta=$(gh pr view <PR> --json mergeStateStatus,reviews,reactionGroups 2>/dev/null || echo '{}')
-        s=$(gh pr checks <PR> --json name,bucket 2>/dev/null || echo '[]')
-        cur=$( {
-          jq -r '.[] | "check \(.name): \(.bucket)"' <<<"$s"
-          jq -r 'select(.mergeStateStatus=="BEHIND" or .mergeStateStatus=="DIRTY") | "rebase: \(.mergeStateStatus) — git pull --rebase origin main (BEHIND=fast-forward, DIRTY=resolve conflicts)"' <<<"$meta"
-          jq -r '.reviews[] | "review \(.author.login): \(.state) @\(.submittedAt)"' <<<"$meta"
-          jq -r '.reactionGroups[]? | select(.users.totalCount>0) | "reaction \(.content): \(.users.totalCount)"' <<<"$meta"
-        } | sort )
-        diff_lines=$(comm -13 <(echo "$prev") <(echo "$cur"))
-        [[ -n "$diff_lines" ]] && echo "$diff_lines"
-        prev=$cur
-        if [[ "$state" =~ ^(MERGED|CLOSED)$ ]]; then
-          [[ "$state" == "MERGED" ]] && { echo "merged — running git fetch"; git fetch --all --prune; }
-          break
-        fi
-        sleep 30
-      done
-      echo "PR <PR> finished: $state"
-  ```
-  Each iteration emits only the rows that changed since last poll: a re-run shows up as `check test: pending` then `check test: failure` (or `success`); a `rebase: BEHIND …` or `rebase: DIRTY …` line both mean run `git pull --rebase origin main` (BEHIND fast-forwards cleanly, DIRTY also needs conflict resolution during the rebase); a new `review <login>: …` line means a reviewer just submitted (the `@submittedAt` stamp keeps prior reviews stable so only fresh ones diff in); a `reaction <CONTENT>: <n>` line tracks reactions on the PR body itself (only groups with a nonzero count emit). **Codex is already configured to auto-review every push** — you don't trigger it — and it signals via reactions: `reaction EYES: 1` (👀) means Codex has acknowledged the push and is reviewing, and `reaction THUMBS_UP: 1` (👍) means it finished and found **no** issues (its all-clear — when it does find something it posts a review/comment instead). So watch for 👀→👍 as the clean-review path. Silent when nothing changes and PR is just waiting for auto-merge. Self-terminates on MERGED/CLOSED — nothing to stop manually. On MERGED it runs `git fetch --all --prune` before exiting so the local repo immediately sees the merged commit on `main` and the remote-tracking branch is cleaned up.
+- Right after creating a new PR (`gh pr create`), babysit its whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` launches one persistent Monitor call that streams each state change — CI settling on every push (green/red checks, BEHIND/DIRTY rebase-needed against the PR's base), new reviews and comments (with the comment body printed inline), Codex 👀→👍 reactions on both the PR body and `@codex review` comments, and MERGED/CLOSED (fetches on merge) — and you act on each: fix red CI, `git pull --rebase`, or drive the reply flow. Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle) — the skill's script diffs state across polls so every change re-emits. See the skill for the mechanics.
 
 ## Shell usage
 - ALWAYS use uv commands when interacting with python and ALWAYS work in venv (do not use --system)
