@@ -80,7 +80,7 @@
     }
   },
   "effortLevel": "high",
-  "autoCompactWindow": 1000000,
+  "autoCompactWindow": 300000,
   "autoCompactEnabled": true,
   "advisorModel": "fable",
   "autoUpdatesChannel": "latest",
