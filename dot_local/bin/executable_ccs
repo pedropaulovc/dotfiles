@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+# ccs — shortcut for `claude-creds swap` (cycle to the next credential profile).
+# Extra args pass through, so `ccs <name>` switches to a specific profile.
+exec node "$(dirname "$0")/claude-creds.mjs" swap "$@"
