@@ -12,10 +12,13 @@ LICENSE
 .config/nvtop
 .config/ccstatusline
 reminder-update-claude-ai.sh
+# extensionless symlink isn't runnable from Windows PATH (needs PATHEXT); use the .cmd shim there.
+.local/bin/claude-creds
 {{ else }}
 # Windows-only targets — skip on Linux/WSL.
 OneDrive
 .local/share/swsettings
 open-swsettings.ps1
 reminder-update-claude-ai.ps1
+.local/bin/claude-creds.cmd
 {{ end }}
