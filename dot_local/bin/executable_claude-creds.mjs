@@ -24,6 +24,9 @@ const CONFIG_DIR = process.env.CLAUDE_CONFIG_DIR || path.join(HOME, '.claude')
 const CREDS_PATH = path.join(CONFIG_DIR, '.credentials.json')
 const PROFILES_DIR = process.env.CLAUDE_CREDS_HOME || path.join(HOME, '.claude', 'cred-profiles')
 
+// refresh a token proactively when it is expired or within this window of expiring
+const REFRESH_SKEW_MS = 5 * 60 * 1000
+
 // ---------- tiny ansi ----------
 const noColor = process.env.NO_COLOR || !process.stdout.isTTY
 const c = (n) => (s) => (noColor ? s : `\x1b[${n}m${s}\x1b[0m`)
@@ -144,10 +147,13 @@ function cmdSave(name) {
   console.log(`  token:   ${fmtExpiry(prof.claudeAiOauth.expiresAt)}`)
 }
 
-function cmdUse(name, opts) {
+async function cmdUse(name, opts) {
   if (!name) die('usage: claude-creds use <name>')
-  const prof = loadProfile(name)
+  let prof = loadProfile(name)
   if (!prof.claudeAiOauth) die(`profile ${name} has no claudeAiOauth block`)
+
+  // 0) renew the token first if it's expired / about to expire
+  prof = await ensureFresh(name, prof)
 
   // 1) write credentials, preserving existing mcpOAuth
   const live = loadLiveCreds() || {}
@@ -170,7 +176,19 @@ function cmdUse(name, opts) {
     }
   }
   console.log(`${ok} switched to ${bold(name)} — ${accountLabel(prof)}`)
-  console.log(`  ${fmtExpiry(prof.claudeAiOauth.expiresAt)}${dim('  (claude will auto-refresh if expired)')}`)
+  console.log(`  ${fmtExpiry(prof.claudeAiOauth.expiresAt)}`)
+}
+
+// cycle to the next saved profile (wrapping around); `swap <name>` still targets a specific one
+async function cmdSwap(name, opts) {
+  if (name) return cmdUse(name, opts)
+  const names = listProfileNames()
+  if (names.length < 2) die(`need at least 2 profiles to cycle through (have ${names.length})`)
+  const active = activeProfileName()
+  const idx = active ? names.indexOf(active) : -1
+  const nextName = names[(idx + 1) % names.length]
+  console.log(dim(`swap: ${active || '(unknown)'} → ${nextName}`))
+  return cmdUse(nextName, opts)
 }
 
 function cmdList() {
@@ -228,6 +246,33 @@ async function refreshOne(prof) {
   if (body.expires_in) next.expiresAt = Date.now() + Number(body.expires_in) * 1000
   if (body.scope) next.scopes = String(body.scope).split(' ')
   return { ...prof, claudeAiOauth: next, refreshedAt: new Date().toISOString() }
+}
+
+// true when the token is expired or close enough to expiry that we should renew now
+function needsRefresh(o) {
+  if (!o || !o.expiresAt) return false
+  return o.expiresAt - Date.now() <= REFRESH_SKEW_MS
+}
+
+// renew a profile's token if it's expired/near-expiry, persisting the result; returns the profile to apply
+async function ensureFresh(name, prof) {
+  const o = prof.claudeAiOauth || {}
+  if (!needsRefresh(o)) return prof
+  if (!o.refreshToken) {
+    console.log(`  ${warn} token ${fmtExpiry(o.expiresAt)} but no refreshToken — using as-is`)
+    return prof
+  }
+  process.stdout.write(`  token ${fmtExpiry(o.expiresAt)} — refreshing … `)
+  try {
+    const updated = await refreshOne(prof)
+    backup(profilePath(name))
+    writeJson(profilePath(name), updated)
+    console.log(`${ok} ${fmtExpiry(updated.claudeAiOauth.expiresAt)}`)
+    return updated
+  } catch (e) {
+    console.log(`${bad} ${red(e.message)}${dim(' — applying stale token, claude may still auto-refresh')}`)
+    return prof
+  }
 }
 
 async function cmdRefresh(name, opts) {
@@ -306,8 +351,9 @@ ${bold('usage:')} claude-creds <command> [args]
   ${cyan('list')}, ls                 list saved profiles (● marks the active one)
   ${cyan('current')}, whoami          show the active profile / account
   ${cyan('save')} <name>              snapshot the current login into a profile
-  ${cyan('use')} <name>  (swap)       switch the live login to a saved profile
+  ${cyan('use')} <name>, switch       switch the live login to a saved profile ${dim('(auto-refreshes if expiring)')}
       ${dim('--no-account')}           don't patch oauthAccount in .claude.json
+  ${cyan('swap')} [name]              cycle to the next profile ${dim('(or switch to <name>)')}
   ${cyan('refresh')} [name] [--all]   renew token(s) via the refresh_token grant
   ${cyan('check')} [name] [--all]     test validity via \`claude auth status\`  (alias: ${cyan('-p')})
   ${cyan('rm')} <name>                delete a profile
@@ -337,7 +383,8 @@ try {
     case 'list': case 'ls': cmdList(); break
     case 'current': case 'whoami': cmdCurrent(); break
     case 'save': cmdSave(arg1); break
-    case 'use': case 'swap': case 'switch': cmdUse(arg1, opts); break
+    case 'use': case 'switch': await cmdUse(arg1, opts); break
+    case 'swap': case 'cycle': case 'next': await cmdSwap(arg1, opts); break
     case 'refresh': case 'renew': await cmdRefresh(arg1, opts); break
     case 'check': case 'test': case 'validate': cmdCheck(arg1, opts); break
     case 'rm': case 'remove': case 'delete': cmdRemove(arg1); break
