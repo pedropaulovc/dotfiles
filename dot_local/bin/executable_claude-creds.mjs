@@ -13,6 +13,7 @@
 import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
+import readline from 'node:readline'
 import { spawnSync } from 'node:child_process'
 
 const OAUTH_CLIENT_ID = '9d1c250a-e61b-44d9-88ed-5944d1962f5e'
@@ -123,12 +124,31 @@ function runClaude(args, extraEnv = {}) {
   })
 }
 
+// run claude interactively (inherit stdio) — for `auth login`'s browser/OAuth flow
+function runClaudeInteractive(args) {
+  const bin = process.env.CLAUDE_BIN || 'claude'
+  return spawnSync(bin, args, { stdio: 'inherit', shell: IS_WIN })
+}
+
+// derive a profile name from an email's domain: pedro@vezza.com.br → vezza, x@gmail.com → gmail
+function emailToProfileName(email) {
+  if (!email || !email.includes('@')) return null
+  const label = email.split('@')[1].toLowerCase().split('.')[0]
+  return label.replace(/[^a-z0-9_-]/g, '') || null
+}
+
+// prompt on stdin (used when swap needs the email of a second account)
+function prompt(question) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
+  return new Promise((resolve) => rl.question(question, (a) => { rl.close(); resolve(a.trim()) }))
+}
+
 // =====================================================================
 // commands
 // =====================================================================
 
-function cmdSave(name) {
-  if (!name) die('usage: claude-creds save <name>')
+// snapshot the current live login into profile <name>; returns the saved profile
+function saveLiveAs(name) {
   const live = loadLiveCreds()
   if (!live || !live.claudeAiOauth) die(`no live credentials at ${CREDS_PATH} — run \`claude auth login\` first`)
   ensureStore()
@@ -142,9 +162,27 @@ function cmdSave(name) {
     savedAt: new Date().toISOString(),
   }
   writeJson(p, prof)
-  console.log(`${ok} saved profile ${bold(name)} → ${dim(p)}`)
+  return prof
+}
+
+function cmdSave(name) {
+  if (!name) die('usage: claude-creds save <name>')
+  const prof = saveLiveAs(name)
+  console.log(`${ok} saved profile ${bold(name)} → ${dim(profilePath(name))}`)
   console.log(`  account: ${accountLabel(prof)}`)
   console.log(`  token:   ${fmtExpiry(prof.claudeAiOauth.expiresAt)}`)
+}
+
+// capture the current live login into a profile named after its email domain; returns the name
+function captureCurrentProfile() {
+  const live = loadLiveCreds()
+  if (!live || !live.claudeAiOauth) return null
+  const email = (liveAccount() || {}).emailAddress
+  const name = emailToProfileName(email)
+  if (!name) die(`current login isn't saved and has no email in ${claudeJsonPath()} to name it after\n  save it manually:  claude-creds save <name>`)
+  saveLiveAs(name)
+  console.log(`${ok} pulled current login → ${bold(name)} ${dim(`(${email})`)}`)
+  return name
 }
 
 async function cmdUse(name, opts) {
@@ -179,12 +217,42 @@ async function cmdUse(name, opts) {
   console.log(`  ${fmtExpiry(prof.claudeAiOauth.expiresAt)}`)
 }
 
+// log into a second account and save it (used when only one profile exists)
+async function addSecondAccount(opts) {
+  console.log(yellow('only one account saved — add a second to swap between.'))
+  const email = await prompt('email of the account to add: ')
+  if (!email) die('no email given')
+  const hintName = emailToProfileName(email)
+  if (!hintName) die(`can't derive a profile name from "${email}"`)
+
+  console.log(dim(`launching \`claude auth login\` — sign in as ${email} …`))
+  const r = runClaudeInteractive(['auth', 'login'])
+  if (r.status !== 0) die(`\`claude auth login\` exited with ${r.status ?? 'signal ' + r.signal}`)
+
+  // login rewrote the live creds — name the profile after the account that actually logged in
+  const actualEmail = (liveAccount() || {}).emailAddress
+  const name = emailToProfileName(actualEmail) || hintName
+  if (actualEmail && emailToProfileName(actualEmail) !== hintName) {
+    console.log(`${warn} logged in as ${actualEmail} (not ${email}) — saving as ${bold(name)}`)
+  }
+  const prof = saveLiveAs(name)
+  console.log(`${ok} saved second account ${bold(name)} — ${accountLabel(prof)}`)
+  console.log(dim('run `claude-creds swap` again to cycle between accounts.'))
+}
+
 // cycle to the next saved profile (wrapping around); `swap <name>` still targets a specific one
 async function cmdSwap(name, opts) {
   if (name) return cmdUse(name, opts)
+
+  // pull the current live login into a profile if it isn't tracked yet
+  let active = activeProfileName()
+  if (!active) active = captureCurrentProfile()
+
   const names = listProfileNames()
-  if (names.length < 2) die(`need at least 2 profiles to cycle through (have ${names.length})`)
-  const active = activeProfileName()
+
+  // only one account known → walk the user through adding a second
+  if (names.length < 2) return addSecondAccount(opts)
+
   const idx = active ? names.indexOf(active) : -1
   const nextName = names[(idx + 1) % names.length]
   console.log(dim(`swap: ${active || '(unknown)'} → ${nextName}`))
@@ -354,6 +422,8 @@ ${bold('usage:')} claude-creds <command> [args]
   ${cyan('use')} <name>, switch       switch the live login to a saved profile ${dim('(auto-refreshes if expiring)')}
       ${dim('--no-account')}           don't patch oauthAccount in .claude.json
   ${cyan('swap')} [name]              cycle to the next profile ${dim('(or switch to <name>)')}
+      ${dim('pulls the current login in first; with only one account, prompts for an')}
+      ${dim('email + runs `claude auth login` to add a second, then saves it')}
   ${cyan('refresh')} [name] [--all]   renew token(s) via the refresh_token grant
   ${cyan('check')} [name] [--all]     test validity via \`claude auth status\`  (alias: ${cyan('-p')})
   ${cyan('rm')} <name>                delete a profile
