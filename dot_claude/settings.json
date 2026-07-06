@@ -89,6 +89,7 @@
   "verbose": true,
   "preferredNotifChannel": "terminal_bell",
   "switchModelsOnFlag": false,
+  "leftArrowOpensAgents": false,
   "teammateMode": "auto",
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
