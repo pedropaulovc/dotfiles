@@ -127,6 +127,10 @@ function runClaude(args, extraEnv = {}) {
 // run claude interactively (inherit stdio) — for `auth login`'s browser/OAuth flow
 function runClaudeInteractive(args) {
   const bin = process.env.CLAUDE_BIN || 'claude'
+  // force the console back to cooked/echo mode and detach our own stdin listeners first, so the
+  // child's "Paste code here" prompt echoes what you type (Windows leaves echo off otherwise)
+  try { if (process.stdin.isTTY) process.stdin.setRawMode(false) } catch {}
+  process.stdin.pause()
   return spawnSync(bin, args, { stdio: 'inherit', shell: IS_WIN })
 }
 
@@ -137,10 +141,15 @@ function emailToProfileName(email) {
   return label.replace(/[^a-z0-9_-]/g, '') || null
 }
 
-// prompt on stdin (used when swap needs the email of a second account)
+// prompt on stdin (used when swap needs the email of a second account).
+// terminal:false keeps readline from putting the console into raw mode — the OS echoes the
+// line, and console echo is left intact for the interactive child we spawn afterwards.
 function prompt(question) {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
-  return new Promise((resolve) => rl.question(question, (a) => { rl.close(); resolve(a.trim()) }))
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: false })
+  return new Promise((resolve) => {
+    process.stdout.write(question)
+    rl.question('', (a) => { rl.close(); resolve(a.trim()) })
+  })
 }
 
 // =====================================================================
