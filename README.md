@@ -15,16 +15,20 @@ the source tree renders byte-identical to what's already installed on each OS.
 | `~/.config/nvtop/interface.ini` | `private_dot_config/nvtop/interface.ini` | WSL/Linux    |
 | `$PROFILE` (PowerShell 7)       | `OneDrive/Documentos/PowerShell/Microsoft.PowerShell_profile.ps1` | Windows |
 | `~/.gitconfig`                  | `dot_gitconfig.tmpl`                     | both (templated) |
-| `~/.claude/CLAUDE.md`           | `dot_claude/CLAUDE.md`                   | both         |
+| `~/.agents/AGENTS.md`           | `dot_agents/AGENTS.md`                   | both         |
+| `~/.codex/AGENTS.md`            | `dot_codex/AGENTS.md.tmpl`               | both         |
+| `~/.claude/CLAUDE.md`           | `dot_claude/CLAUDE.md.tmpl`              | both         |
 | `~/.claude/settings.json`       | `dot_claude/settings.json`               | both         |
 
 Each OS ignores the other's files via a platform-branched `.chezmoiignore`, so
 `apply` never creates a Linux dotfile on Windows or vice-versa. `.gitconfig` is
 the one file whose content legitimately differs per OS (credential-helper path,
 `autocrlf`, `hooksPath`), so it's a template that emits each platform's exact
-bytes. `CLAUDE.md` and `settings.json` are unified — one canonical copy shared
-by both homes. `.gitattributes` pins all files to LF so Windows clones stay
-byte-identical to the source (chezmoi apply noop survives `core.autocrlf=true`).
+bytes. `settings.json` has one canonical copy shared by both homes. `AGENTS.md`
+is the canonical instruction file; chezmoi copies its contents to Codex's
+`AGENTS.md` and Claude Code's `CLAUDE.md` targets. `.gitattributes` pins all
+files to LF so Windows clones stay byte-identical to the source (chezmoi apply
+noop survives `core.autocrlf=true`).
 
 ## Platform detection (WSL vs Windows vs Linux)
 
