@@ -16,7 +16,7 @@ Email: pedro@vezza.com.br
 - The main dev environment (`amet`) has a GeForce RTX 3090 available. Use it for ML tasks, audio/video processing and transcription.
 
 ## Introspection
-- If you ever need to review past chat logs (`~/.Codex/projects`) write TypeScript code and use NPM package `Codex-types`. It has all type definitions needed to parse complex logs.
+- If you ever need to review past chat logs (`~/.claude/projects`) write TypeScript code and use NPM package `claude-code-types`. It has all type definitions needed to parse complex logs.
 
 ## Research style
 - REPLACE the Fetch tool with Firecrawl + Browserbase MCP tools — far more reliable against sites blocking automated access. Route by task:
