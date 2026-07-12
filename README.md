@@ -19,6 +19,7 @@ the source tree renders byte-identical to what's already installed on each OS.
 | `~/.codex/AGENTS.md`            | `dot_codex/AGENTS.md.tmpl`               | both         |
 | `~/.claude/CLAUDE.md`           | `dot_claude/CLAUDE.md.tmpl`              | both         |
 | `~/.claude/settings.json`       | `dot_claude/settings.json`               | both         |
+| `~/.config/litellm/config.yaml` | `private_dot_config/litellm/config.yaml` | both         |
 
 Each OS ignores the other's files via a platform-branched `.chezmoiignore`, so
 `apply` never creates a Linux dotfile on Windows or vice-versa. `.gitconfig` is
@@ -78,20 +79,42 @@ absent.
 
 ### `claudex`
 
-`claudex` launches the Claude Code harness against a Claude-compatible proxy
-serving an alternate model, leaving your normal `claude`/`yc` on Anthropic. It's
-a bash function (`.bashrc`) and its PowerShell twin (`Invoke-ClaudeX`, aliased
-`claudex`); every override is scoped to the single invocation, and extra args
-pass through (`claudex --continue`). The proxy endpoint and token are secrets,
-so they come from the untracked secrets file rather than the repo — set these
-and `claudex` refuses to run until you do:
+`claudex` runs the Claude Code harness (the UI/tooling) against an alternate
+model — **OpenAI, via a local proxy** — while your normal `claude`/`yc` stay on
+Anthropic. Claude Code only speaks the Anthropic API, so a
+[LiteLLM](https://docs.litellm.ai/) proxy sits in the middle: it exposes an
+Anthropic `/v1/messages` endpoint on localhost and translates each request to
+OpenAI (and the response back). Two commands, each a bash function (`.bashrc`)
+plus a PowerShell twin (aliased the same):
+
+```
+claudex-proxy      # start the LiteLLM proxy — leave running in its own terminal/tmux
+claudex [args…]    # launch Claude Code pointed at it (args pass through: claudex --continue)
+```
+
+`claudex-proxy` runs `litellm` via `uvx` (pinned to Python 3.13 — litellm's Rust
+extension caps there) using `~/.config/litellm/config.yaml`, which is
+chezmoi-managed and **secret-free** (keys are read from the environment at
+runtime). `claudex` pre-flights the proxy and, if it's down, tells you to start
+it rather than falling back to Anthropic. Every model/effort override is scoped
+to the single invocation.
+
+Only the proxy needs a secret — your **OpenAI key** — from the untracked secrets
+file (see above); `claudex-proxy` refuses to start without it:
 
 ```bash
-# ~/.config/shell/secrets.sh   (POSIX)          # ~/.config/shell/secrets.ps1 (PowerShell)
-export CLAUDEX_BASE_URL="https://your-proxy"     $env:CLAUDEX_BASE_URL   = "https://your-proxy"
-export CLAUDEX_AUTH_TOKEN="your-proxy-token"     $env:CLAUDEX_AUTH_TOKEN = "your-proxy-token"
-export CLAUDEX_MODEL="gpt-5.6-sol"   # optional  $env:CLAUDEX_MODEL      = "gpt-5.6-sol"  # optional
+# ~/.config/shell/secrets.sh  (POSIX)        # ~/.config/shell/secrets.ps1  (PowerShell)
+export OPENAI_API_KEY="sk-…"                  $env:OPENAI_API_KEY = "sk-…"
 ```
+
+`claudex` itself needs nothing by default: it targets `http://127.0.0.1:4000`
+with a throwaway token (the proxy is open on localhost). Optional overrides —
+`CLAUDEX_MODEL` (default `gpt-5.6-sol`, the name mapped to OpenAI in
+`config.yaml`), `CLAUDEX_BASE_URL` / `CLAUDEX_AUTH_TOKEN` (for a remote or
+master-keyed proxy), `CLAUDEX_PROXY_PORT`. To lock down the proxy on a shared
+box, set `LITELLM_MASTER_KEY` (proxy side) and matching `CLAUDEX_AUTH_TOKEN`
+(client side). Point it at a different OpenAI model by editing the `model:`
+line in `config.yaml`.
 
 ## Bootstrap
 

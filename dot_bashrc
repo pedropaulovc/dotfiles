@@ -178,26 +178,41 @@ yct() {
 alias yg="gemini --yolo"
 alias findall="find . -type f -name"
 
-# claudex — run the Claude Code harness against an alternate model served by a
-# Claude-compatible proxy, without disturbing your normal `claude`/`yc` (which
-# stay on Anthropic). Every override below is scoped to this one invocation.
-# Proxy endpoint + token come from the untracked secrets file (see README
-# "Secrets"); claudex refuses to run if they're unset so it never silently
-# falls back to your real Anthropic account. Extra args pass through, so
-# `claudex --continue` works.
+# claudex — run the Claude Code harness against an alternate model (OpenAI, via
+# the local LiteLLM proxy) without disturbing your normal `claude`/`yc`, which
+# stay on Anthropic. Start the proxy first with `claudex-proxy` (own terminal);
+# the OpenAI key lives there, not here. Every override is scoped to this one
+# invocation and extra args pass through, so `claudex --continue` works.
 claudex() {
   local model="${CLAUDEX_MODEL:-gpt-5.6-sol}"
-  if [ -z "$CLAUDEX_BASE_URL" ] || [ -z "$CLAUDEX_AUTH_TOKEN" ]; then
-    echo "claudex: set CLAUDEX_BASE_URL and CLAUDEX_AUTH_TOKEN in ~/.config/shell/secrets.sh" >&2
+  local base="${CLAUDEX_BASE_URL:-http://127.0.0.1:4000}"
+  local token="${CLAUDEX_AUTH_TOKEN:-sk-claudex-local}"
+  if ! curl -sf -o /dev/null "$base/v1/models" -H "x-api-key: $token"; then
+    echo "claudex: proxy not reachable at $base — start it with: claudex-proxy" >&2
     return 1
   fi
-  ANTHROPIC_BASE_URL="$CLAUDEX_BASE_URL" \
-  ANTHROPIC_AUTH_TOKEN="$CLAUDEX_AUTH_TOKEN" \
+  ANTHROPIC_BASE_URL="$base" \
+  ANTHROPIC_AUTH_TOKEN="$token" \
   CLAUDE_CODE_SUBAGENT_MODEL="$model" \
   CLAUDE_CODE_ALWAYS_ENABLE_EFFORT=1 \
   CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=3 \
   ENABLE_TOOL_SEARCH=false \
   claude --model "$model" "$@"
+}
+
+# claudex-proxy — start the LiteLLM proxy that `claudex` points at. Exposes an
+# Anthropic /v1/messages endpoint on localhost and routes it to OpenAI per
+# ~/.config/litellm/config.yaml. Runs in the foreground (Ctrl-C to stop) — keep
+# it in its own terminal/tmux window. Reads OPENAI_API_KEY from your secrets
+# file; pinned to Python 3.13 (litellm's Rust extension caps there).
+claudex-proxy() {
+  if [ -z "$OPENAI_API_KEY" ]; then
+    echo "claudex-proxy: set OPENAI_API_KEY in ~/.config/shell/secrets.sh" >&2
+    return 1
+  fi
+  uvx --python 3.13 --from 'litellm[proxy]' litellm \
+    --config "$HOME/.config/litellm/config.yaml" \
+    --host 127.0.0.1 --port "${CLAUDEX_PROXY_PORT:-4000}" "$@"
 }
 
 export NVM_DIR="$HOME/.nvm"
