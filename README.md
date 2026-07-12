@@ -72,6 +72,27 @@ recreate it. To make secrets reproducible across machines, upgrade to chezmoi's
 [age encryption](https://chezmoi.io/user-guide/encryption/age/) and commit the
 encrypted blob instead.
 
+On Windows the PowerShell profile sources the same-shaped untracked file at
+`~/.config/shell/secrets.ps1` (define `$env:` vars there); it too no-ops when
+absent.
+
+### `claudex`
+
+`claudex` launches the Claude Code harness against a Claude-compatible proxy
+serving an alternate model, leaving your normal `claude`/`yc` on Anthropic. It's
+a bash function (`.bashrc`) and its PowerShell twin (`Invoke-ClaudeX`, aliased
+`claudex`); every override is scoped to the single invocation, and extra args
+pass through (`claudex --continue`). The proxy endpoint and token are secrets,
+so they come from the untracked secrets file rather than the repo — set these
+and `claudex` refuses to run until you do:
+
+```bash
+# ~/.config/shell/secrets.sh   (POSIX)          # ~/.config/shell/secrets.ps1 (PowerShell)
+export CLAUDEX_BASE_URL="https://your-proxy"     $env:CLAUDEX_BASE_URL   = "https://your-proxy"
+export CLAUDEX_AUTH_TOKEN="your-proxy-token"     $env:CLAUDEX_AUTH_TOKEN = "your-proxy-token"
+export CLAUDEX_MODEL="gpt-5.6-sol"   # optional  $env:CLAUDEX_MODEL      = "gpt-5.6-sol"  # optional
+```
+
 ## Bootstrap
 
 ```bash

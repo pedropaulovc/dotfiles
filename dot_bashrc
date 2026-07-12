@@ -178,6 +178,28 @@ yct() {
 alias yg="gemini --yolo"
 alias findall="find . -type f -name"
 
+# claudex — run the Claude Code harness against an alternate model served by a
+# Claude-compatible proxy, without disturbing your normal `claude`/`yc` (which
+# stay on Anthropic). Every override below is scoped to this one invocation.
+# Proxy endpoint + token come from the untracked secrets file (see README
+# "Secrets"); claudex refuses to run if they're unset so it never silently
+# falls back to your real Anthropic account. Extra args pass through, so
+# `claudex --continue` works.
+claudex() {
+  local model="${CLAUDEX_MODEL:-gpt-5.6-sol}"
+  if [ -z "$CLAUDEX_BASE_URL" ] || [ -z "$CLAUDEX_AUTH_TOKEN" ]; then
+    echo "claudex: set CLAUDEX_BASE_URL and CLAUDEX_AUTH_TOKEN in ~/.config/shell/secrets.sh" >&2
+    return 1
+  fi
+  ANTHROPIC_BASE_URL="$CLAUDEX_BASE_URL" \
+  ANTHROPIC_AUTH_TOKEN="$CLAUDEX_AUTH_TOKEN" \
+  CLAUDE_CODE_SUBAGENT_MODEL="$model" \
+  CLAUDE_CODE_ALWAYS_ENABLE_EFFORT=1 \
+  CLAUDE_CODE_MAX_TOOL_USE_CONCURRENCY=3 \
+  ENABLE_TOOL_SEARCH=false \
+  claude --model "$model" "$@"
+}
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
