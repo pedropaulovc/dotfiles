@@ -21,7 +21,7 @@ Email: pedro@vezza.com.br
   - `firecrawl_browser_{create,delete,list}` are deprecated — use scrape + interact.
 - Fallback when both fail: Playwright via `/playwright-cli` skill (ALWAYS `--headed`).
 - Mirrors: Reddit → redlib (redlib.{us,de}.catsarch.com), teddit, libreddit; Twitter/X → nitter (xcancel.com); YouTube → piped/invidious, or `yt-dlp` (`--cookies-from-browser firefox/chrome` for gated videos); archives → `https://web.archive.org/web/2026/<url>`, `https://archive.{today,ph,is,li,md,vn,fo}/<url>`.
-- During research, leverage video subtitles via `yt-dlp --write-auto-subs --skip-download` — often faster than watching/transcribing.
+- During research, leverage video subtitles via `yt-dlp --write-auto-subs --skip-download`. UI-heavy activities have the best content in videos.
 - Do NOT silently accept failed fetches (401/403/429, anti-bot, CAPTCHA, paywall) or known-missing credentials (`az`, `gh`, `wrangler`…). Surface the specific error — don't pivot to weaker sources or fabricate around the gap. The user can often fetch it directly (authenticated session, browser, paid API) and paste it back.
 
 ## Communication style
