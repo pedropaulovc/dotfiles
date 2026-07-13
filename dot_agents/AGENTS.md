@@ -115,6 +115,15 @@ Email: pedro@vezza.com.br
  * One second of CPU time is an ETERNITY, do not settle for poor performance.
  * The worst type of performance bug is when the system is homogeneously slow. Don;t let it get to that state.
 
+### Empirical skepticism — a "doesn't work" claim is a hypothesis until a repro backs it
+ * A "doesn't work / impossible / too slow / must be ugly" verdict is not evidence until a re-runnable repro is attached. N self-authored failures prove your *call shapes* fail — not that the feature is dead. An instant False/None is a rejection with an enumerable cause; suspect your arguments first, the feature last.
+ * This holds whether you wrote the claim or inherited it (comment, runbook, prior agent). A specific, named mechanism with no repro is a hypothesis wearing a fact's clothes — specificity makes it more *trusted*, not more *true*. Untested inherited claims calcify into folklore.
+ * When you WRITE a gating claim, commit its repro next to it. When you INHERIT one, spend the few minutes to falsify it before building on it — especially when it's expensive (forces a slow/ugly pattern everywhere).
+ * Before any "dead" verdict, get a **positive control**: reproduce a form known to work, then bisect the delta to your failing form one variable at a time. That converges; brainstorming more failing variants does not. If no working form exists anywhere, say so — that itself is the evidence.
+ * Don't pre-engineer defensive fallbacks around an *unverified* assumption that a tool will misbehave. Assume it works; if a failure is real, reproduce it first, then fix with evidence.
+ * "It was reviewed" ≠ "the premise was checked" — review verifies written code, not unstated architectural premises.
+ * Word verdicts honestly: **"dead under <variants tried>; untested: <list>"** — never "dead, period" while untested deltas remain. If you can't enumerate what you haven't tried, you haven't mapped the space.
+
 ## Distributed systems
  * No HTTP call may last more than 1s. If it does, it is a sign you should replace your API with an async API that quickly returns a job ID that can be polled.
 
