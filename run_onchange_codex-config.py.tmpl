@@ -1,7 +1,7 @@
 # Merge chezmoi-managed Codex settings into ~/.codex/config.toml.
 #
 # Codex owns this file at runtime — it rewrites [projects.*] trust, [hooks.state]
-# hashes, marketplace revisions, and stores the Firecrawl MCP api key in it. So we
+# hashes, [marketplaces.*] revisions, and stores the Firecrawl MCP api key in it. So we
 # can't manage it as a plain file (chezmoi would clobber those). Instead this script
 # runs on `chezmoi apply` whenever the MANAGED block below changes, and surgically
 # upserts ONLY those keys via tomlkit, leaving every other key — including the secret
@@ -39,6 +39,24 @@ status_line_use_colors = true
 
 [windows]
 sandbox = "elevated"
+
+[plugins]
+"developing-solidworks@agent-plugins" = { enabled = true }
+"mediocrity-detector@agent-plugins" = { enabled = true }
+"memory-to-repo@agent-plugins" = { enabled = true }
+"unrelated-issue-detector@agent-plugins" = { enabled = true }
+"worktree-reset@agent-plugins" = { enabled = true }
+"watch-pr@agent-plugins" = { enabled = true }
+"command-chain-separator@agent-plugins" = { enabled = true }
+"gh-issue@agent-plugins" = { enabled = true }
+"playwright-cli-headed@agent-plugins" = { enabled = true }
+"pr-comments@agent-plugins" = { enabled = true }
+
+# Only the marketplace's source identity is managed; last_updated/last_revision
+# are runtime state Codex rewrites on every marketplace refresh, so we leave them.
+[marketplaces.agent-plugins]
+source_type = "git"
+source = "https://github.com/pedropaulovc/agent-plugins.git"
 ''')
 
 
