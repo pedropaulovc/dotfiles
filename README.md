@@ -6,20 +6,22 @@ the source tree renders byte-identical to what's already installed on each OS.
 
 ## Managed files
 
-| target                          | source                                   | applies on   |
-| ------------------------------- | ---------------------------------------- | ------------ |
-| `~/.bashrc`                     | `dot_bashrc`                             | WSL/Linux    |
-| `~/.profile`                    | `dot_profile`                           | WSL/Linux    |
-| `~/.inputrc`                    | `dot_inputrc`                           | WSL/Linux    |
-| `~/.tmux.conf`                  | `dot_tmux.conf`                         | WSL/Linux    |
-| `~/.config/nvtop/interface.ini` | `private_dot_config/nvtop/interface.ini` | WSL/Linux    |
-| `$PROFILE` (PowerShell 7)       | `OneDrive/Documentos/PowerShell/Microsoft.PowerShell_profile.ps1` | Windows |
-| `~/.gitconfig`                  | `dot_gitconfig.tmpl`                     | both (templated) |
-| `~/.agents/AGENTS.md`           | `dot_agents/AGENTS.md`                   | both         |
-| `~/.codex/AGENTS.md`            | `dot_codex/AGENTS.md.tmpl`               | both         |
-| `~/.config/opencode/AGENTS.md`  | `private_dot_config/opencode/AGENTS.md.tmpl` | both     |
-| `~/.claude/CLAUDE.md`           | `dot_claude/CLAUDE.md.tmpl`              | both         |
-| `~/.claude/settings.json`       | `dot_claude/settings.json`               | both         |
+| target                                      | source                                                            | applies on       |
+| ------------------------------------------- | ----------------------------------------------------------------- | ---------------- |
+| `~/.bashrc`                                 | `dot_bashrc`                                                      | WSL/Linux        |
+| `~/.profile`                                | `dot_profile`                                                     | WSL/Linux        |
+| `~/.inputrc`                                | `dot_inputrc`                                                     | WSL/Linux        |
+| `~/.tmux.conf`                              | `dot_tmux.conf`                                                   | WSL/Linux        |
+| `~/.config/nvtop/interface.ini`             | `private_dot_config/nvtop/interface.ini`                          | WSL/Linux        |
+| `$PROFILE` (PowerShell 7)                   | `OneDrive/Documentos/PowerShell/Microsoft.PowerShell_profile.ps1` | Windows          |
+| `~/.gitconfig`                              | `dot_gitconfig.tmpl`                                              | both (templated) |
+| `~/.agents/AGENTS.md`                       | `dot_agents/AGENTS.md`                                            | both             |
+| `~/.codex/AGENTS.md`                        | `dot_codex/AGENTS.md.tmpl`                                        | both             |
+| `~/.config/opencode/AGENTS.md`              | `private_dot_config/opencode/AGENTS.md.tmpl`                      | both             |
+| `~/.config/opencode/tui.json`               | `private_dot_config/opencode/tui.json`                            | both             |
+| `~/.config/opencode/plugins/statusline.tsx` | `private_dot_config/opencode/plugins/statusline.tsx`              | both             |
+| `~/.claude/CLAUDE.md`                       | `dot_claude/CLAUDE.md.tmpl`                                       | both             |
+| `~/.claude/settings.json`                   | `dot_claude/settings.json`                                        | both             |
 
 Each OS ignores the other's files via a platform-branched `.chezmoiignore`, so
 `apply` never creates a Linux dotfile on Windows or vice-versa. `.gitconfig` is
