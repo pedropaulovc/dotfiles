@@ -194,3 +194,6 @@ export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
