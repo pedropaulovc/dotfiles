@@ -3,60 +3,42 @@
 # Codex owns this file at runtime — it rewrites [projects.*] trust, [hooks.state]
 # hashes, [marketplaces.*] revisions, and stores the Firecrawl MCP api key in it. So we
 # can't manage it as a plain file (chezmoi would clobber those). Instead this script
-# runs on `chezmoi apply` whenever the MANAGED block below changes, and surgically
-# upserts ONLY those keys via tomlkit, leaving every other key — including the secret
-# and all machine-local state — byte-for-byte untouched.
+# runs on `chezmoi apply` whenever the managed settings change, and surgically upserts
+# ONLY those keys via tomlkit, leaving every other key — including the secret and all
+# machine-local state — byte-for-byte untouched.
 #
-# Managed = enforce-present, not enforce-absent: dropping a key here stops enforcing
-# it, but won't delete a copy Codex already wrote. Add new machines' settings here,
-# not by hand-editing ~/.codex/config.toml.
-import os, sys, tomlkit
+# The managed settings live in .chezmoitemplates/codex-managed.toml and are injected
+# below via includeTemplate (the rendered script stays self-contained, since a
+# run_onchange temp script can't read source files). Managed = enforce-present, not
+# enforce-absent: dropping a key there stops enforcing it, but won't delete a copy
+# Codex already wrote. Edit that file, not ~/.codex/config.toml.
+import os, sys
+
+# On the FIRST `chezmoi apply` after this script lands, chezmoi runs it under its default
+# .py interpreter (plain `python`) — the regenerated ~/.config/chezmoi config that maps
+# .py -> `uv run --with tomlkit` only takes effect on the NEXT run, so a cold machine would
+# otherwise need two passes. That default python usually lacks tomlkit; detect it and
+# re-exec under uv (which pulls tomlkit on the fly). A sentinel env var prevents an
+# infinite re-exec loop if the dependency still can't be satisfied. If uv itself is
+# missing, fail with an actionable message instead of a raw FileNotFoundError.
+try:
+    import tomlkit
+except ModuleNotFoundError:
+    if os.environ.get("_CODEX_CFG_UV_BOOTSTRAP"):
+        raise
+    import subprocess
+    try:
+        done = subprocess.run(
+            ["uv", "run", "--with", "tomlkit", "--quiet", "python", os.path.abspath(__file__), *sys.argv[1:]],
+            env={**os.environ, "_CODEX_CFG_UV_BOOTSTRAP": "1"},
+        )
+    except FileNotFoundError:
+        print("codex-config: needs uv or tomlkit - install uv: https://astral.sh/uv", file=sys.stderr)
+        sys.exit(1)
+    sys.exit(done.returncode)
 
 MANAGED = tomlkit.parse('''
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
-plan_mode_reasoning_effort = "high"
-
-[features]
-memories = true
-
-[shell_environment_policy]
-inherit = "core"
-
-[shell_environment_policy.set]
-CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
-CLAUDE_CODE_NO_FLICKER = "1"
-CLAUDE_CODE_WORKFLOWS = "1"
-COLORTERM = "truecolor"
-CLAUDE_AFK_TIMEOUT_MS = "1800000"
-
-[tui]
-status_line = ["model", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir", "git-branch", "branch-changes"]
-status_line_use_colors = true
-
-[tui.model_availability_nux]
-"gpt-5.6-sol" = 4
-
-[windows]
-sandbox = "elevated"
-
-[plugins]
-"developing-solidworks@agent-plugins" = { enabled = true }
-"mediocrity-detector@agent-plugins" = { enabled = true }
-"memory-to-repo@agent-plugins" = { enabled = true }
-"unrelated-issue-detector@agent-plugins" = { enabled = true }
-"worktree-reset@agent-plugins" = { enabled = true }
-"watch-pr@agent-plugins" = { enabled = true }
-"command-chain-separator@agent-plugins" = { enabled = true }
-"gh-issue@agent-plugins" = { enabled = true }
-"playwright-cli-headed@agent-plugins" = { enabled = true }
-"pr-comments@agent-plugins" = { enabled = true }
-
-# Only the marketplace's source identity is managed; last_updated/last_revision
-# are runtime state Codex rewrites on every marketplace refresh, so we leave them.
-[marketplaces.agent-plugins]
-source_type = "git"
-source = "https://github.com/pedropaulovc/agent-plugins.git"
+{{ includeTemplate "codex-managed.toml" }}
 ''')
 
 
