@@ -10,7 +10,24 @@
 # Managed = enforce-present, not enforce-absent: dropping a key here stops enforcing
 # it, but won't delete a copy Codex already wrote. Add new machines' settings here,
 # not by hand-editing ~/.codex/config.toml.
-import os, sys, tomlkit
+import os, sys
+
+# On the FIRST `chezmoi apply` after this script lands, chezmoi runs it under its default
+# .py interpreter (plain `python`) — the regenerated ~/.config/chezmoi config that maps
+# .py -> `uv run --with tomlkit` only takes effect on the NEXT run, so a cold machine would
+# otherwise need two passes. That default python usually lacks tomlkit; detect it and
+# re-exec under uv (which pulls tomlkit on the fly). A sentinel env var prevents an
+# infinite re-exec loop if the dependency still can't be satisfied.
+try:
+    import tomlkit
+except ModuleNotFoundError:
+    if os.environ.get("_CODEX_CFG_UV_BOOTSTRAP"):
+        raise
+    import subprocess
+    sys.exit(subprocess.run(
+        ["uv", "run", "--with", "tomlkit", "--quiet", "python", os.path.abspath(__file__), *sys.argv[1:]],
+        env={**os.environ, "_CODEX_CFG_UV_BOOTSTRAP": "1"},
+    ).returncode)
 
 MANAGED = tomlkit.parse('''
 model = "gpt-5.6-sol"
