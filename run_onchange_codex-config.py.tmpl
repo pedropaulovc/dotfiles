@@ -1,0 +1,77 @@
+# Merge chezmoi-managed Codex settings into ~/.codex/config.toml.
+#
+# Codex owns this file at runtime — it rewrites [projects.*] trust, [hooks.state]
+# hashes, [marketplaces.*] revisions, and stores the Firecrawl MCP api key in it. So we
+# can't manage it as a plain file (chezmoi would clobber those). Instead this script
+# runs on `chezmoi apply` whenever the MANAGED block below changes, and surgically
+# upserts ONLY those keys via tomlkit, leaving every other key — including the secret
+# and all machine-local state — byte-for-byte untouched.
+#
+# Managed = enforce-present, not enforce-absent: dropping a key here stops enforcing
+# it, but won't delete a copy Codex already wrote. Add new machines' settings here,
+# not by hand-editing ~/.codex/config.toml.
+import os, sys, tomlkit
+
+MANAGED = tomlkit.parse('''
+model = "gpt-5.6-sol"
+model_reasoning_effort = "high"
+plan_mode_reasoning_effort = "high"
+
+[features]
+memories = true
+
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+CLAUDE_CODE_NO_FLICKER = "1"
+CLAUDE_CODE_WORKFLOWS = "1"
+COLORTERM = "truecolor"
+CLAUDE_AFK_TIMEOUT_MS = "1800000"
+
+[tui]
+status_line = ["model", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir", "git-branch", "branch-changes"]
+status_line_use_colors = true
+
+[tui.model_availability_nux]
+"gpt-5.6-sol" = 4
+
+[windows]
+sandbox = "elevated"
+
+[plugins]
+"developing-solidworks@agent-plugins" = { enabled = true }
+"mediocrity-detector@agent-plugins" = { enabled = true }
+"memory-to-repo@agent-plugins" = { enabled = true }
+"unrelated-issue-detector@agent-plugins" = { enabled = true }
+"worktree-reset@agent-plugins" = { enabled = true }
+"watch-pr@agent-plugins" = { enabled = true }
+"command-chain-separator@agent-plugins" = { enabled = true }
+"gh-issue@agent-plugins" = { enabled = true }
+"playwright-cli-headed@agent-plugins" = { enabled = true }
+"pr-comments@agent-plugins" = { enabled = true }
+
+# Only the marketplace's source identity is managed; last_updated/last_revision
+# are runtime state Codex rewrites on every marketplace refresh, so we leave them.
+[marketplaces.agent-plugins]
+source_type = "git"
+source = "https://github.com/pedropaulovc/agent-plugins.git"
+''')
+
+
+def upsert(dst, src):
+    """Recursively set managed leaves into dst, preserving unmanaged siblings."""
+    for key, val in src.items():
+        if isinstance(val, dict) and isinstance(dst.get(key), dict):
+            upsert(dst[key], val)
+        else:
+            dst[key] = val
+
+
+path = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else "~/.codex/config.toml")
+doc = tomlkit.parse(open(path, encoding="utf-8").read()) if os.path.exists(path) else tomlkit.document()
+upsert(doc, MANAGED)
+os.makedirs(os.path.dirname(path), exist_ok=True)
+with open(path, "w", encoding="utf-8", newline="\n") as f:
+    f.write(tomlkit.dumps(doc))

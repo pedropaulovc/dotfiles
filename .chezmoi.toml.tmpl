@@ -15,3 +15,9 @@
 [interpreters.ps1]
     command = "pwsh"
     args = ["-NoLogo"]
+
+# Run .py scripts (e.g. the Codex config merge) with uv, pulling deps on the fly
+# so no venv or global install is required on any machine.
+[interpreters.py]
+    command = "uv"
+    args = ["run", "--with", "tomlkit", "--quiet", "python"]
