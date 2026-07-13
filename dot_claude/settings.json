@@ -60,7 +60,7 @@
   },
   "enabledPlugins": {
     "command-chain-separator@agent-plugins": true,
-    "gh-issue@agent-plugins": true,
+    "gh-issue@agent-plugins": false,
     "mediocrity-detector@agent-plugins": true,
     "no-fetch@agent-plugins": true,
     "playwright-cli-headed@agent-plugins": true,
