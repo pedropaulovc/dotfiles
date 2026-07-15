@@ -176,6 +176,7 @@ yct() {
   tmux attach-session -t "$session"
 }
 alias yg="gemini --yolo"
+alias yx="codex --dangerously-bypass-approvals-and-sandbox"
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"

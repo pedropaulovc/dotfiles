@@ -11,6 +11,15 @@ function Invoke-YoloClaude {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control @Remaining
 }
 
+function Invoke-YoloCodex {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox @Remaining
+}
+
 function Invoke-ShellGpt {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -46,6 +55,7 @@ function Invoke-RmRf {
 }
 
 Set-Alias -Name yc -Value Invoke-YoloClaude
+Set-Alias -Name yx -Value Invoke-YoloCodex
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'
