@@ -59,7 +59,7 @@
     "refreshInterval": 10
   },
   "enabledPlugins": {
-    "command-chain-separator@agent-plugins": true,
+    "command-chain-separator@agent-plugins": false,
     "gh-issue@agent-plugins": false,
     "mediocrity-detector@agent-plugins": true,
     "no-fetch@agent-plugins": true,
