@@ -5,9 +5,9 @@ function Invoke-YoloClaude {
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
     )
-    
-    # $env:CLAUDE_CODE_DISABLE_AUTO_UPDATE='1' 
-	
+
+    # $env:CLAUDE_CODE_DISABLE_AUTO_UPDATE='1'
+
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control @Remaining
 }
 
@@ -39,9 +39,9 @@ function Invoke-KillAll {
         [string] $Name
     )
 
-    Get-Process $Name -ErrorAction SilentlyContinue | ForEach-Object { 
+    Get-Process $Name -ErrorAction SilentlyContinue | ForEach-Object {
         Write-Information "Killing process $($_.Name) with Id $($_.Id)"
-        
+
         Stop-Process -Id $_.Id -ErrorAction SilentlyContinue
     }
 }

@@ -1,0 +1,15 @@
+{{ if eq .platform "windows" -}}
+# Deploys the PowerShell profile to $PROFILE.CurrentUserCurrentHost (the current
+# user's actual profile path) instead of a hardcoded OneDrive/Documentos path —
+# $PROFILE already accounts for OneDrive-redirected Documents, non-redirected
+# Documents, locale-specific folder names, etc.
+# Re-runs only when the profile content changes (hash below pins the re-run):
+# {{ include ".chezmoitemplates/Microsoft.PowerShell_profile.ps1" | sha256sum }}
+$profileDir = Split-Path $PROFILE.CurrentUserCurrentHost -Parent
+if (-not (Test-Path $profileDir)) {
+    New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+}
+@'
+{{ include ".chezmoitemplates/Microsoft.PowerShell_profile.ps1" }}
+'@ | Set-Content -Path $PROFILE.CurrentUserCurrentHost -Encoding UTF8
+{{ end -}}
