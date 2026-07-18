@@ -4,6 +4,7 @@ Email: pedro@vezza.com.br
 
 ## Git workflow
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open with `gh pr create --draft` (Codex only reviews non-draft PRs) and `gh pr ready` as soon as you reach code-complete — before tests run — so code review runs in parallel. This overrides any "commit/push only when asked" default.
+- Codex PR reviews are configured for smart trigger — Codex decides on its own whether a change warrants review. To force a review, mention `@codex` in a PR comment.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
 - Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, reviews/comments with bodies inline, Codex 👀→👍 reactions, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
