@@ -93,6 +93,7 @@ Email: pedro@vezza.com.br
 
 ### Distributed systems
  * No HTTP call over 1s — past that, replace the API with an async one: return a job ID, let clients poll.
+ * Telemetry is vital for so many activities: error root cause analysis, performance investugation, progress tracking. OTEL makes this standardized. Always ensure you have enough telemetry to backtrack important operations. Err on the side of more telemetry rather than less. This guidance also applies to large local applications performing batch operations.
 
 ### Reliability
  * Long-running work (batch jobs etc.) checkpoints periodically so it resumes without significant loss.
@@ -100,4 +101,5 @@ Email: pedro@vezza.com.br
 ### Development environments
  * Guard your dev inner loop — compiling, deploying assets, unit tests must be optimized for fast iteration.
  * Nuking the env must be trivial: a couple of commands to wipe caches/binaries/databases and restore a known-good state.
+ * Leverage subagents for parallel work but be careful to check-in periodically in case they went idle for too long.
  * The test suite must be trustworthy. Corollary 1: there are no flaky tests, only broken tests. Corollary 2: there are **no unrelated** changes — see something, do something; spin off a subagent in a separate worktree to fix the flake/bad merge.
