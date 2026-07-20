@@ -3,15 +3,15 @@
 # Codex owns this file at runtime — it rewrites [projects.*] trust, [hooks.state]
 # hashes, [marketplaces.*] revisions, and stores the Firecrawl MCP api key in it. So we
 # can't manage it as a plain file (chezmoi would clobber those). Instead this script
-# runs on `chezmoi apply` whenever the managed settings change, and surgically upserts
-# ONLY those keys via tomlkit, leaving every other key — including the secret and all
-# machine-local state — byte-for-byte untouched.
+# runs on `chezmoi apply` whenever the managed settings change, surgically upserts
+# those keys, and deletes explicit tombstones via tomlkit. Every other key — including
+# the secret and all machine-local state — stays byte-for-byte untouched.
 #
 # The managed settings live in .chezmoitemplates/codex-managed.toml and are injected
 # below via includeTemplate (the rendered script stays self-contained, since a
-# run_onchange temp script can't read source files). Managed = enforce-present, not
-# enforce-absent: dropping a key there stops enforcing it, but won't delete a copy
-# Codex already wrote. Edit that file, not ~/.codex/config.toml.
+# run_onchange temp script can't read source files). Managed = enforce-present: dropping
+# a key there stops enforcing it, but won't delete a copy Codex already wrote. Put
+# intentional removals in REMOVED below. Edit the template, not ~/.codex/config.toml.
 import os, sys
 
 # On the FIRST `chezmoi apply` after this script lands, chezmoi runs it under its default
@@ -42,6 +42,7 @@ except ModuleNotFoundError:
 MANAGED = tomlkit.parse(r'''
 {{ includeTemplate "codex-managed.toml" . }}
 ''')
+REMOVED = (("plugins", "command-chain-separator@agent-plugins"),)
 
 
 def upsert(dst, src):
@@ -53,9 +54,21 @@ def upsert(dst, src):
             dst[key] = val
 
 
+def delete_path(dst, keys):
+    """Delete one exact config leaf while preserving every sibling."""
+    parent = dst
+    for key in keys[:-1]:
+        parent = parent.get(key)
+        if not isinstance(parent, dict):
+            return
+    parent.pop(keys[-1], None)
+
+
 path = os.path.expanduser(sys.argv[1] if len(sys.argv) > 1 else "~/.codex/config.toml")
 doc = tomlkit.parse(open(path, encoding="utf-8").read()) if os.path.exists(path) else tomlkit.document()
 upsert(doc, MANAGED)
+for removed_path in REMOVED:
+    delete_path(doc, removed_path)
 os.makedirs(os.path.dirname(path), exist_ok=True)
 with open(path, "w", encoding="utf-8", newline="\n") as f:
     f.write(tomlkit.dumps(doc))
