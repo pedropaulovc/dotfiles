@@ -38,7 +38,7 @@ except ModuleNotFoundError:
     sys.exit(done.returncode)
 
 MANAGED = tomlkit.parse('''
-{{ includeTemplate "codex-managed.toml" }}
+{{ includeTemplate "codex-managed.toml" . }}
 ''')
 
 

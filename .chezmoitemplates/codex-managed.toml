@@ -4,6 +4,9 @@
 # Editing this file changes the rendered script's hash, so the merge re-runs on
 # the next `chezmoi apply`. Add new managed settings here, not by hand-editing
 # ~/.codex/config.toml.
+{{ $codexHome := joinPath .chezmoi.homeDir ".codex" -}}
+{{ $curatedCache := joinPath $codexHome "plugins/cache/openai-curated-remote" -}}
+{{ $systemSkills := joinPath $codexHome "skills/.system" -}}
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 plan_mode_reasoning_effort = "high"
@@ -38,7 +41,6 @@ sandbox = "elevated"
 "unrelated-issue-detector@agent-plugins" = { enabled = true }
 "worktree-reset@agent-plugins" = { enabled = true }
 "watch-pr@agent-plugins" = { enabled = true }
-"command-chain-separator@agent-plugins" = { enabled = true }
 "gh-issue@agent-plugins" = { enabled = true }
 "playwright-cli-headed@agent-plugins" = { enabled = true }
 "pr-comments@agent-plugins" = { enabled = true }
@@ -48,3 +50,122 @@ sandbox = "elevated"
 [marketplaces.agent-plugins]
 source_type = "git"
 source = "https://github.com/pedropaulovc/agent-plugins.git"
+
+# Codex identifies skill overrides by their absolute SKILL.md paths. Keep this
+# list aligned with the disabled skills in the live config when curated plugin
+# versions change.
+[[skills.config]]
+path = {{ joinPath $curatedCache "google-calendar/1.2.4/skills/google-calendar/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "google-calendar/1.2.4/skills/google-calendar-daily-brief/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "google-calendar/1.2.4/skills/google-calendar-free-up-time/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "google-calendar/1.2.4/skills/google-calendar-group-scheduler/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "google-calendar/1.2.4/skills/google-calendar-meeting-prep/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-analytics-dashboard/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-business-review/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-design-report/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-experiment-analysis/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-financial-budget/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-investment-committee-memo/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-legal-memorandum/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-market-trends-report/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-minimal-letterhead/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-operating-calendar/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-operating-review/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-project-kickoff/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-project-tracker/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-sales-pipeline/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-simple-dark-mode/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-simple-light-mode/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-strategy-memorandum/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-system-design/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-team-alignment/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $curatedCache "openai-templates/0.1.0/skills/artifact-template-three-statement-forecast/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $systemSkills "imagegen/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $systemSkills "plugin-creator/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $systemSkills "skill-creator/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $systemSkills "skill-installer/SKILL.md" | toJson }}
+enabled = false
