@@ -6,6 +6,9 @@
 # ~/.codex/config.toml.
 {{ $codexHome := joinPath .chezmoi.homeDir ".codex" -}}
 {{ $curatedCache := joinPath $codexHome "plugins/cache/openai-curated-remote" -}}
+{{ $primaryRuntimeCache := joinPath $codexHome "plugins/cache/openai-primary-runtime" -}}
+{{ $bundledCache := joinPath $codexHome "plugins/cache/openai-bundled" -}}
+{{ $agentPluginCache := joinPath $codexHome "plugins/cache/agent-plugins" -}}
 {{ $systemSkills := joinPath $codexHome "skills/.system" -}}
 model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
@@ -169,3 +172,37 @@ enabled = false
 [[skills.config]]
 path = {{ joinPath $systemSkills "skill-installer/SKILL.md" | toJson }}
 enabled = false
+
+{{ if eq .chezmoi.os "windows" }}
+[[skills.config]]
+path = {{ joinPath $primaryRuntimeCache "documents/26.715.12143/skills/documents/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $agentPluginCache "pr-comments/0.1.14/skills/comments/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $primaryRuntimeCache "presentations/26.715.12143/skills/presentations/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $bundledCache "sites/0.1.27/skills/sites-building/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $bundledCache "sites/0.1.27/skills/sites-hosting/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $primaryRuntimeCache "spreadsheets/26.715.12143/skills/spreadsheets/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $primaryRuntimeCache "spreadsheets/26.715.12143/skills/excel-live-control/SKILL.md" | toJson }}
+enabled = false
+
+[[skills.config]]
+path = {{ joinPath $primaryRuntimeCache "template-creator/26.715.12143/skills/template-creator/SKILL.md" | toJson }}
+enabled = false
+{{ end }}
