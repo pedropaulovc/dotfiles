@@ -37,7 +37,9 @@ except ModuleNotFoundError:
         sys.exit(1)
     sys.exit(done.returncode)
 
-MANAGED = tomlkit.parse('''
+# Keep this raw: rendered TOML contains escaped Windows paths, and a normal
+# Python string would consume one backslash layer before tomlkit parses it.
+MANAGED = tomlkit.parse(r'''
 {{ includeTemplate "codex-managed.toml" . }}
 ''')
 
