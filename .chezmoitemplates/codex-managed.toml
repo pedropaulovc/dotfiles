@@ -17,6 +17,10 @@ plan_mode_reasoning_effort = "high"
 [features]
 memories = true
 
+# Suppress Codex's nudge to switch models as you approach rate/usage limits.
+[notice]
+hide_rate_limit_model_nudge = true
+
 [shell_environment_policy]
 inherit = "core"
 
@@ -47,6 +51,16 @@ sandbox = "elevated"
 "gh-issue@agent-plugins" = { enabled = true }
 "playwright-cli-headed@agent-plugins" = { enabled = true }
 "pr-comments@agent-plugins" = { enabled = true }
+# OpenAI bundled/runtime plugins we keep disabled (their skills are already
+# disabled below; disabling the parent plugin turns the whole set off).
+"sites@openai-bundled" = { enabled = false }
+"visualize@openai-bundled" = { enabled = false }
+"browser@openai-bundled" = { enabled = false }
+"documents@openai-primary-runtime" = { enabled = false }
+"pdf@openai-primary-runtime" = { enabled = false }
+"spreadsheets@openai-primary-runtime" = { enabled = false }
+"presentations@openai-primary-runtime" = { enabled = false }
+"template-creator@openai-primary-runtime" = { enabled = false }
 
 # Only the marketplace's source identity is managed; last_updated/last_revision
 # are runtime state Codex rewrites on every marketplace refresh, so we leave them.
