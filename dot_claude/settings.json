@@ -64,7 +64,6 @@
     "mediocrity-detector@agent-plugins": true,
     "no-fetch@agent-plugins": true,
     "playwright-cli-headed@agent-plugins": true,
-    "pr-comments@agent-plugins": true,
     "unrelated-issue-detector@agent-plugins": true,
     "worktree-reset@agent-plugins": true,
     "memory-to-repo@agent-plugins": true,
