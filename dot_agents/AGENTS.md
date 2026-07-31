@@ -8,6 +8,7 @@ Email: pedro@vezza.com.br
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
 - Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, reviews/comments with bodies inline, Codex 👀→👍 reactions, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
+- Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence. For non-Claude Code harnesses, append `Co-Authored-By: <model> <noreply@model-author>` e.g. `Co-Authored-By: GPT 5.6 Luna (high) <noreply@openai.com>`
 
 ## Shell usage
 - Python: ALWAYS uv, ALWAYS in a venv (never `--system`).
@@ -75,7 +76,6 @@ Email: pedro@vezza.com.br
     ```
 
 - Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / `/loop` to filter out the noise.
-- Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence. For non-Claude Code harnesses, append `Co-Authored-By: <model> <noreply@model-author>` e.g. `Co-Authored-By: GPT 5.6 Luna (high) <noreply@openai.com>`
 
 ## Engineering wisdom
 
