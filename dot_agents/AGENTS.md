@@ -75,6 +75,7 @@ Email: pedro@vezza.com.br
     ```
 
 - Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / `/loop` to filter out the noise.
+- Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence. For non-Claude Code harnesses, append `Co-Authored-By: <model> <noreply@model-author>` e.g. `Co-Authored-By: GPT 5.6 Luna (high) <noreply@openai.com>`
 
 ## Engineering wisdom
 
