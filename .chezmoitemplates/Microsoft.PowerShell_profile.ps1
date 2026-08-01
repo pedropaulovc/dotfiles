@@ -11,7 +11,7 @@ function Invoke-YoloClaude {
 
     # $env:CLAUDE_CODE_DISABLE_AUTO_UPDATE='1'
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control @Remaining
 }
 
 function Invoke-YoloClaudeFable {
@@ -20,7 +20,7 @@ function Invoke-YoloClaudeFable {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model fable --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model fable --effort high @Remaining
 }
 
 function Invoke-YoloClaudeOpus {
@@ -29,7 +29,7 @@ function Invoke-YoloClaudeOpus {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model opus --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model opus --effort high @Remaining
 }
 
 function Invoke-YoloClaudeSonnet {
@@ -38,7 +38,7 @@ function Invoke-YoloClaudeSonnet {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model sonnet --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model sonnet --effort high @Remaining
 }
 
 function Invoke-YoloCodex {
