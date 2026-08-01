@@ -11,7 +11,34 @@ function Invoke-YoloClaude {
 
     # $env:CLAUDE_CODE_DISABLE_AUTO_UPDATE='1'
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control @Remaining
+}
+
+function Invoke-YoloClaudeFable {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model fable --effort high @Remaining
+}
+
+function Invoke-YoloClaudeOpus {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model opus --effort high @Remaining
+}
+
+function Invoke-YoloClaudeSonnet {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name amet --remote-control --model sonnet --effort high @Remaining
 }
 
 function Invoke-YoloCodex {
@@ -21,6 +48,32 @@ function Invoke-YoloCodex {
     )
 
 	& codex --dangerously-bypass-approvals-and-sandbox @Remaining
+}
+
+function Invoke-YoloCodexSol {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-sol -c 'model_reasoning_effort="high"' @Remaining
+}
+
+function Invoke-YoloCodexTerra {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-terra -c 'model_reasoning_effort="max"' @Remaining
+}
+
+function Invoke-YoloCodexLuna {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-luna -c 'model_reasoning_effort="max"' @Remaining
 }
 
 function Invoke-ShellGpt {
@@ -58,7 +111,13 @@ function Invoke-RmRf {
 }
 
 Set-Alias -Name yc -Value Invoke-YoloClaude
+Set-Alias -Name ycf -Value Invoke-YoloClaudeFable
+Set-Alias -Name yco -Value Invoke-YoloClaudeOpus
+Set-Alias -Name ycs -Value Invoke-YoloClaudeSonnet
 Set-Alias -Name yx -Value Invoke-YoloCodex
+Set-Alias -Name yxs -Value Invoke-YoloCodexSol
+Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
+Set-Alias -Name yxl -Value Invoke-YoloCodexLuna
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'
