@@ -41,6 +41,11 @@ function Invoke-YoloClaudeSonnet {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model sonnet --effort high @Remaining
 }
 
+function Invoke-YoloClaudeContinue { Invoke-YoloClaude --continue @args }
+function Invoke-YoloClaudeFableContinue { Invoke-YoloClaudeFable --continue @args }
+function Invoke-YoloClaudeOpusContinue { Invoke-YoloClaudeOpus --continue @args }
+function Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --continue @args }
+
 function Invoke-YoloCodex {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -75,6 +80,20 @@ function Invoke-YoloCodexLuna {
     )
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-luna -c 'model_reasoning_effort="max"' @Remaining
 }
+
+function Invoke-YoloCodexContinue { Invoke-YoloCodex resume --last @args }
+function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
+function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
+function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
+
+function Invoke-YoloOmp { & omp --auto-approve @args }
+function Invoke-YoloOmpSol { Invoke-YoloOmp --model gpt-5.6-sol --thinking high @args }
+function Invoke-YoloOmpTerra { Invoke-YoloOmp --model gpt-5.6-terra --thinking max @args }
+function Invoke-YoloOmpLuna { Invoke-YoloOmp --model gpt-5.6-luna --thinking max @args }
+function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
+function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
+function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
+function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
 
 function Invoke-ShellGpt {
     param(
@@ -114,10 +133,26 @@ Set-Alias -Name yc -Value Invoke-YoloClaude
 Set-Alias -Name ycf -Value Invoke-YoloClaudeFable
 Set-Alias -Name yco -Value Invoke-YoloClaudeOpus
 Set-Alias -Name ycs -Value Invoke-YoloClaudeSonnet
+Set-Alias -Name ycc -Value Invoke-YoloClaudeContinue
+Set-Alias -Name ycfc -Value Invoke-YoloClaudeFableContinue
+Set-Alias -Name ycoc -Value Invoke-YoloClaudeOpusContinue
+Set-Alias -Name ycsc -Value Invoke-YoloClaudeSonnetContinue
 Set-Alias -Name yx -Value Invoke-YoloCodex
 Set-Alias -Name yxs -Value Invoke-YoloCodexSol
 Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
 Set-Alias -Name yxl -Value Invoke-YoloCodexLuna
+Set-Alias -Name yxc -Value Invoke-YoloCodexContinue
+Set-Alias -Name yxsc -Value Invoke-YoloCodexSolContinue
+Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
+Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
+Set-Alias -Name yp -Value Invoke-YoloOmp
+Set-Alias -Name yps -Value Invoke-YoloOmpSol
+Set-Alias -Name ypt -Value Invoke-YoloOmpTerra
+Set-Alias -Name ypl -Value Invoke-YoloOmpLuna
+Set-Alias -Name ypc -Value Invoke-YoloOmpContinue
+Set-Alias -Name ypsc -Value Invoke-YoloOmpSolContinue
+Set-Alias -Name yptc -Value Invoke-YoloOmpTerraContinue
+Set-Alias -Name yplc -Value Invoke-YoloOmpLunaContinue
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'

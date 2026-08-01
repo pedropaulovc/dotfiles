@@ -154,6 +154,10 @@ yc() {
 ycf() { yc --model fable --effort high "$@"; }
 yco() { yc --model opus --effort high "$@"; }
 ycs() { yc --model sonnet --effort high "$@"; }
+ycc() { yc --continue "$@"; }
+ycfc() { ycf --continue "$@"; }
+ycoc() { yco --continue "$@"; }
+ycsc() { ycs --continue "$@"; }
 
 # Launch claude inside a tmux session so it keeps running if the terminal dies.
 # Reattaches to the existing per-directory session if one is already running.
@@ -188,6 +192,18 @@ alias yx="codex --dangerously-bypass-approvals-and-sandbox"
 yxs() { yx --model gpt-5.6-sol -c 'model_reasoning_effort="high"' "$@"; }
 yxt() { yx --model gpt-5.6-terra -c 'model_reasoning_effort="max"' "$@"; }
 yxl() { yx --model gpt-5.6-luna -c 'model_reasoning_effort="max"' "$@"; }
+yxc() { yx resume --last "$@"; }
+yxsc() { yxs resume --last "$@"; }
+yxtc() { yxt resume --last "$@"; }
+yxlc() { yxl resume --last "$@"; }
+yp() { omp --auto-approve "$@"; }
+yps() { yp --model gpt-5.6-sol --thinking high "$@"; }
+ypt() { yp --model gpt-5.6-terra --thinking max "$@"; }
+ypl() { yp --model gpt-5.6-luna --thinking max "$@"; }
+ypc() { yp --continue "$@"; }
+ypsc() { yps --continue "$@"; }
+yptc() { ypt --continue "$@"; }
+yplc() { ypl --continue "$@"; }
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
