@@ -86,6 +86,15 @@ function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
 function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
 
+function Invoke-YoloOmp { & omp --auto-approve @args }
+function Invoke-YoloOmpSol { Invoke-YoloOmp --model gpt-5.6-sol --thinking high @args }
+function Invoke-YoloOmpTerra { Invoke-YoloOmp --model gpt-5.6-terra --thinking max @args }
+function Invoke-YoloOmpLuna { Invoke-YoloOmp --model gpt-5.6-luna --thinking max @args }
+function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
+function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
+function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
+function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
+
 function Invoke-ShellGpt {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -136,6 +145,14 @@ Set-Alias -Name yxc -Value Invoke-YoloCodexContinue
 Set-Alias -Name yxsc -Value Invoke-YoloCodexSolContinue
 Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
 Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
+Set-Alias -Name yp -Value Invoke-YoloOmp
+Set-Alias -Name yps -Value Invoke-YoloOmpSol
+Set-Alias -Name ypt -Value Invoke-YoloOmpTerra
+Set-Alias -Name ypl -Value Invoke-YoloOmpLuna
+Set-Alias -Name ypc -Value Invoke-YoloOmpContinue
+Set-Alias -Name ypsc -Value Invoke-YoloOmpSolContinue
+Set-Alias -Name yptc -Value Invoke-YoloOmpTerraContinue
+Set-Alias -Name yplc -Value Invoke-YoloOmpLunaContinue
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'

@@ -196,6 +196,14 @@ yxc() { yx resume --last "$@"; }
 yxsc() { yxs resume --last "$@"; }
 yxtc() { yxt resume --last "$@"; }
 yxlc() { yxl resume --last "$@"; }
+yp() { omp --auto-approve "$@"; }
+yps() { yp --model gpt-5.6-sol --thinking high "$@"; }
+ypt() { yp --model gpt-5.6-terra --thinking max "$@"; }
+ypl() { yp --model gpt-5.6-luna --thinking max "$@"; }
+ypc() { yp --continue "$@"; }
+ypsc() { yps --continue "$@"; }
+yptc() { ypt --continue "$@"; }
+yplc() { ypl --continue "$@"; }
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
