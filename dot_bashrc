@@ -135,7 +135,7 @@ alias start="explorer.exe"
 # Loads systemPrompt from .claude/settings.json if present.
 yc() {
   # Base claude invocation with the flags we always want.
-  local args=(claude --verbose --dangerously-skip-permissions)
+  local args=(claude --verbose --dangerously-skip-permissions --name "${HOSTNAME}-wsl")
 
   # If the project has a systemPrompt in .claude/settings.json, pass it through.
   local sp
@@ -159,7 +159,7 @@ ycs() { yc --model sonnet --effort high "$@"; }
 # Reattaches to the existing per-directory session if one is already running.
 yct() {
   # Base claude invocation with the flags we always want.
-  local args=(claude --verbose --dangerously-skip-permissions --worktree)
+  local args=(claude --verbose --dangerously-skip-permissions --name "${HOSTNAME}-wsl" --worktree)
 
   # If the project has a systemPrompt in .claude/settings.json, pass it through.
   local sp
