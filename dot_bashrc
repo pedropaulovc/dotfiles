@@ -151,6 +151,10 @@ yc() {
   "${args[@]}"
 }
 
+ycf() { yc --model fable --effort high "$@"; }
+yco() { yc --model opus --effort high "$@"; }
+ycs() { yc --model sonnet --effort high "$@"; }
+
 # Launch claude inside a tmux session so it keeps running if the terminal dies.
 # Reattaches to the existing per-directory session if one is already running.
 yct() {

@@ -14,6 +14,33 @@ function Invoke-YoloClaude {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control @Remaining
 }
 
+function Invoke-YoloClaudeFable {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model fable --effort high @Remaining
+}
+
+function Invoke-YoloClaudeOpus {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model opus --effort high @Remaining
+}
+
+function Invoke-YoloClaudeSonnet {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name Local --remote-control --model sonnet --effort high @Remaining
+}
+
 function Invoke-YoloCodex {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -84,6 +111,9 @@ function Invoke-RmRf {
 }
 
 Set-Alias -Name yc -Value Invoke-YoloClaude
+Set-Alias -Name ycf -Value Invoke-YoloClaudeFable
+Set-Alias -Name yco -Value Invoke-YoloClaudeOpus
+Set-Alias -Name ycs -Value Invoke-YoloClaudeSonnet
 Set-Alias -Name yx -Value Invoke-YoloCodex
 Set-Alias -Name yxs -Value Invoke-YoloCodexSol
 Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
