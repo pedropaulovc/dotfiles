@@ -8,6 +8,10 @@ case $- in
       *) return;;
 esac
 
+# Use UTF-8 for Python defaults and standard I/O.
+export PYTHONUTF8=1
+export PYTHONIOENCODING=utf-8
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
