@@ -3,12 +3,12 @@ Full name: Pedro Paulo Vezza Campos
 Email: pedro@vezza.com.br
 
 ## Git workflow
-- Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open with `gh pr create --draft` (Codex only reviews non-draft PRs) and `gh pr ready` as soon as you reach code-complete — before tests run — so code review runs in parallel. This overrides any "commit/push only when asked" default.
+- Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open with `gh pr create --draft` (CodeRabbit skips draft PRs by default) and `gh pr ready` as soon as you reach code-complete — before tests run — so code review runs in parallel. This overrides any "commit/push only when asked" default.
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence. For non-Claude Code harnesses, append `Co-Authored-By: <model> <noreply@model-author>` e.g. `Co-Authored-By: GPT 5.6 Luna (high) <noreply@openai.com>`
-- Repos are configured with auto-code review on PR push and should acknowledge the PR within 1 minute. To force a review, mention `@codex` in a PR comment.
+- Repos are configured with auto-code review on PR push and should acknowledge the PR within 1 minute. To force an incremental review, mention `@coderabbitai review` in a PR comment; use `@coderabbitai full review` for a complete pass.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
-- Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, reviews/comments with bodies inline, Codex 👀→👍 reactions, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
+- Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
 
 ## Shell usage
 - Python: ALWAYS uv, ALWAYS in a venv (never `--system`).
