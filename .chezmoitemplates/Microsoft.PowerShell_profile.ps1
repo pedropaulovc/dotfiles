@@ -23,6 +23,32 @@ function Invoke-YoloCodex {
 	& codex --dangerously-bypass-approvals-and-sandbox @Remaining
 }
 
+function Invoke-YoloCodexSol {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-sol -c 'model_reasoning_effort="high"' @Remaining
+}
+
+function Invoke-YoloCodexTerra {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-terra -c 'model_reasoning_effort="max"' @Remaining
+}
+
+function Invoke-YoloCodexLuna {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-luna -c 'model_reasoning_effort="max"' @Remaining
+}
+
 function Invoke-ShellGpt {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -59,6 +85,9 @@ function Invoke-RmRf {
 
 Set-Alias -Name yc -Value Invoke-YoloClaude
 Set-Alias -Name yx -Value Invoke-YoloCodex
+Set-Alias -Name yxs -Value Invoke-YoloCodexSol
+Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
+Set-Alias -Name yxl -Value Invoke-YoloCodexLuna
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'

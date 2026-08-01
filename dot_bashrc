@@ -181,6 +181,9 @@ yct() {
 }
 alias yg="gemini --yolo"
 alias yx="codex --dangerously-bypass-approvals-and-sandbox"
+yxs() { yx --model gpt-5.6-sol -c 'model_reasoning_effort="high"' "$@"; }
+yxt() { yx --model gpt-5.6-terra -c 'model_reasoning_effort="max"' "$@"; }
+yxl() { yx --model gpt-5.6-luna -c 'model_reasoning_effort="max"' "$@"; }
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
