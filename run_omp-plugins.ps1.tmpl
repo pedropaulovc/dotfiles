@@ -17,7 +17,8 @@ if ($LASTEXITCODE -ne 0) {
 $expectedMarketplacePattern = '(?m)^[ \t]*' +
     [regex]::Escape($marketplaceName) +
     '[ \t]+' +
-    [regex]::Escape($marketplaceUrl) +
+    [regex]::Escape($marketplaceUrl.TrimEnd('/')) +
+    '/?' +
     '(?:[ \t]+|\r?$)'
 if (-not ($marketplaces -cmatch $expectedMarketplacePattern)) {
     if ($marketplaces -cmatch ("(?m)^[ \t]*" + [regex]::Escape($marketplaceName) + "[ \t]")) {
