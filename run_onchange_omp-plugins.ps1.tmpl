@@ -25,11 +25,6 @@ if (-not $marketplaces.Contains($expectedMarketplace)) {
     }
 }
 
-$installedJson = & omp plugin list --json
-if ($LASTEXITCODE -ne 0) {
-    throw "omp could not list installed plugins."
-}
-$installed = ($installedJson -join [Environment]::NewLine) | ConvertFrom-Json
 $plugins = @(
 {{- range $plugin := $manifest.plugins }}
     {{ $plugin | toJson }}
@@ -37,16 +32,9 @@ $plugins = @(
 )
 
 foreach ($plugin in $plugins) {
-    $isInstalled = @($installed.marketplace | Where-Object { $_.id -eq $plugin }).Count -gt 0
-    if (-not $isInstalled) {
-        & omp plugin install $plugin --scope user
-        if ($LASTEXITCODE -ne 0) {
-            throw "omp could not install plugin $plugin."
-        }
-    }
-    & omp plugin upgrade $plugin
+    & omp plugin install $plugin --scope user --force
     if ($LASTEXITCODE -ne 0) {
-        throw "omp could not upgrade plugin $plugin."
+        throw "omp could not install or upgrade plugin $plugin."
     }
 }
 {{- end }}
