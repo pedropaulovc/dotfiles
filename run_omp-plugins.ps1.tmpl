@@ -14,9 +14,13 @@ if ($LASTEXITCODE -ne 0) {
     throw "omp could not list configured marketplaces."
 }
 
-$expectedMarketplace = "$marketplaceName  $marketplaceUrl"
-if (-not $marketplaces.Contains($expectedMarketplace)) {
-    if ($marketplaces -match "(?m)^\s*$([regex]::Escape($marketplaceName))\s") {
+$expectedMarketplacePattern = '(?m)^[ \t]*' +
+    [regex]::Escape($marketplaceName) +
+    '[ \t]+' +
+    [regex]::Escape($marketplaceUrl) +
+    '(?:[ \t]+|\r?$)'
+if (-not ($marketplaces -cmatch $expectedMarketplacePattern)) {
+    if ($marketplaces -cmatch ("(?m)^[ \t]*" + [regex]::Escape($marketplaceName) + "[ \t]")) {
         throw "Marketplace $marketplaceName is registered with a different source."
     }
     & omp plugin marketplace add $marketplaceSource
