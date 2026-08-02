@@ -1,0 +1,128 @@
+providers: 
+  fetch: auto
+  webSearchOrder: 
+    - firecrawl
+    - perplexity
+    - gemini
+    - anthropic
+    - codex
+    - xai
+    - zai
+    - exa
+    - tinyfish
+    - jina
+    - kagi
+    - tavily
+    - brave
+    - kimi
+    - parallel
+    - synthetic
+    - searxng
+    - startpage
+    - duckduckgo
+    - ecosia
+    - google
+    - mojeek
+    - public
+modelRoles: 
+  default: openai-codex/gpt-5.6-luna:max
+symbolPreset: unicode
+theme: 
+  dark: titanium
+setupVersion: 1
+statusLine: 
+  preset: default
+  sessionAccent: true
+display: 
+  showTokenUsage: false
+  cacheMissMarker: true
+proseOnlyThinking: false
+advisor: 
+  enabled: false
+steeringMode: all
+followUpMode: one-at-a-time
+interruptMode: immediate
+doubleEscapeAction: tree
+autocompleteMaxVisible: 7
+tools: 
+  approvalMode: yolo
+marketplace: 
+  autoUpdate: auto
+memory: 
+  backend: local
+autolearn: 
+  enabled: true
+lsp: 
+  diagnosticsOnWrite: false
+  diagnosticsOnEdit: false
+  formatOnWrite: true
+debug: 
+  enabled: false
+grep: 
+  contextBefore: 1
+task: 
+  eager: preferred
+  isolation: 
+    mode: auto
+    merge: branch
+    commits: ai
+worktree: 
+  base: ~/src/.omp/wt
+commands: 
+  enableClaudeUser: false
+  enableClaudeProject: false
+  enableOpencodeUser: false
+  enableOpencodeProject: false
+codexResets: 
+  autoRedeem: unset
+fetch: 
+  enabled: true
+completion: 
+  notify: "off"
+startup: 
+  quiet: true
+  showSplash: false
+dev: 
+  autoqaConsent: granted
+disabledProviders:
+  - claude
+  - claude-plugins
+  - codex
+  - opencode
+  - github
+# skills:
+#   ignoredSkills:
+#     - benchmark
+#     - benchmark-models
+#     - browse
+#     - careful
+#     - connect-chrome
+#     - context-restore
+#     - context-save
+#     - design-consultation
+#     - design-html
+#     - design-shotgun
+#     - document-generate
+#     - document-release
+#     - freeze
+#     - gstack
+#     - gstack-upgrade
+#     - guard
+#     - health
+#     - ios-clean
+#     - ios-fix
+#     - ios-qa
+#     - ios-sync
+#     - learn
+#     - make-pdf
+#     - open-gstack-browser
+#     - pair-agent
+#     - power-search
+#     - scrape
+#     - setup-browser-cookies
+#     - setup-gbrain
+#     - ship
+#     - skill-creator
+#     - skillify
+#     - sync-gbrain
+#     - unfreeze
