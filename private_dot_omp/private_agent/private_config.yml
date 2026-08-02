@@ -86,7 +86,6 @@ dev:
   autoqaConsent: granted
 disabledProviders:
   - claude
-  - claude-plugins
   - codex
   - opencode
   - github
