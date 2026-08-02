@@ -5,6 +5,7 @@ marketplace:
   source: pedropaulovc/agent-plugins
 plugins:
   - mediocrity-detector@agent-plugins
+  - omp-persist-system-prompt@agent-plugins
   - playwright-cli-headed@agent-plugins
   - unrelated-issue-detector@agent-plugins
   - watch-pr@agent-plugins
