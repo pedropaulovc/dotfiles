@@ -196,14 +196,14 @@ yxc() { yx resume --last "$@"; }
 yxsc() { yxs resume --last "$@"; }
 yxtc() { yxt resume --last "$@"; }
 yxlc() { yxl resume --last "$@"; }
-yp() { omp --auto-approve "$@"; }
-yps() { yp --model gpt-5.6-sol --thinking high "$@"; }
-ypt() { yp --model gpt-5.6-terra --thinking max "$@"; }
-ypl() { yp --model gpt-5.6-luna --thinking max "$@"; }
-ypc() { yp --continue "$@"; }
-ypsc() { yps --continue "$@"; }
-yptc() { ypt --continue "$@"; }
-yplc() { ypl --continue "$@"; }
+yo() { omp --auto-approve "$@"; }
+yos() { yo --provider openai-codex --model gpt-5.6-sol --thinking high "$@"; }
+yot() { yo --provider openai-codex --model gpt-5.6-terra --thinking max "$@"; }
+yol() { yo --provider openai-codex --model gpt-5.6-luna --thinking max "$@"; }
+yoc() { yo --continue "$@"; }
+yosc() { yos --continue "$@"; }
+yotc() { yot --continue "$@"; }
+yolc() { yol --continue "$@"; }
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
