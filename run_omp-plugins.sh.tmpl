@@ -1,0 +1,39 @@
+{{- $manifest := includeTemplate "omp-plugins.yml" . | fromYaml -}}
+{{- if ne .platform "windows" -}}
+#!/bin/sh
+set -eu
+
+if ! command -v omp >/dev/null 2>&1; then
+  printf '%s\n' 'omp is required to synchronize the plugin manifest.' >&2
+  exit 1
+fi
+
+marketplace_name={{ $manifest.marketplace.name | toJson }}
+marketplace_source={{ $manifest.marketplace.source | toJson }}
+marketplace_url="https://github.com/${marketplace_source}"
+marketplaces="$(omp plugin marketplace list)"
+
+if ! printf '%s\n' "$marketplaces" | awk -v name="$marketplace_name" -v url="$marketplace_url" '
+  $1 == name && $2 == url { found = 1 }
+  END {
+    if (found) exit 0
+    exit 1
+  }
+'; then
+  if printf '%s\n' "$marketplaces" | awk -v name="$marketplace_name" '
+    $1 == name { found = 1 }
+    END {
+      if (found) exit 0
+      exit 1
+    }
+  '; then
+    printf 'Marketplace %s is registered with a different source.\n' "$marketplace_name" >&2
+    exit 1
+  fi
+  omp plugin marketplace add "$marketplace_source"
+fi
+
+{{- range $plugin := $manifest.plugins }}
+omp plugin install {{ $plugin | toJson }} --scope user --force
+{{- end }}
+{{- end }}

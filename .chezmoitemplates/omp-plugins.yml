@@ -1,0 +1,11 @@
+# Declarative OMP plugin set. Versions are intentionally omitted so the
+# sync scripts install the latest versions published by the marketplace.
+marketplace:
+  name: agent-plugins
+  source: pedropaulovc/agent-plugins
+plugins:
+  - mediocrity-detector@agent-plugins
+  - playwright-cli-headed@agent-plugins
+  - unrelated-issue-detector@agent-plugins
+  - watch-pr@agent-plugins
+  - worktree-reset@agent-plugins
