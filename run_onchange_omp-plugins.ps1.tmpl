@@ -1,0 +1,52 @@
+{{- $manifest := includeTemplate "omp-plugins.yml" . | fromYaml -}}
+{{- if eq .platform "windows" }}
+$ErrorActionPreference = "Stop"
+
+if (-not (Get-Command omp -ErrorAction SilentlyContinue)) {
+    throw "omp is required to synchronize the plugin manifest."
+}
+
+$marketplaceName = {{ $manifest.marketplace.name | toJson }}
+$marketplaceSource = {{ $manifest.marketplace.source | toJson }}
+$marketplaceUrl = "https://github.com/$marketplaceSource"
+$marketplaces = (& omp plugin marketplace list | Out-String)
+if ($LASTEXITCODE -ne 0) {
+    throw "omp could not list configured marketplaces."
+}
+
+$expectedMarketplace = "$marketplaceName  $marketplaceUrl"
+if (-not $marketplaces.Contains($expectedMarketplace)) {
+    if ($marketplaces -match "(?m)^\s*$([regex]::Escape($marketplaceName))\s") {
+        throw "Marketplace $marketplaceName is registered with a different source."
+    }
+    & omp plugin marketplace add $marketplaceSource
+    if ($LASTEXITCODE -ne 0) {
+        throw "omp could not add marketplace $marketplaceSource."
+    }
+}
+
+$installedJson = & omp plugin list --json
+if ($LASTEXITCODE -ne 0) {
+    throw "omp could not list installed plugins."
+}
+$installed = ($installedJson -join [Environment]::NewLine) | ConvertFrom-Json
+$plugins = @(
+{{- range $plugin := $manifest.plugins }}
+    {{ $plugin | toJson }}
+{{- end }}
+)
+
+foreach ($plugin in $plugins) {
+    $isInstalled = @($installed.marketplace | Where-Object { $_.id -eq $plugin }).Count -gt 0
+    if (-not $isInstalled) {
+        & omp plugin install $plugin --scope user
+        if ($LASTEXITCODE -ne 0) {
+            throw "omp could not install plugin $plugin."
+        }
+    }
+    & omp plugin upgrade $plugin
+    if ($LASTEXITCODE -ne 0) {
+        throw "omp could not upgrade plugin $plugin."
+    }
+}
+{{- end }}
