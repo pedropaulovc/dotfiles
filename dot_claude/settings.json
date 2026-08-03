@@ -66,7 +66,6 @@
     "playwright-cli-headed@agent-plugins": true,
     "unrelated-issue-detector@agent-plugins": true,
     "worktree-reset@agent-plugins": true,
-    "memory-to-repo@agent-plugins": true,
     "watch-pr@agent-plugins": true
   },
   "extraKnownMarketplaces": {
