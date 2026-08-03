@@ -87,10 +87,14 @@ function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @ar
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
 
 function Invoke-YoloOmp { & omp --auto-approve @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
+function Invoke-YoloOmpOpus { Invoke-YoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
 function Invoke-YoloOmpTerra { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-terra --thinking max @args }
 function Invoke-YoloOmpLuna { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-luna --thinking max @args }
 function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
+function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable --continue @args }
+function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus --continue @args }
 function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
 function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
@@ -146,10 +150,14 @@ Set-Alias -Name yxsc -Value Invoke-YoloCodexSolContinue
 Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
 Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
 Set-Alias -Name yo -Value Invoke-YoloOmp
+Set-Alias -Name yof -Value Invoke-YoloOmpFable
+Set-Alias -Name yoo -Value Invoke-YoloOmpOpus
 Set-Alias -Name yos -Value Invoke-YoloOmpSol
 Set-Alias -Name yot -Value Invoke-YoloOmpTerra
 Set-Alias -Name yol -Value Invoke-YoloOmpLuna
 Set-Alias -Name yoc -Value Invoke-YoloOmpContinue
+Set-Alias -Name yofc -Value Invoke-YoloOmpFableContinue
+Set-Alias -Name yooc -Value Invoke-YoloOmpOpusContinue
 Set-Alias -Name yosc -Value Invoke-YoloOmpSolContinue
 Set-Alias -Name yotc -Value Invoke-YoloOmpTerraContinue
 Set-Alias -Name yolc -Value Invoke-YoloOmpLunaContinue
