@@ -86,9 +86,12 @@ function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
 function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
 
-function omp { & 'C:\src\dogfood\omp-windows-x64.exe' @args }
+# Use the host-dependent OMP binary for interactive commands.
+$ompBinary = 'C:\src\dogfood\omp-windows-x64.exe'
+function omp { & $ompBinary @args }
 
-function Invoke-YoloOmp { & omp --auto-approve @args }
+function Invoke-YoloOmp { & $ompBinary --auto-approve @args }
+
 function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
 function Invoke-YoloOmpOpus { Invoke-YoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
