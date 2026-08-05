@@ -86,6 +86,8 @@ function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
 function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
 
+function omp { & 'C:\src\dogfood\omp-windows-x64.exe' @args }
+
 function Invoke-YoloOmp { & omp --auto-approve @args }
 function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
 function Invoke-YoloOmpOpus { Invoke-YoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
