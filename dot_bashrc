@@ -196,14 +196,7 @@ yxc() { yx resume --last "$@"; }
 yxsc() { yxs resume --last "$@"; }
 yxtc() { yxt resume --last "$@"; }
 yxlc() { yxl resume --last "$@"; }
-# Use the host-dependent OMP binary for interactive commands.
-OMP_BINARY="/home/pedro/src/oh-my-pi/.wt/host-dependent-tests/packages/coding-agent/binaries/omp-linux-x64"
-omp() {
-  "$OMP_BINARY" "$@"
-}
-
-yo() { "$OMP_BINARY" --auto-approve "$@"; }
-
+yo() { omp --auto-approve "$@"; }
 yof() { yo --provider anthropic --model claude-fable-5 --thinking high "$@"; }
 yoo() { yo --provider anthropic --model claude-opus-5 --thinking high "$@"; }
 yos() { yo --provider openai-codex --model gpt-5.6-sol --thinking high "$@"; }
@@ -215,6 +208,22 @@ yooc() { yoo --continue "$@"; }
 yosc() { yos --continue "$@"; }
 yotc() { yot --continue "$@"; }
 yolc() { yol --continue "$@"; }
+
+# Use the pinned host-dependent OMP binary without changing omp or yo.
+PYO_BINARY="/home/pedro/src/oh-my-pi/.wt/host-dependent-tests/packages/coding-agent/binaries/omp-linux-x64"
+pyo() { "$PYO_BINARY" --auto-approve "$@"; }
+pyof() { pyo --provider anthropic --model claude-fable-5 --thinking high "$@"; }
+pyoo() { pyo --provider anthropic --model claude-opus-5 --thinking high "$@"; }
+pyos() { pyo --provider openai-codex --model gpt-5.6-sol --thinking high "$@"; }
+pyot() { pyo --provider openai-codex --model gpt-5.6-terra --thinking max "$@"; }
+pyol() { pyo --provider openai-codex --model gpt-5.6-luna --thinking max "$@"; }
+pyoc() { pyo --continue "$@"; }
+pyofc() { pyof --continue "$@"; }
+pyooc() { pyoo --continue "$@"; }
+pyosc() { pyos --continue "$@"; }
+pyotc() { pyot --continue "$@"; }
+pyolc() { pyol --continue "$@"; }
+
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
