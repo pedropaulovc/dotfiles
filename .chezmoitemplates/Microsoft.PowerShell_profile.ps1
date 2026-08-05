@@ -86,12 +86,7 @@ function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
 function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
 
-# Use the host-dependent OMP binary for interactive commands.
-$ompBinary = 'C:\src\dogfood\omp-windows-x64.exe'
-function omp { & $ompBinary @args }
-
-function Invoke-YoloOmp { & $ompBinary --auto-approve @args }
-
+function Invoke-YoloOmp { & omp --auto-approve @args }
 function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
 function Invoke-YoloOmpOpus { Invoke-YoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
@@ -103,6 +98,21 @@ function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus --continue @args }
 function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
 function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
+
+# Use the pinned host-dependent OMP binary without changing omp or yo.
+$pyoBinary = 'C:\src\dogfood\omp-windows-x64.exe'
+function Invoke-PinnedYoloOmp { & $pyoBinary --auto-approve @args }
+function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
+function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
+function Invoke-PinnedYoloOmpSol { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
+function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-terra --thinking max @args }
+function Invoke-PinnedYoloOmpLuna { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-luna --thinking max @args }
+function Invoke-PinnedYoloOmpContinue { Invoke-PinnedYoloOmp --continue @args }
+function Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
+function Invoke-PinnedYoloOmpOpusContinue { Invoke-PinnedYoloOmpOpus --continue @args }
+function Invoke-PinnedYoloOmpSolContinue { Invoke-PinnedYoloOmpSol --continue @args }
+function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
+function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue @args }
 
 function Invoke-ShellGpt {
     param(
@@ -166,6 +176,18 @@ Set-Alias -Name yooc -Value Invoke-YoloOmpOpusContinue
 Set-Alias -Name yosc -Value Invoke-YoloOmpSolContinue
 Set-Alias -Name yotc -Value Invoke-YoloOmpTerraContinue
 Set-Alias -Name yolc -Value Invoke-YoloOmpLunaContinue
+Set-Alias -Name pyo -Value Invoke-PinnedYoloOmp
+Set-Alias -Name pyof -Value Invoke-PinnedYoloOmpFable
+Set-Alias -Name pyoo -Value Invoke-PinnedYoloOmpOpus
+Set-Alias -Name pyos -Value Invoke-PinnedYoloOmpSol
+Set-Alias -Name pyot -Value Invoke-PinnedYoloOmpTerra
+Set-Alias -Name pyol -Value Invoke-PinnedYoloOmpLuna
+Set-Alias -Name pyoc -Value Invoke-PinnedYoloOmpContinue
+Set-Alias -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
+Set-Alias -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
+Set-Alias -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
+Set-Alias -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
+Set-Alias -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'
