@@ -99,7 +99,7 @@ function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
 function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
 
-# Use the pinned host-dependent OMP binary without changing omp or yo.
+# Use the reviewed async-progress fork binary without changing production omp or yo.
 $pyoBinary = 'C:\src\dogfood\omp-windows-x64.exe'
 function Invoke-PinnedYoloOmp { & $pyoBinary --auto-approve @args }
 function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
