@@ -41,7 +41,7 @@ advisor:
   enabled: false
 steeringMode: all
 followUpMode: one-at-a-time
-interruptMode: immediate
+interruptMode: wait
 doubleEscapeAction: tree
 autocompleteMaxVisible: 7
 tools: 
