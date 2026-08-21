@@ -103,9 +103,9 @@ function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
 $pyoBinary = 'C:\src\dogfood\omp-windows-x64.exe'
 function Invoke-PinnedYoloOmp {
 	$tempBinary = Join-Path ([System.IO.Path]::GetTempPath()) "omp-pyo-$([guid]::NewGuid()).exe"
-	Copy-Item -LiteralPath $pyoBinary -Destination $tempBinary
 
 	try {
+		Copy-Item -LiteralPath $pyoBinary -Destination $tempBinary -ErrorAction Stop
 		& $tempBinary --auto-approve @args
 	}
 	finally {
