@@ -89,6 +89,8 @@ disabledProviders:
   - codex
   - opencode
   - github
+composer:
+  shape: box
 # skills:
 #   ignoredSkills:
 #     - benchmark
