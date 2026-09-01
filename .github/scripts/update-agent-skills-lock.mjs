@@ -122,8 +122,28 @@ function cloneAtCommit(sourceUrl, commit, repositories, temporaryRoot) {
 }
 
 function getSkillTreeHash(repositoryDirectory, commit, skillPath) {
-  runGit(["cat-file", "-e", `${commit}:${skillPath}`], repositoryDirectory);
   const skillFolder = getSkillFolder(skillPath);
+  const skillRevisionPath = `${commit}:${skillPath}`;
+  const skillType = runGit(
+    ["cat-file", "-t", skillRevisionPath],
+    repositoryDirectory,
+  );
+  if (skillType !== "blob") {
+    throw new Error(
+      `Skill path ${skillPath} must resolve to a blob, got ${skillType}.`,
+    );
+  }
+  if (skillFolder) {
+    const folderType = runGit(
+      ["cat-file", "-t", `${commit}:${skillFolder}`],
+      repositoryDirectory,
+    );
+    if (folderType !== "tree") {
+      throw new Error(
+        `Skill folder ${skillFolder} must resolve to a tree, got ${folderType}.`,
+      );
+    }
+  }
   const revisionPath = skillFolder
     ? `${commit}:${skillFolder}`
     : `${commit}^{tree}`;

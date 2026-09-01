@@ -2,7 +2,7 @@ name: Update managed agent skills
 
 on:
   schedule:
-    - cron: "17 3 */3 * *"
+    - cron: "17 3 * * *"
   workflow_dispatch:
 
 permissions:
@@ -21,13 +21,40 @@ jobs:
         with:
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 1
+          persist-credentials: false
+
+      - name: Check three-day cadence
+        id: cadence
+        if: github.event_name == 'schedule'
+        env:
+          SCHEDULE_ANCHOR: "2026-09-04"
+        run: |
+          today=$(date -u +%s)
+          anchor=$(date -u -d "$SCHEDULE_ANCHOR" +%s)
+          if [ "$today" -lt "$anchor" ]; then
+            echo "due=false" >> "$GITHUB_OUTPUT"
+            echo "Three-day cadence starts on ${SCHEDULE_ANCHOR}."
+            exit 0
+          fi
+
+          days_since_anchor=$(( (today - anchor) / 86400 ))
+          if [ $((days_since_anchor % 3)) -ne 0 ]; then
+            echo "due=false" >> "$GITHUB_OUTPUT"
+            echo "No managed skill refresh due today."
+            exit 0
+          fi
+
+          echo "due=true" >> "$GITHUB_OUTPUT"
 
       - name: Refresh immutable skill revisions
+        if: github.event_name == 'workflow_dispatch' || steps.cadence.outputs.due == 'true'
         run: node .github/scripts/update-agent-skills-lock.mjs
 
       - name: Commit lock updates
+        if: github.event_name == 'workflow_dispatch' || steps.cadence.outputs.due == 'true'
         env:
           DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           if git diff --quiet -- dot_agents/dot_skill-lock.json; then
             echo "All managed agent skills are current."
@@ -38,4 +65,14 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add dot_agents/dot_skill-lock.json
           git commit -m "chore: update managed agent skill versions"
-          git push origin "HEAD:${DEFAULT_BRANCH}"
+
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0=http.extraheader
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GITHUB_TOKEN}"
+          git fetch --no-tags origin "$DEFAULT_BRANCH"
+          git rebase "origin/${DEFAULT_BRANCH}"
+          if ! git push origin "HEAD:${DEFAULT_BRANCH}"; then
+            git fetch --no-tags origin "$DEFAULT_BRANCH"
+            git rebase "origin/${DEFAULT_BRANCH}"
+            git push origin "HEAD:${DEFAULT_BRANCH}"
+          fi

@@ -95,6 +95,18 @@ node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
 cmp -s "$lock_file" "$tmp_dir/current-lock.json"
 
 rm "$source_dir/SKILL.md"
+mkdir "$source_dir/SKILL.md"
+printf '%s\n' 'directory, not a skill file' >"$source_dir/SKILL.md/README"
+git -C "$source_dir" add --all
+git -C "$source_dir" commit -qm 'replace root skill file with directory'
+cp "$lock_file" "$tmp_dir/tree-lock.json"
+if node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" --lock-file "$lock_file"; then
+  printf '%s\n' 'Updater unexpectedly accepted a skill directory.' >&2
+  exit 1
+fi
+cmp -s "$lock_file" "$tmp_dir/tree-lock.json"
+
+rm -rf "$source_dir/SKILL.md"
 git -C "$source_dir" add --all
 git -C "$source_dir" commit -qm 'remove root skill source'
 cp "$lock_file" "$tmp_dir/failed-lock.json"
