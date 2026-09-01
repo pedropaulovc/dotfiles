@@ -123,6 +123,107 @@ function Invoke-PinnedYoloOmpOpusContinue { Invoke-PinnedYoloOmpOpus --continue 
 function Invoke-PinnedYoloOmpSolContinue { Invoke-PinnedYoloOmpSol --continue @args }
 function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
 function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue @args }
+# Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
+# Temporary projects are removed after seven days without any file or
+# directory modification. Continue shortcuts (the *c variants) are
+# intentionally not wrapped.
+function Remove-StaleTemporaryProjects {
+    param(
+        [string] $SourcePath
+    )
+
+    if (-not (Test-Path -LiteralPath $SourcePath -PathType Container)) {
+        return
+    }
+
+    $cutoff = [DateTime]::UtcNow.AddDays(-7)
+    $projects = Get-ChildItem -LiteralPath $SourcePath -Directory -Force -ErrorAction SilentlyContinue
+    foreach ($project in $projects) {
+        if ($project.Name -notlike 'tmp-*') {
+            continue
+        }
+
+        try {
+            $latest = $project.LastWriteTimeUtc
+            $entries = @(Get-ChildItem -LiteralPath $project.FullName -Force -Recurse -ErrorAction Stop)
+            foreach ($entry in $entries) {
+                if ($entry.LastWriteTimeUtc -gt $latest) {
+                    $latest = $entry.LastWriteTimeUtc
+                }
+            }
+        }
+        catch {
+            Write-Warning "Unable to inspect temporary project: $($project.FullName)"
+            continue
+        }
+
+        if ($latest -ge $cutoff) {
+            continue
+        }
+
+        Write-Information "Removing stale temporary project: $($project.FullName)"
+        Remove-Item -LiteralPath $project.FullName -Recurse -Force -ErrorAction SilentlyContinue
+    }
+}
+
+function Invoke-TemporaryProject {
+    param(
+        [Parameter(Mandatory = $true, Position = 0)]
+        [string] $Command,
+        [Parameter(Mandatory = $true, Position = 1)]
+        [string] $Name,
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [object[]] $Remaining
+    )
+
+    if (
+        [string]::IsNullOrWhiteSpace($Name) -or
+        $Name -match '(^\.{1,2}$|^[-]|[\\/:*?"<>|]|\p{Cc}|[. ]$)'
+    ) {
+        throw "Invalid temporary project name: $Name"
+    }
+
+    $sourcePath = 'C:\src'
+    $projectPath = Join-Path -Path $sourcePath -ChildPath "tmp-$Name"
+    [System.IO.Directory]::CreateDirectory($projectPath) | Out-Null
+
+    try {
+        Push-Location -LiteralPath $projectPath
+        try {
+            & $Command @Remaining
+        }
+        finally {
+            Pop-Location
+        }
+    }
+    finally {
+        Remove-StaleTemporaryProjects -SourcePath $sourcePath
+    }
+}
+
+function Invoke-YoloClaudeTemporary { Invoke-TemporaryProject 'yc' @args }
+function Invoke-YoloClaudeFableTemporary { Invoke-TemporaryProject 'ycf' @args }
+function Invoke-YoloClaudeOpusTemporary { Invoke-TemporaryProject 'yco' @args }
+function Invoke-YoloClaudeSonnetTemporary { Invoke-TemporaryProject 'ycs' @args }
+
+function Invoke-YoloCodexTemporary { Invoke-TemporaryProject 'yx' @args }
+function Invoke-YoloCodexSolTemporary { Invoke-TemporaryProject 'yxs' @args }
+function Invoke-YoloCodexTerraTemporary { Invoke-TemporaryProject 'yxt' @args }
+function Invoke-YoloCodexLunaTemporary { Invoke-TemporaryProject 'yxl' @args }
+
+function Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
+function Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
+function Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
+function Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
+function Invoke-YoloOmpTerraTemporary { Invoke-TemporaryProject 'yot' @args }
+function Invoke-YoloOmpLunaTemporary { Invoke-TemporaryProject 'yol' @args }
+
+function Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
+function Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
+function Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @args }
+function Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args }
+function Invoke-PinnedYoloOmpTerraTemporary { Invoke-TemporaryProject 'pyot' @args }
+function Invoke-PinnedYoloOmpLunaTemporary { Invoke-TemporaryProject 'pyol' @args }
 
 function Invoke-ShellGpt {
     param(
@@ -198,6 +299,33 @@ Set-Alias -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
 Set-Alias -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
 Set-Alias -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
 Set-Alias -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
+
+# The hyphenated base names avoid collisions with existing shortcuts whose
+# t suffix already has another meaning (yot, yxt, and pyot).
+Set-Alias -Name yct -Value Invoke-YoloClaudeTemporary
+Set-Alias -Name yc-t -Value Invoke-YoloClaudeTemporary
+Set-Alias -Name ycft -Value Invoke-YoloClaudeFableTemporary
+Set-Alias -Name ycot -Value Invoke-YoloClaudeOpusTemporary
+Set-Alias -Name ycst -Value Invoke-YoloClaudeSonnetTemporary
+
+Set-Alias -Name yxtt -Value Invoke-YoloCodexTerraTemporary
+Set-Alias -Name yx-t -Value Invoke-YoloCodexTemporary
+Set-Alias -Name yxst -Value Invoke-YoloCodexSolTemporary
+Set-Alias -Name yxlt -Value Invoke-YoloCodexLunaTemporary
+
+Set-Alias -Name yo-t -Value Invoke-YoloOmpTemporary
+Set-Alias -Name yoft -Value Invoke-YoloOmpFableTemporary
+Set-Alias -Name yoot -Value Invoke-YoloOmpOpusTemporary
+Set-Alias -Name yost -Value Invoke-YoloOmpSolTemporary
+Set-Alias -Name yott -Value Invoke-YoloOmpTerraTemporary
+Set-Alias -Name yolt -Value Invoke-YoloOmpLunaTemporary
+
+Set-Alias -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
+Set-Alias -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
+Set-Alias -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
+Set-Alias -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary
+Set-Alias -Name pyott -Value Invoke-PinnedYoloOmpTerraTemporary
+Set-Alias -Name pyolt -Value Invoke-PinnedYoloOmpLunaTemporary
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'

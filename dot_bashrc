@@ -224,6 +224,90 @@ pyosc() { pyos --continue "$@"; }
 pyotc() { pyot --continue "$@"; }
 pyolc() { pyol --continue "$@"; }
 
+# Run an agent shortcut in a temporary project under ~/src/tmp-<name>.
+# Temporary projects are removed after seven days without any file or
+# directory modification. Continue shortcuts (the *c variants) are
+# intentionally not wrapped.
+__tmp_project_cleanup() {
+  local src_dir=$1
+  [ -d "$src_dir" ] || return 0
+
+  local project recent
+  while IFS= read -r -d '' project; do
+    recent=$(find -P "$project" -newermt '7 days ago' -print -quit 2>/dev/null)
+    [ -n "$recent" ] && continue
+
+    printf 'Removing stale temporary project: %s\n' "$project" >&2
+    rm -rf -- "$project" || \
+      printf 'Unable to remove stale temporary project: %s\n' "$project" >&2
+  done < <(
+    find -P "$src_dir" -mindepth 1 -maxdepth 1 -type d -name 'tmp-*' \
+      -print0 2>/dev/null
+  )
+}
+__tmp_project() {
+  local name=${1-}
+  local command=${2-}
+  local shortcut=${FUNCNAME[1]-$command}
+
+  if [ -z "$name" ]; then
+    printf 'Usage: %s <name> [args...]\n' "$shortcut" >&2
+    return 2
+  fi
+
+  case "$name" in
+    .|..|-*|*/*|*\\*)
+      printf 'Invalid temporary project name: %s\n' "$name" >&2
+      return 2
+      ;;
+  esac
+
+  shift 2
+  local src_dir="$HOME/src"
+  local project_dir="$src_dir/tmp-$name"
+  mkdir -p -- "$project_dir" || return
+
+  local status
+  if (
+    cd -- "$project_dir" || exit
+    "$command" "$@"
+  ); then
+    status=0
+  else
+    status=$?
+  fi
+
+  __tmp_project_cleanup "$src_dir"
+  return "$status"
+}
+
+# The hyphenated base names avoid collisions with existing shortcuts whose
+# t suffix already has another meaning (yct, yot, yxt, and pyot).
+yc-t() { __tmp_project "${1-}" yc "${@:2}"; }
+ycft() { __tmp_project "${1-}" ycf "${@:2}"; }
+ycot() { __tmp_project "${1-}" yco "${@:2}"; }
+ycst() { __tmp_project "${1-}" ycs "${@:2}"; }
+
+ygt() { __tmp_project "${1-}" gemini --yolo "${@:2}"; }
+yx-t() { __tmp_project "${1-}" yx "${@:2}"; }
+yxst() { __tmp_project "${1-}" yxs "${@:2}"; }
+yxtt() { __tmp_project "${1-}" yxt "${@:2}"; }
+yxlt() { __tmp_project "${1-}" yxl "${@:2}"; }
+
+yo-t() { __tmp_project "${1-}" yo "${@:2}"; }
+yoft() { __tmp_project "${1-}" yof "${@:2}"; }
+yoot() { __tmp_project "${1-}" yoo "${@:2}"; }
+yost() { __tmp_project "${1-}" yos "${@:2}"; }
+yott() { __tmp_project "${1-}" yot "${@:2}"; }
+yolt() { __tmp_project "${1-}" yol "${@:2}"; }
+
+pyo-t() { __tmp_project "${1-}" pyo "${@:2}"; }
+pyoft() { __tmp_project "${1-}" pyof "${@:2}"; }
+pyoot() { __tmp_project "${1-}" pyoo "${@:2}"; }
+pyost() { __tmp_project "${1-}" pyos "${@:2}"; }
+pyott() { __tmp_project "${1-}" pyot "${@:2}"; }
+pyolt() { __tmp_project "${1-}" pyol "${@:2}"; }
+
 alias findall="find . -type f -name"
 
 export NVM_DIR="$HOME/.nvm"
