@@ -10,7 +10,8 @@ New-Item -ItemType Directory -Path (Join-Path $sourcePath "tmp-fresh") -Force | 
 
 try {
     $profilePath = Join-Path $repoDir ".chezmoitemplates/Microsoft.PowerShell_profile.ps1"
-    $profileText = (Get-Content -LiteralPath $profilePath -Raw).Replace("'C:\src'", "'$sourcePath'")
+    $escapedSourcePath = $sourcePath.Replace("'", "''")
+    $profileText = (Get-Content -LiteralPath $profilePath -Raw).Replace("'C:\src'", "'$escapedSourcePath'")
     . ([scriptblock]::Create($profileText))
     @(
         "yct", "yc-t", "ycft", "ycot", "ycst",
@@ -23,9 +24,14 @@ try {
         }
     }
 
+    $pwshPath = (Get-Process -Id $PID).Path
+
     function Invoke-TestPyol {
         (Get-Location).Path | Set-Content -LiteralPath $callLog
         ($args -join " ") | Add-Content -LiteralPath $callLog
+        if ($args -contains "--fail") {
+            & $pwshPath -NoLogo -NoProfile -NonInteractive -Command "exit 17"
+        }
     }
     Set-Alias -Name pyol -Value Invoke-TestPyol -Force
 
@@ -51,6 +57,17 @@ try {
         throw "pyolt accepted a path traversal project name."
     }
 
+    $namedParameterFailed = $false
+    try {
+        pyolt -Command evil myproj
+    }
+    catch {
+        $namedParameterFailed = $true
+    }
+    if (-not $namedParameterFailed) {
+        throw "pyolt allowed a user argument to bind the internal command parameter."
+    }
+
     pyolt myproj --flag value
     $calls = @(Get-Content -LiteralPath $callLog)
     if ($calls.Count -ne 2 -or $calls[0] -ne (Join-Path $sourcePath "tmp-myproj") -or $calls[1] -ne "--flag value") {
@@ -65,6 +82,24 @@ try {
     if (-not (Test-Path -LiteralPath (Join-Path $sourcePath "tmp-fresh") -PathType Container)) {
         throw "pyolt removed a fresh temporary project."
     }
+    $failingStalePath = Join-Path $sourcePath "tmp-failing-stale"
+    New-Item -ItemType Directory -Path $failingStalePath -Force | Out-Null
+    [System.IO.Directory]::SetLastWriteTimeUtc($failingStalePath, [DateTime]::UtcNow.AddDays(-8))
+    $failureExitCode = $null
+    try {
+        pyolt failing --fail
+    }
+    catch {
+        $failureExitCode = $LASTEXITCODE
+    }
+
+    if ($failureExitCode -ne 17) {
+        throw "pyolt did not preserve the wrapped command exit code."
+    }
+    if (Test-Path -LiteralPath $failingStalePath) {
+        throw "pyolt did not clean up after a failed wrapped command."
+    }
+
     if (Get-Command pyolct -ErrorAction SilentlyContinue) {
         throw "A continue temporary shortcut was unexpectedly defined."
     }

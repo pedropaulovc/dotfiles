@@ -45,6 +45,16 @@ else
     status=$?
     [ "$status" -eq 2 ]
 fi
+mkdir -p "$HOME/outside"
+ln -s "$HOME/outside" "$HOME/src/tmp-linked"
+if pyolt linked; then
+    printf 'pyolt followed a symbolic-link project path.\n' >&2
+    exit 1
+else
+    status=$?
+    [ "$status" -eq 2 ]
+fi
+[ -L "$HOME/src/tmp-linked" ]
 
 pyolt myproj --flag value
 [ "$(sed -n '1p' "$CALL_LOG")" = "$HOME/src/tmp-myproj" ]

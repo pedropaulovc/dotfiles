@@ -127,7 +127,8 @@ function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue 
 # Temporary projects are removed after seven days without any file or
 # directory modification. Continue shortcuts (the *c variants) are
 # intentionally not wrapped.
-function Remove-StaleTemporaryProjects {
+function Remove-StaleTemporaryProject {
+    [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string] $SourcePath
     )
@@ -142,6 +143,12 @@ function Remove-StaleTemporaryProjects {
         if ($project.Name -notlike 'tmp-*') {
             continue
         }
+
+        if ($project.Attributes -band [System.IO.FileAttributes]::ReparsePoint) {
+            Write-Warning "Skipping symbolic link or junction: $($project.FullName)"
+            continue
+        }
+
 
         try {
             $latest = $project.LastWriteTimeUtc
@@ -161,43 +168,77 @@ function Remove-StaleTemporaryProjects {
             continue
         }
 
+        if (-not $PSCmdlet.ShouldProcess($project.FullName, 'Remove stale temporary project')) {
+            continue
+        }
+
         Write-Information "Removing stale temporary project: $($project.FullName)"
-        Remove-Item -LiteralPath $project.FullName -Recurse -Force -ErrorAction SilentlyContinue
+        try {
+            Remove-Item -LiteralPath $project.FullName -Recurse -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Warning "Unable to remove stale temporary project: $($project.FullName)"
+        }
     }
 }
 
 function Invoke-TemporaryProject {
-    param(
-        [Parameter(Mandatory = $true, Position = 0)]
-        [string] $Command,
-        [Parameter(Mandatory = $true, Position = 1)]
-        [string] $Name,
-        [Parameter(ValueFromRemainingArguments = $true)]
-        [object[]] $Remaining
-    )
+    $arguments = @($args)
+    if ($arguments.Count -lt 2) {
+        $shortcut = if ($arguments.Count -gt 0) { [string] $arguments[0] } else { 'temporary project shortcut' }
+        throw "Usage: $shortcut <name> [args...]"
+    }
+
+    $command = [string] $arguments[0]
+    $name = [string] $arguments[1]
+    $remaining = [object[]] @()
+    if ($arguments.Count -gt 2) {
+        $remaining = [object[]] $arguments[2..($arguments.Count - 1)]
+    }
 
     if (
-        [string]::IsNullOrWhiteSpace($Name) -or
-        $Name -match '(^\.{1,2}$|^[-]|[\\/:*?"<>|]|\p{Cc}|[. ]$)'
+        [string]::IsNullOrWhiteSpace($name) -or
+        $name -match '(^\.{1,2}$|^[-]|[\\/:*?"<>|]|\p{Cc}|[. ]$)'
     ) {
-        throw "Invalid temporary project name: $Name"
+        throw "Invalid temporary project name: $name"
     }
 
     $sourcePath = 'C:\src'
-    $projectPath = Join-Path -Path $sourcePath -ChildPath "tmp-$Name"
+    $projectPath = Join-Path -Path $sourcePath -ChildPath "tmp-$name"
+    $existingProject = Get-Item -LiteralPath $projectPath -Force -ErrorAction SilentlyContinue
+    if ($null -ne $existingProject -and ($existingProject.Attributes -band [System.IO.FileAttributes]::ReparsePoint)) {
+        throw "Temporary project path is a symbolic link or junction: $projectPath"
+    }
     [System.IO.Directory]::CreateDirectory($projectPath) | Out-Null
 
+    $commandSucceeded = $true
+    $commandExitCode = $null
+    $global:LASTEXITCODE = 0
     try {
         Push-Location -LiteralPath $projectPath
         try {
-            & $Command @Remaining
+            & $command @remaining
+            $commandSucceeded = $?
+            $commandExitCode = $LASTEXITCODE
         }
         finally {
             Pop-Location
         }
     }
     finally {
-        Remove-StaleTemporaryProjects -SourcePath $sourcePath
+        Remove-StaleTemporaryProject -SourcePath $sourcePath
+    }
+
+    if ($null -ne $commandExitCode) {
+        $global:LASTEXITCODE = $commandExitCode
+    }
+    $commandFailed = -not $commandSucceeded -or ($null -ne $commandExitCode -and $commandExitCode -ne 0)
+    if ($commandFailed) {
+        if ($null -ne $commandExitCode) {
+            throw "Temporary project command '$command' exited with code $commandExitCode."
+        }
+
+        throw "Temporary project command '$command' failed."
     }
 }
 

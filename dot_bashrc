@@ -264,9 +264,14 @@ __tmp_project() {
 
   shift 2
   local src_dir="$HOME/src"
+  mkdir -p -- "$src_dir" || return
+  src_dir=$(cd -- "$src_dir" && pwd -P) || return
   local project_dir="$src_dir/tmp-$name"
+  if [ -L "$project_dir" ]; then
+    printf 'Temporary project path is a symbolic link: %s\n' "$project_dir" >&2
+    return 2
+  fi
   mkdir -p -- "$project_dir" || return
-
   local status
   if (
     cd -- "$project_dir" || exit
