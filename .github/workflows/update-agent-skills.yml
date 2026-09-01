@@ -23,7 +23,7 @@ jobs:
           fetch-depth: 1
 
       - name: Refresh immutable skill revisions
-        run: node scripts/update-agent-skills-lock.mjs
+        run: node .github/scripts/update-agent-skills-lock.mjs
 
       - name: Commit lock updates
         run: |

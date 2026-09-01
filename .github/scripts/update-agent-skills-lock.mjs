@@ -11,7 +11,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { tmpdir } from "node:os";
 
-const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../..");
 const defaultLockFile = join(
   repositoryRoot,
   "dot_agents",
@@ -138,7 +138,8 @@ function getSkillTreeHash(repositoryDirectory, commit, skillPath) {
 
 function main() {
   const { lockFile, timestamp } = parseArguments(process.argv.slice(2));
-  const lock = JSON.parse(readFileSync(lockFile, "utf8"));
+  const lockContents = readFileSync(lockFile, "utf8");
+  const lock = JSON.parse(lockContents);
   if (!lock.skills || typeof lock.skills !== "object" || Array.isArray(lock.skills)) {
     throw new Error(`Invalid skill lock: ${lockFile}`);
   }
@@ -207,7 +208,8 @@ function main() {
       return;
     }
 
-    writeFileSync(lockFile, `${JSON.stringify(nextLock, null, 2)}\n`);
+    const ending = lockContents.endsWith("\n") ? "\n" : "";
+    writeFileSync(lockFile, `${JSON.stringify(nextLock, null, 2)}${ending}`);
     for (const update of updates) {
       console.log(`${update.name}: ${update.oldRef} -> ${update.newRef}`);
       if (update.oldHash !== update.newHash) {

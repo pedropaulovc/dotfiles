@@ -56,7 +56,7 @@ cat >"$lock_file" <<EOF
 EOF
 
 now='2026-09-02T03:17:00.000Z'
-node "$repo_dir/scripts/update-agent-skills-lock.mjs" \
+node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
   --lock-file "$lock_file" \
   --now "$now"
 node - "$lock_file" "$new_ref" "$new_nested_hash" "$new_root_hash" "$now" <<'NODE'
@@ -81,7 +81,7 @@ if (lock.lastSelectedAgents.join(",") !== "codex") {
 NODE
 
 cp "$lock_file" "$tmp_dir/current-lock.json"
-node "$repo_dir/scripts/update-agent-skills-lock.mjs" \
+node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
   --lock-file "$lock_file" \
   --now '2026-09-03T03:17:00.000Z' >/dev/null
 cmp -s "$lock_file" "$tmp_dir/current-lock.json"
@@ -90,7 +90,7 @@ rm "$source_dir/SKILL.md"
 git -C "$source_dir" add --all
 git -C "$source_dir" commit -qm 'remove root skill source'
 cp "$lock_file" "$tmp_dir/failed-lock.json"
-if node "$repo_dir/scripts/update-agent-skills-lock.mjs" --lock-file "$lock_file"; then
+if node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" --lock-file "$lock_file"; then
   printf '%s\n' 'Updater unexpectedly accepted a missing skill.' >&2
   exit 1
 fi
