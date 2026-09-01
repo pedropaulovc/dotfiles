@@ -28,6 +28,7 @@ function Sync-Skill {
         [string] $PathEncoded,
         [string] $ExpectedHashEncoded,
         [string] $NameEncoded,
+        [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $AgentArgs
     )
 
