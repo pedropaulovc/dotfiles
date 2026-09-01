@@ -234,7 +234,10 @@ __tmp_project_cleanup() {
 
   local project recent
   while IFS= read -r -d '' project; do
-    recent=$(find -P "$project" -newermt '7 days ago' -print -quit 2>/dev/null)
+    if ! recent=$(find -P "$project" -newermt '7 days ago' -print -quit 2>/dev/null); then
+      printf 'Unable to inspect temporary project: %s\n' "$project" >&2
+      continue
+    fi
     [ -n "$recent" ] && continue
 
     printf 'Removing stale temporary project: %s\n' "$project" >&2
