@@ -164,7 +164,7 @@ function Remove-StaleTemporaryProject {
             continue
         }
 
-        if ($latest -ge $cutoff) {
+        if ($latest -gt $cutoff) {
             continue
         }
 
