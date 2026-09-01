@@ -6,17 +6,76 @@ set -eu
 
 # The metadata checksum makes this run whenever the lock file changes.
 # checksum: {{ $metadata | sha256sum }}
+# Lock values are base64 encoded before they enter this script.
 
 if ! command -v npx >/dev/null 2>&1; then
   printf '%s\n' 'npx is required to synchronize agent skills.' >&2
   exit 1
 fi
 
+if ! command -v git >/dev/null 2>&1; then
+  printf '%s\n' 'git is required to synchronize agent skills.' >&2
+  exit 1
+fi
+
+decode() {
+  printf '%s' "$1" | base64 --decode
+}
+
 state_dir="$(mktemp -d)"
-trap 'rm -rf "$state_dir"' EXIT HUP INT TERM
+repos_dir="$(mktemp -d)"
+trap 'rm -rf "$state_dir" "$repos_dir"' EXIT HUP INT TERM
 export XDG_STATE_HOME="$state_dir"
 
-{{- range $name, $skill := $lock.skills }}
-npx --yes skills add {{ $skill.sourceUrl | toJson }} --skill {{ $name | toJson }} --global --yes
-{{- end }}
+sync_skill() {
+  skill_source="$(decode "$1")"
+  skill_revision="$(decode "$2")"
+  skill_path="$(decode "$3")"
+  expected_hash="$(decode "$4")"
+  skill_name="$(decode "$5")"
+
+  case "$skill_revision" in
+    *[!0123456789abcdefABCDEF]*)
+      printf 'Invalid skill revision for %s.\n' "$skill_name" >&2
+      return 1
+      ;;
+  esac
+  if [ "${#skill_revision}" -ne 40 ]; then
+    printf 'Invalid skill revision for %s.\n' "$skill_name" >&2
+    return 1
+  fi
+
+  repo_dir="$(mktemp -d "$repos_dir/repo.XXXXXX")"
+  git clone --filter=blob:none --no-checkout -- "$skill_source" "$repo_dir"
+  git -C "$repo_dir" fetch --depth=1 origin "$skill_revision"
+  git -C "$repo_dir" checkout --detach "$skill_revision"
+
+  skill_folder="${skill_path%/SKILL.md}"
+  if [ "$skill_folder" = "$skill_path" ]; then
+    skill_folder="${skill_path%SKILL.md}"
+  fi
+
+  if [ -n "$skill_folder" ]; then
+    actual_hash="$(git -C "$repo_dir" rev-parse --verify --end-of-options "$skill_revision:$skill_folder")"
+    skill_dir="$repo_dir/$skill_folder"
+  else
+    actual_hash="$(git -C "$repo_dir" rev-parse --verify --end-of-options "$skill_revision^{tree}")"
+    skill_dir="$repo_dir"
+  fi
+  if [ "$actual_hash" != "$expected_hash" ]; then
+    printf 'Skill hash mismatch for %s: expected %s, got %s.\n' "$skill_name" "$expected_hash" "$actual_hash" >&2
+    return 1
+  fi
+
+  npx --yes skills@1.5.23 add "$skill_dir" --skill "$skill_name" --global --yes
+}
+
+{{ range $name, $skill := $lock.skills }}
+sync_skill \
+  '{{ $skill.sourceUrl | b64enc }}' \
+  '{{ $skill.ref | b64enc }}' \
+  '{{ $skill.skillPath | b64enc }}' \
+  '{{ $skill.skillFolderHash | b64enc }}' \
+  '{{ $name | b64enc }}'
+{{ end }}
 {{- end }}

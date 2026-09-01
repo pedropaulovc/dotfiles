@@ -5,23 +5,94 @@ $ErrorActionPreference = "Stop"
 
 # The metadata checksum makes this run whenever the lock file changes.
 # checksum: {{ $metadata | sha256sum }}
+# Lock values are base64 encoded before they enter this script.
 
 if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
     throw "npx is required to synchronize agent skills."
 }
 
+if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
+    throw "git is required to synchronize agent skills."
+}
+
+function Decode-Base64Utf8 {
+    param([string] $EncodedValue)
+
+    [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($EncodedValue))
+}
+
+function Sync-Skill {
+    param(
+        [string] $SourceEncoded,
+        [string] $RevisionEncoded,
+        [string] $PathEncoded,
+        [string] $ExpectedHashEncoded,
+        [string] $NameEncoded
+    )
+
+    $skillSource = Decode-Base64Utf8 $SourceEncoded
+    $skillRevision = Decode-Base64Utf8 $RevisionEncoded
+    $skillPath = Decode-Base64Utf8 $PathEncoded
+    $expectedHash = Decode-Base64Utf8 $ExpectedHashEncoded
+    $skillName = Decode-Base64Utf8 $NameEncoded
+
+    if ($skillRevision -notmatch '^[0-9a-fA-F]{40}$') {
+        throw "Invalid skill revision for $skillName."
+    }
+
+    $repoDir = Join-Path $reposDir ([System.Guid]::NewGuid().ToString("N"))
+    & git clone --filter=blob:none --no-checkout -- $skillSource $repoDir
+    if ($LASTEXITCODE -ne 0) {
+        throw "git could not clone the source for $skillName."
+    }
+    & git -C $repoDir fetch --depth=1 origin $skillRevision
+    if ($LASTEXITCODE -ne 0) {
+        throw "git could not fetch the revision for $skillName."
+    }
+    & git -C $repoDir checkout --detach $skillRevision
+    if ($LASTEXITCODE -ne 0) {
+        throw "git could not check out the revision for $skillName."
+    }
+
+    $skillFolder = $skillPath -replace '(?i)(/)?SKILL\.md$', ''
+    if ($skillFolder) {
+        $revisionPath = "{0}:{1}" -f $skillRevision, $skillFolder
+        $skillDir = Join-Path $repoDir $skillFolder
+    }
+    else {
+        $revisionPath = $skillRevision + "^{tree}"
+        $skillDir = $repoDir
+    }
+
+    $actualHash = (& git -C $repoDir rev-parse --verify --end-of-options $revisionPath).Trim()
+    if ($LASTEXITCODE -ne 0) {
+        throw "git could not read the skill tree for $skillName."
+    }
+    if ($actualHash -ne $expectedHash) {
+        throw ("Skill hash mismatch for {0}: expected {1}, got {2}." -f $skillName, $expectedHash, $actualHash)
+    }
+
+    & npx --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes
+    if ($LASTEXITCODE -ne 0) {
+        throw "npx could not install or upgrade skill $skillName."
+    }
+}
+
 $stateDir = Join-Path ([System.IO.Path]::GetTempPath()) ("skills-" + [System.Guid]::NewGuid().ToString("N"))
-New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
+$reposDir = Join-Path ([System.IO.Path]::GetTempPath()) ("skills-repos-" + [System.Guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $stateDir, $reposDir -Force | Out-Null
 try {
     $env:XDG_STATE_HOME = $stateDir
-{{- range $name, $skill := $lock.skills }}
-    & npx --yes skills add {{ $skill.sourceUrl | toJson }} --skill {{ $name | toJson }} --global --yes
-    if ($LASTEXITCODE -ne 0) {
-        throw "npx could not install or upgrade skill {{ $name }}."
-    }
-{{- end }}
+{{ range $name, $skill := $lock.skills }}
+    Sync-Skill `
+        "{{ $skill.sourceUrl | b64enc }}" `
+        "{{ $skill.ref | b64enc }}" `
+        "{{ $skill.skillPath | b64enc }}" `
+        "{{ $skill.skillFolderHash | b64enc }}" `
+        "{{ $name | b64enc }}"
+{{ end }}
 }
 finally {
-    Remove-Item -LiteralPath $stateDir -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -LiteralPath $stateDir, $reposDir -Recurse -Force -ErrorAction SilentlyContinue
 }
 {{- end }}
