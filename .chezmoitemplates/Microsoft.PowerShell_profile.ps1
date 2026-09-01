@@ -123,6 +123,7 @@ function Invoke-PinnedYoloOmpOpusContinue { Invoke-PinnedYoloOmpOpus --continue 
 function Invoke-PinnedYoloOmpSolContinue { Invoke-PinnedYoloOmpSol --continue @args }
 function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
 function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue @args }
+
 # Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
 # Temporary projects are removed after seven days without any file or
 # directory modification. Continue shortcuts (the *c variants) are
@@ -148,7 +149,6 @@ function Remove-StaleTemporaryProject {
             Write-Warning "Skipping symbolic link or junction: $($project.FullName)"
             continue
         }
-
 
         try {
             $latest = $project.LastWriteTimeUtc
