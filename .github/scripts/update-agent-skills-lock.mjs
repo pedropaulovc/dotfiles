@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 import {
   mkdtempSync,
   readFileSync,
+  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
@@ -76,7 +77,7 @@ function getSkillFolder(skillPath) {
   if (skillPath === "SKILL.md") {
     return "";
   }
-  if (!/\/SKILL\.md$/i.test(skillPath)) {
+  if (!/\/SKILL\.md$/.test(skillPath)) {
     throw new Error(`Unsupported skill path: ${skillPath}`);
   }
 
@@ -134,6 +135,20 @@ function getSkillTreeHash(repositoryDirectory, commit, skillPath) {
     throw new Error(`Invalid tree hash for ${skillPath}: ${hash}`);
   }
   return hash.toLowerCase();
+}
+
+function writeLockFile(lockFile, contents) {
+  const temporaryDirectory = mkdtempSync(
+    join(dirname(lockFile), ".agent-skills-lock-"),
+  );
+  const temporaryFile = join(temporaryDirectory, "lock.json");
+
+  try {
+    writeFileSync(temporaryFile, contents);
+    renameSync(temporaryFile, lockFile);
+  } finally {
+    rmSync(temporaryDirectory, { recursive: true, force: true });
+  }
 }
 
 function main() {
@@ -209,7 +224,7 @@ function main() {
     }
 
     const ending = lockContents.endsWith("\n") ? "\n" : "";
-    writeFileSync(lockFile, `${JSON.stringify(nextLock, null, 2)}${ending}`);
+    writeLockFile(lockFile, `${JSON.stringify(nextLock, null, 2)}${ending}`);
     for (const update of updates) {
       console.log(`${update.name}: ${update.oldRef} -> ${update.newRef}`);
       if (update.oldHash !== update.newHash) {

@@ -55,6 +55,10 @@ cat >"$lock_file" <<EOF
 }
 EOF
 
+lock_without_final_newline="$tmp_dir/lock-without-final-newline.json"
+printf '%s' "$(cat "$lock_file")" >"$lock_without_final_newline"
+mv "$lock_without_final_newline" "$lock_file"
+
 now='2026-09-02T03:17:00.000Z'
 node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
   --lock-file "$lock_file" \
@@ -77,6 +81,10 @@ if (nested.updatedAt !== now || root.updatedAt !== now) {
 }
 if (lock.lastSelectedAgents.join(",") !== "codex") {
   throw new Error("unrelated lock metadata changed");
+}
+const bytes = fs.readFileSync(lockFile);
+if (bytes[bytes.length - 1] === 0x0a) {
+  throw new Error("lock final newline was not preserved");
 }
 NODE
 
