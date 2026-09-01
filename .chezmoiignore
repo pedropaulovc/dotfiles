@@ -1,6 +1,7 @@
 # Repo-only files, never applied to $HOME.
 README.md
 LICENSE
+tests/
 
 # Platform-scoped: each OS ignores the other's files so `apply` is a noop.
 {{ if eq .platform "windows" }}

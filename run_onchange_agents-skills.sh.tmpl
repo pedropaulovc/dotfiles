@@ -33,6 +33,7 @@ sync_skill() {
   skill_path="$(decode "$3")"
   expected_hash="$(decode "$4")"
   skill_name="$(decode "$5")"
+  shift 5
 
   case "$skill_revision" in
     *[!0123456789abcdefABCDEF]*)
@@ -67,7 +68,7 @@ sync_skill() {
     return 1
   fi
 
-  npx --yes skills@1.5.23 add "$skill_dir" --skill "$skill_name" --global --yes
+  npx --yes skills@1.5.23 add "$skill_dir" --skill "$skill_name" --global --yes "$@"
 }
 
 {{ range $name, $skill := $lock.skills }}
@@ -76,6 +77,7 @@ sync_skill \
   '{{ $skill.ref | b64enc }}' \
   '{{ $skill.skillPath | b64enc }}' \
   '{{ $skill.skillFolderHash | b64enc }}' \
-  '{{ $name | b64enc }}'
+  '{{ $name | b64enc }}'{{ range $agent := $lock.lastSelectedAgents }} \
+  --agent "$(decode '{{ $agent | b64enc }}')"{{ end }}
 {{ end }}
 {{- end }}

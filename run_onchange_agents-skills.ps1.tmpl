@@ -27,7 +27,8 @@ function Sync-Skill {
         [string] $RevisionEncoded,
         [string] $PathEncoded,
         [string] $ExpectedHashEncoded,
-        [string] $NameEncoded
+        [string] $NameEncoded,
+        [string[]] $AgentArgs
     )
 
     $skillSource = Decode-Base64Utf8 $SourceEncoded
@@ -71,8 +72,7 @@ function Sync-Skill {
     if ($actualHash -ne $expectedHash) {
         throw ("Skill hash mismatch for {0}: expected {1}, got {2}." -f $skillName, $expectedHash, $actualHash)
     }
-
-    & npx --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes
+    & npx --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes @AgentArgs
     if ($LASTEXITCODE -ne 0) {
         throw "npx could not install or upgrade skill $skillName."
     }
@@ -89,7 +89,8 @@ try {
         "{{ $skill.ref | b64enc }}" `
         "{{ $skill.skillPath | b64enc }}" `
         "{{ $skill.skillFolderHash | b64enc }}" `
-        "{{ $name | b64enc }}"
+        "{{ $name | b64enc }}"{{ range $agent := $lock.lastSelectedAgents }} `
+        "--agent" (Decode-Base64Utf8 "{{ $agent | b64enc }}"){{ end }}
 {{ end }}
 }
 finally {
