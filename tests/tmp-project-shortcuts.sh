@@ -72,6 +72,22 @@ else
     [ "$status" -eq 17 ]
 fi
 [ ! -d "$HOME/src/tmp-failing-stale" ]
+mkdir -p "$HOME/src/tmp-uninspectable" "$HOME/fake-bin"
+touch -d '8 days ago' "$HOME/src/tmp-uninspectable"
+cat >"$HOME/fake-bin/find" <<'FIND'
+#!/bin/sh
+case "$*" in
+    *-newermt*) exit 1 ;;
+    *) exec /usr/bin/find "$@" ;;
+esac
+FIND
+chmod +x "$HOME/fake-bin/find"
+old_path=$PATH
+PATH="$HOME/fake-bin:$PATH"
+pyolt uninspectable
+PATH=$old_path
+[ -d "$HOME/src/tmp-uninspectable" ]
+
 
 if type pyolct >/dev/null 2>&1; then
     printf 'A continue temporary shortcut was unexpectedly defined.\n' >&2
