@@ -1,0 +1,25 @@
+name: hindsight
+
+services:
+  hindsight:
+    image: ghcr.io/vectorize-io/hindsight:${HINDSIGHT_VERSION:-0.9.2}
+    pull_policy: always
+    container_name: hindsight
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:28888:8888"
+      - "127.0.0.1:29999:9999"
+    environment:
+      HINDSIGHT_API_LLM_PROVIDER: openai-responses
+      HINDSIGHT_API_LLM_API_KEY: ${OPENAI_API_TOKEN:?Set OPENAI_API_TOKEN in ../TMP/.env}
+      HINDSIGHT_API_LLM_MODEL: gpt-5.6-luna
+      HINDSIGHT_API_LLM_REASONING_EFFORT: xhigh
+      HINDSIGHT_API_LLM_TEMPERATURE: none
+      HINDSIGHT_API_WORKER_ID: hindsight-local
+      HINDSIGHT_API_AUDIT_LOG_ENABLED: "true"
+      HINDSIGHT_API_CONSOLIDATION_LLM_TIMEOUT: "1200"
+    volumes:
+      - hindsight-data:/home/hindsight/.pg0
+
+volumes:
+  hindsight-data:
