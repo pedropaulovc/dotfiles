@@ -1,0 +1,60 @@
+{
+  "version": 3,
+  "skills": {
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
+      "skillPath": "skills/playwright-cli/SKILL.md",
+      "skillFolderHash": "6bf055ae36a2460e4a8f70eaec772ab7ac7e12e4",
+      "installedAt": "2026-03-30T02:06:57.875Z",
+      "updatedAt": "2026-06-25T00:15:07.887Z"
+    },
+    "humanizer": {
+      "source": "blader/humanizer",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/blader/humanizer.git",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "8b3a17889fbf12bedae20974a3c9f9de746ed754",
+      "installedAt": "2026-05-19T18:11:52.074Z",
+      "updatedAt": "2026-05-19T18:14:58.953Z"
+    },
+    "hallmark": {
+      "source": "nutlope/hallmark",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/nutlope/hallmark.git",
+      "skillPath": "skills/hallmark/SKILL.md",
+      "skillFolderHash": "747c924c4767b4d5fa6f1c59985c87a21c918334",
+      "installedAt": "2026-09-01T05:25:40.014Z",
+      "updatedAt": "2026-09-01T05:26:51.150Z"
+    },
+    "hindsight-self-hosted": {
+      "source": "vectorize-io/hindsight",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
+      "skillPath": "skills/hindsight-self-hosted/SKILL.md",
+      "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
+      "installedAt": "2026-09-01T07:31:11.821Z",
+      "updatedAt": "2026-09-01T07:31:11.821Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "antigravity-cli",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-code-cli",
+    "opencode",
+    "warp",
+    "zed",
+    "claude-code"
+  ]
+}

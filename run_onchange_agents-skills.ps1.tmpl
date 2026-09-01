@@ -1,0 +1,27 @@
+{{- $metadata := include "dot_agents/dot_skill-lock.json" -}}
+{{- $lock := $metadata | fromJson -}}
+{{- if eq .platform "windows" }}
+$ErrorActionPreference = "Stop"
+
+# The metadata checksum makes this run whenever the lock file changes.
+# checksum: {{ $metadata | sha256sum }}
+
+if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
+    throw "npx is required to synchronize agent skills."
+}
+
+$stateDir = Join-Path ([System.IO.Path]::GetTempPath()) ("skills-" + [System.Guid]::NewGuid().ToString("N"))
+New-Item -ItemType Directory -Path $stateDir -Force | Out-Null
+try {
+    $env:XDG_STATE_HOME = $stateDir
+{{- range $name, $skill := $lock.skills }}
+    & npx --yes skills add {{ $skill.sourceUrl | toJson }} --skill {{ $name | toJson }} --global --yes
+    if ($LASTEXITCODE -ne 0) {
+        throw "npx could not install or upgrade skill {{ $name }}."
+    }
+{{- end }}
+}
+finally {
+    Remove-Item -LiteralPath $stateDir -Recurse -Force -ErrorAction SilentlyContinue
+}
+{{- end }}

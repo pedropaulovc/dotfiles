@@ -1,0 +1,22 @@
+{{- $metadata := include "dot_agents/dot_skill-lock.json" -}}
+{{- $lock := $metadata | fromJson -}}
+{{- if ne .platform "windows" -}}
+#!/bin/sh
+set -eu
+
+# The metadata checksum makes this run whenever the lock file changes.
+# checksum: {{ $metadata | sha256sum }}
+
+if ! command -v npx >/dev/null 2>&1; then
+  printf '%s\n' 'npx is required to synchronize agent skills.' >&2
+  exit 1
+fi
+
+state_dir="$(mktemp -d)"
+trap 'rm -rf "$state_dir"' EXIT HUP INT TERM
+export XDG_STATE_HOME="$state_dir"
+
+{{- range $name, $skill := $lock.skills }}
+npx --yes skills add {{ $skill.sourceUrl | toJson }} --skill {{ $name | toJson }} --global --yes
+{{- end }}
+{{- end }}
