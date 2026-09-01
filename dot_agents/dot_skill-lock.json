@@ -1,0 +1,64 @@
+{
+  "version": 3,
+  "skills": {
+    "playwright-cli": {
+      "source": "microsoft/playwright-cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
+      "ref": "cbc09311c468e10fba47964e9b3830fe625c9b01",
+      "skillPath": "skills/playwright-cli/SKILL.md",
+      "skillFolderHash": "ef9a12fdadfb2ad4b67d512a10e840979f162c3a",
+      "installedAt": "2026-03-30T02:06:57.875Z",
+      "updatedAt": "2026-06-25T00:15:07.887Z"
+    },
+    "humanizer": {
+      "source": "blader/humanizer",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/blader/humanizer.git",
+      "ref": "e2e92e7b4b8229253ed5c8e81dc65463fdeddda5",
+      "skillPath": "SKILL.md",
+      "skillFolderHash": "b8a8804ed9210e539531fc26c2d84fdb603960f4",
+      "installedAt": "2026-05-19T18:11:52.074Z",
+      "updatedAt": "2026-05-19T18:14:58.953Z"
+    },
+    "hallmark": {
+      "source": "nutlope/hallmark",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/nutlope/hallmark.git",
+      "ref": "13ac0ec7e148655948100b6396439e481361d690",
+      "skillPath": "skills/hallmark/SKILL.md",
+      "skillFolderHash": "747c924c4767b4d5fa6f1c59985c87a21c918334",
+      "installedAt": "2026-09-01T05:25:40.014Z",
+      "updatedAt": "2026-09-01T05:26:51.150Z"
+    },
+    "hindsight-self-hosted": {
+      "source": "vectorize-io/hindsight",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
+      "ref": "9a4be5e05245ebe750246727deaf54218cf2981d",
+      "skillPath": "skills/hindsight-self-hosted/SKILL.md",
+      "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
+      "installedAt": "2026-09-01T07:31:11.821Z",
+      "updatedAt": "2026-09-01T07:31:11.821Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  },
+  "lastSelectedAgents": [
+    "amp",
+    "antigravity",
+    "antigravity-cli",
+    "cline",
+    "codex",
+    "cursor",
+    "deepagents",
+    "gemini-cli",
+    "github-copilot",
+    "kimi-code-cli",
+    "opencode",
+    "warp",
+    "zed",
+    "claude-code"
+  ]
+}
