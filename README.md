@@ -13,6 +13,7 @@ the source tree renders byte-identical to what's already installed on each OS.
 | `~/.inputrc`                                | `dot_inputrc`                                                     | WSL/Linux        |
 | `~/.tmux.conf`                              | `dot_tmux.conf`                                                   | WSL/Linux        |
 | `~/.config/nvtop/interface.ini`             | `private_dot_config/nvtop/interface.ini`                          | WSL/Linux        |
+| `~/.config/hindsight/compose.yaml`           | `private_dot_config/hindsight/compose.yaml`                       | WSL/Linux        |
 | `$PROFILE` (PowerShell 7)                   | `OneDrive/Documentos/PowerShell/Microsoft.PowerShell_profile.ps1` | Windows          |
 | `~/.gitconfig`                              | `dot_gitconfig.tmpl`                                              | both (templated) |
 | `~/.agents/AGENTS.md`                       | `dot_agents/AGENTS.md`                                            | both             |
