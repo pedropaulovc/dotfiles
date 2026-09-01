@@ -26,6 +26,8 @@ jobs:
         run: node .github/scripts/update-agent-skills-lock.mjs
 
       - name: Commit lock updates
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           if git diff --quiet -- dot_agents/dot_skill-lock.json; then
             echo "All managed agent skills are current."
@@ -36,4 +38,4 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add dot_agents/dot_skill-lock.json
           git commit -m "chore: update managed agent skill versions"
-          git push origin "HEAD:${{ github.event.repository.default_branch }}"
+          git push origin "HEAD:${DEFAULT_BRANCH}"
