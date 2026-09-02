@@ -2,6 +2,8 @@
 README.md
 LICENSE
 tests/
+.github
+.github/**
 
 # Platform-scoped: each OS ignores the other's files so `apply` is a noop.
 {{ if eq .platform "windows" }}
