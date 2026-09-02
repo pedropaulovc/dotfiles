@@ -65,7 +65,7 @@ function runGit(argumentsList, cwd) {
 }
 
 function getUpstreamHead(sourceUrl) {
-  const output = runGit(["ls-remote", sourceUrl, "HEAD"], repositoryRoot);
+  const output = runGit(["ls-remote", "--", sourceUrl, "HEAD"], repositoryRoot);
   const head = output.split(/\s+/)[0] || "";
   if (!/^[0-9a-f]{40}$/i.test(head)) {
     throw new Error(`Could not resolve a commit for ${sourceUrl}.`);
