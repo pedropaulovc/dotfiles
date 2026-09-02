@@ -78,8 +78,9 @@ recreate it. To make secrets reproducible across machines, upgrade to chezmoi's
 encrypted blob instead.
 
 The Hindsight API token is kept separately in the untracked
-`~/.omp/agent/.env` with mode `600`. The post-update chezmoi hook refreshes it
-from Azure whenever the tracked Hindsight settings change.
+`~/.omp/agent/.env`; the POSIX hook enforces mode `600`, and the Windows hook
+applies a user-only ACL. The post-update hook refreshes it from Azure whenever
+the tracked Hindsight settings change.
 
 ## Bootstrap
 
