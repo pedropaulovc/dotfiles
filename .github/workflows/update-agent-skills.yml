@@ -68,7 +68,8 @@ jobs:
 
           export GIT_CONFIG_COUNT=1
           export GIT_CONFIG_KEY_0=http.extraheader
-          export GIT_CONFIG_VALUE_0="AUTHORIZATION: bearer ${GITHUB_TOKEN}"
+          auth_header=$(printf 'x-access-token:%s' "$GITHUB_TOKEN" | base64 -w0)
+          export GIT_CONFIG_VALUE_0="AUTHORIZATION: basic ${auth_header}"
           git fetch --no-tags origin "$DEFAULT_BRANCH"
           git rebase "origin/${DEFAULT_BRANCH}"
           if ! git push origin "HEAD:${DEFAULT_BRANCH}"; then
