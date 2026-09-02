@@ -20,7 +20,7 @@ function Invoke-YoloClaudeFable {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model fable --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model fable --effort high --autocompact 1M @Remaining
 }
 
 function Invoke-YoloClaudeOpus {
@@ -29,7 +29,7 @@ function Invoke-YoloClaudeOpus {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model opus --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model opus --effort high --autocompact 500k @Remaining
 }
 
 function Invoke-YoloClaudeSonnet {
@@ -38,7 +38,7 @@ function Invoke-YoloClaudeSonnet {
         [string[]] $Remaining
     )
 
-	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model sonnet --effort high @Remaining
+	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model sonnet --effort high --autocompact 500k @Remaining
 }
 
 function Invoke-YoloClaudeContinue { Invoke-YoloClaude --continue @args }

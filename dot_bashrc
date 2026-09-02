@@ -151,9 +151,9 @@ yc() {
   "${args[@]}"
 }
 
-ycf() { yc --model fable --effort high "$@"; }
-yco() { yc --model opus --effort high "$@"; }
-ycs() { yc --model sonnet --effort high "$@"; }
+ycf() { yc --model fable --effort high --autocompact 1M "$@"; }
+yco() { yc --model opus --effort high --autocompact 500k "$@"; }
+ycs() { yc --model sonnet --effort high --autocompact 500k "$@"; }
 ycc() { yc --continue "$@"; }
 ycfc() { ycf --continue "$@"; }
 ycoc() { yco --continue "$@"; }
