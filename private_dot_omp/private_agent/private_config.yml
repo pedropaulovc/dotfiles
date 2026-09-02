@@ -94,6 +94,6 @@ composer:
   shape: box
 hindsight:
   scoping: per-project
-  apiUrl: http://127.0.0.1:28888
+  apiUrl: https://hindsight.vza.net
   retainMode: full-session
   mentalModelsEnabled: true

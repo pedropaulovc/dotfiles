@@ -1,0 +1,92 @@
+{{- $config := include "private_dot_omp/private_agent/private_config.yml" | fromYaml -}}
+{{- $hindsight := $config.hindsight | toJson -}}
+{{- if eq .platform "windows" -}}
+$ErrorActionPreference = "Stop"
+
+# The checksum makes this run whenever the rendered Hindsight section changes.
+# checksum: {{ $hindsight | sha256sum }}
+
+$previousLastExitCode = $global:LASTEXITCODE
+$tempPath = $null
+
+function Set-PrivateFileAcl {
+    param([string] $Path)
+
+    $acl = Get-Acl -LiteralPath $Path
+    $acl.SetAccessRuleProtection($true, $false)
+    foreach ($existingRule in @($acl.Access)) {
+        [void]$acl.RemoveAccessRule($existingRule)
+    }
+    $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $rule = [System.Security.AccessControl.FileSystemAccessRule]::new(
+        $identity,
+        [System.Security.AccessControl.FileSystemRights]::FullControl,
+        [System.Security.AccessControl.AccessControlType]::Allow
+    )
+    $acl.SetAccessRule($rule)
+    Set-Acl -LiteralPath $Path -AclObject $acl
+}
+
+try {
+    if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
+        throw "az is required to refresh the Hindsight API token."
+    }
+
+    $agentDir = if ($env:PI_CODING_AGENT_DIR) {
+        $env:PI_CODING_AGENT_DIR
+    }
+    else {
+        Join-Path $HOME ".omp\agent"
+    }
+    $envFile = Join-Path $agentDir ".env"
+    New-Item -ItemType Directory -Path $agentDir -Force | Out-Null
+
+    $tokenOutput = (& az webapp config appsettings list `
+        --resource-group rg-hindsight-wu2 `
+        --name app-hindsight-wu2 `
+        --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" `
+        --output tsv | Out-String)
+    $azSucceeded = $?
+    $azExitCode = $LASTEXITCODE
+    if (-not $azSucceeded -or $azExitCode -ne 0) {
+        throw "Azure CLI could not read HINDSIGHT_API_TENANT_API_KEY."
+    }
+
+    $token = $tokenOutput.Trim()
+    if ([string]::IsNullOrWhiteSpace($token)) {
+        throw "Azure app setting HINDSIGHT_API_TENANT_API_KEY is empty or missing."
+    }
+
+    if (Test-Path -LiteralPath $envFile -PathType Container) {
+        throw "Expected $envFile to be a regular file."
+    }
+
+    $lines = [System.Collections.Generic.List[string]]::new()
+    if (Test-Path -LiteralPath $envFile -PathType Leaf) {
+        foreach ($line in [System.IO.File]::ReadAllLines($envFile)) {
+            if ($line -notmatch '^\s*(?:export\s+)?HINDSIGHT_API_TOKEN\s*=') {
+                [void]$lines.Add($line)
+            }
+        }
+    }
+    [void]$lines.Add("HINDSIGHT_API_TOKEN=$token")
+
+    $tempPath = Join-Path $agentDir (".env.tmp-" + [System.Guid]::NewGuid().ToString("N"))
+    $utf8 = [System.Text.UTF8Encoding]::new($false)
+    [System.IO.File]::WriteAllLines($tempPath, $lines, $utf8)
+    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        Set-PrivateFileAcl $tempPath
+    }
+    Move-Item -LiteralPath $tempPath -Destination $envFile -Force
+    $tempPath = $null
+    $token = $null
+    $tokenOutput = $null
+    Write-Output "Updated $envFile from the Azure Hindsight app setting."
+}
+finally {
+    if ($null -ne $tempPath) {
+        Remove-Item -LiteralPath $tempPath -Force -ErrorAction SilentlyContinue
+    }
+    $global:LASTEXITCODE = $previousLastExitCode
+}
+{{- end }}
