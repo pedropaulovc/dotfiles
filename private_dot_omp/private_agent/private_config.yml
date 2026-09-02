@@ -94,6 +94,6 @@ composer:
   shape: box
 hindsight:
   scoping: per-project
-  apiUrl: https://app-hindsight-wu2.azurewebsites.net
+  apiUrl: https://hindsight.vza.net
   retainMode: full-session
   mentalModelsEnabled: true

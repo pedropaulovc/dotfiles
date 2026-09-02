@@ -77,6 +77,10 @@ recreate it. To make secrets reproducible across machines, upgrade to chezmoi's
 [age encryption](https://chezmoi.io/user-guide/encryption/age/) and commit the
 encrypted blob instead.
 
+The Hindsight API token is kept separately in the untracked
+`~/.omp/agent/.env` with mode `600`. The post-update chezmoi hook refreshes it
+from Azure whenever the tracked Hindsight settings change.
+
 ## Bootstrap
 
 ```bash

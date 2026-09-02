@@ -1,0 +1,59 @@
+{{- $config := include "private_dot_omp/private_agent/private_config.yml" | fromYaml -}}
+{{- $hindsight := $config.hindsight | toJson -}}
+{{- if ne .platform "windows" -}}
+#!/bin/sh
+set -eu
+set +x
+umask 077
+
+# The checksum makes this run whenever the rendered Hindsight section changes.
+# checksum: {{ $hindsight | sha256sum }}
+
+if ! command -v az >/dev/null 2>&1; then
+  printf '%s\n' 'az is required to refresh the Hindsight API token.' >&2
+  exit 1
+fi
+
+agent_dir="${PI_CODING_AGENT_DIR:-$HOME/.omp/agent}"
+env_file="$agent_dir/.env"
+mkdir -p "$agent_dir"
+
+token="$(
+  set +x
+  az webapp config appsettings list \
+    --resource-group rg-hindsight-wu2 \
+    --name app-hindsight-wu2 \
+    --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" \
+    --output tsv
+)"
+if [ -z "$token" ]; then
+  printf '%s\n' 'Azure app setting HINDSIGHT_API_TENANT_API_KEY is empty or missing.' >&2
+  exit 1
+fi
+
+if [ -e "$env_file" ] && [ ! -f "$env_file" ]; then
+  printf 'Expected %s to be a regular file.\n' "$env_file" >&2
+  exit 1
+fi
+
+tmp_file=
+cleanup() {
+  if [ -n "$tmp_file" ]; then
+    rm -f "$tmp_file"
+  fi
+}
+trap cleanup EXIT HUP INT TERM
+
+tmp_file="$(mktemp "$agent_dir/.env.tmp.XXXXXX")"
+if [ -f "$env_file" ]; then
+  awk '
+    $0 !~ /^[[:space:]]*(export[[:space:]]+)?HINDSIGHT_API_TOKEN[[:space:]]*=/
+  ' "$env_file" >"$tmp_file"
+fi
+printf 'HINDSIGHT_API_TOKEN=%s\n' "$token" >>"$tmp_file"
+chmod 600 "$tmp_file"
+mv -f -- "$tmp_file" "$env_file"
+tmp_file=
+unset token
+printf 'Updated %s from the Azure Hindsight app setting.\n' "$env_file"
+{{- end }}
