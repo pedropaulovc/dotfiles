@@ -78,7 +78,6 @@
     }
   },
   "effortLevel": "high",
-  "autoCompactWindow": 500000,
   "advisorModel": "fable",
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
