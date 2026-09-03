@@ -4,6 +4,7 @@ marketplace:
   name: agent-plugins
   source: pedropaulovc/agent-plugins
 plugins:
+  - cloudflare-temp-accounts@agent-plugins
   - mediocrity-detector@agent-plugins
   - omp-persist-system-prompt@agent-plugins
   - playwright-cli-headed@agent-plugins
