@@ -15,11 +15,11 @@
       "source": "blader/humanizer",
       "sourceType": "github",
       "sourceUrl": "https://github.com/blader/humanizer.git",
-      "ref": "e2e92e7b4b8229253ed5c8e81dc65463fdeddda5",
+      "ref": "9862685f575c65a8247f90369951df1b3416e3d6",
       "skillPath": "SKILL.md",
-      "skillFolderHash": "b8a8804ed9210e539531fc26c2d84fdb603960f4",
+      "skillFolderHash": "5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c",
       "installedAt": "2026-05-19T18:11:52.074Z",
-      "updatedAt": "2026-05-19T18:14:58.953Z"
+      "updatedAt": "2026-09-07T08:26:41.364Z"
     },
     "hallmark": {
       "source": "nutlope/hallmark",
@@ -35,11 +35,11 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "b67b7e5c5c1139d6575056690324ddfea6180019",
+      "ref": "7e17a120e2dfb04934768f7ada813bceba43ad15",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-09-04T08:03:51.108Z"
+      "updatedAt": "2026-09-07T08:26:41.364Z"
     }
   },
   "dismissed": {
