@@ -7,9 +7,11 @@ providers:
         contextWindow: 258000
       gpt-5.6-luna:
         contextWindow: 258000
+      gpt-6-astra:
+        contextWindow: 258000
   anthropic:
     modelOverrides:
-      claude-fable-5:
+      claude-fable-5.1:
         contextWindow: 258000
       claude-opus-5:
         contextWindow: 258000

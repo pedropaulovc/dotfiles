@@ -18,9 +18,9 @@ set -e
 set -u
 for shortcut in \
     yc-t ycft ycot ycst ygt \
-    yx-t yxst yxtt yxlt \
-    yo-t yoft yoot yost yott yolt \
-    pyo-t pyoft pyoot pyost pyott pyolt; do
+    yx-t yxst yxtt yxlt yxat \
+    yo-t yoft yoot yost yott yolt yoat \
+    pyo-t pyoft pyoot pyost pyott pyolt pyoat; do
     type "$shortcut" >/dev/null
 done
 
