@@ -80,24 +80,35 @@ function Invoke-YoloCodexLuna {
     )
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-luna -c 'model_reasoning_effort="max"' @Remaining
 }
+function Invoke-YoloCodexAstra {
+    param(
+        [Parameter(ValueFromRemainingArguments = $true)]
+        [string[]] $Remaining
+    )
+
+	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-6-astra -c 'model_reasoning_effort="low"' @Remaining
+}
 
 function Invoke-YoloCodexContinue { Invoke-YoloCodex resume --last @args }
 function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
 function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
 function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
+function Invoke-YoloCodexAstraContinue { Invoke-YoloCodexAstra resume --last @args }
 
 function Invoke-YoloOmp { & omp --auto-approve @args }
-function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp --provider anthropic --model claude-fable-5.1 --thinking high @args }
 function Invoke-YoloOmpOpus { Invoke-YoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
 function Invoke-YoloOmpTerra { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-terra --thinking max @args }
 function Invoke-YoloOmpLuna { Invoke-YoloOmp --provider openai-codex --model gpt-5.6-luna --thinking max @args }
+function Invoke-YoloOmpAstra { Invoke-YoloOmp --provider openai-codex --model gpt-6-astra --thinking low @args }
 function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
 function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable --continue @args }
 function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus --continue @args }
 function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
 function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
+function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra --continue @args }
 
 # Run a temporary copy of the reviewed binary so pyo sessions do not lock the original.
 $pyoBinary = 'C:\src\dogfood\omp-windows-x64.exe'
@@ -112,17 +123,19 @@ function Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --provider anthropic --model claude-fable-5 --thinking high @args }
+function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --provider anthropic --model claude-fable-5.1 --thinking high @args }
 function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --provider anthropic --model claude-opus-5 --thinking high @args }
 function Invoke-PinnedYoloOmpSol { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-sol --thinking high @args }
 function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-terra --thinking max @args }
 function Invoke-PinnedYoloOmpLuna { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-5.6-luna --thinking max @args }
+function Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --provider openai-codex --model gpt-6-astra --thinking low @args }
 function Invoke-PinnedYoloOmpContinue { Invoke-PinnedYoloOmp --continue @args }
 function Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
 function Invoke-PinnedYoloOmpOpusContinue { Invoke-PinnedYoloOmpOpus --continue @args }
 function Invoke-PinnedYoloOmpSolContinue { Invoke-PinnedYoloOmpSol --continue @args }
 function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
 function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue @args }
+function Invoke-PinnedYoloOmpAstraContinue { Invoke-PinnedYoloOmpAstra --continue @args }
 
 # Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
 # Temporary projects are removed after seven days without any file or
@@ -251,6 +264,7 @@ function Invoke-YoloCodexTemporary { Invoke-TemporaryProject 'yx' @args }
 function Invoke-YoloCodexSolTemporary { Invoke-TemporaryProject 'yxs' @args }
 function Invoke-YoloCodexTerraTemporary { Invoke-TemporaryProject 'yxt' @args }
 function Invoke-YoloCodexLunaTemporary { Invoke-TemporaryProject 'yxl' @args }
+function Invoke-YoloCodexAstraTemporary { Invoke-TemporaryProject 'yxa' @args }
 
 function Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
 function Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
@@ -258,6 +272,7 @@ function Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
 function Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
 function Invoke-YoloOmpTerraTemporary { Invoke-TemporaryProject 'yot' @args }
 function Invoke-YoloOmpLunaTemporary { Invoke-TemporaryProject 'yol' @args }
+function Invoke-YoloOmpAstraTemporary { Invoke-TemporaryProject 'yoa' @args }
 
 function Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
 function Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
@@ -265,6 +280,7 @@ function Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @arg
 function Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args }
 function Invoke-PinnedYoloOmpTerraTemporary { Invoke-TemporaryProject 'pyot' @args }
 function Invoke-PinnedYoloOmpLunaTemporary { Invoke-TemporaryProject 'pyol' @args }
+function Invoke-PinnedYoloOmpAstraTemporary { Invoke-TemporaryProject 'pyoa' @args }
 
 function Invoke-ShellGpt {
     param(
@@ -312,34 +328,40 @@ Set-Alias -Name yx -Value Invoke-YoloCodex
 Set-Alias -Name yxs -Value Invoke-YoloCodexSol
 Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
 Set-Alias -Name yxl -Value Invoke-YoloCodexLuna
+Set-Alias -Name yxa -Value Invoke-YoloCodexAstra
 Set-Alias -Name yxc -Value Invoke-YoloCodexContinue
 Set-Alias -Name yxsc -Value Invoke-YoloCodexSolContinue
 Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
 Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
+Set-Alias -Name yxac -Value Invoke-YoloCodexAstraContinue
 Set-Alias -Name yo -Value Invoke-YoloOmp
 Set-Alias -Name yof -Value Invoke-YoloOmpFable
 Set-Alias -Name yoo -Value Invoke-YoloOmpOpus
 Set-Alias -Name yos -Value Invoke-YoloOmpSol
 Set-Alias -Name yot -Value Invoke-YoloOmpTerra
 Set-Alias -Name yol -Value Invoke-YoloOmpLuna
+Set-Alias -Name yoa -Value Invoke-YoloOmpAstra
 Set-Alias -Name yoc -Value Invoke-YoloOmpContinue
 Set-Alias -Name yofc -Value Invoke-YoloOmpFableContinue
 Set-Alias -Name yooc -Value Invoke-YoloOmpOpusContinue
 Set-Alias -Name yosc -Value Invoke-YoloOmpSolContinue
 Set-Alias -Name yotc -Value Invoke-YoloOmpTerraContinue
 Set-Alias -Name yolc -Value Invoke-YoloOmpLunaContinue
+Set-Alias -Name yoac -Value Invoke-YoloOmpAstraContinue
 Set-Alias -Name pyo -Value Invoke-PinnedYoloOmp
 Set-Alias -Name pyof -Value Invoke-PinnedYoloOmpFable
 Set-Alias -Name pyoo -Value Invoke-PinnedYoloOmpOpus
 Set-Alias -Name pyos -Value Invoke-PinnedYoloOmpSol
 Set-Alias -Name pyot -Value Invoke-PinnedYoloOmpTerra
 Set-Alias -Name pyol -Value Invoke-PinnedYoloOmpLuna
+Set-Alias -Name pyoa -Value Invoke-PinnedYoloOmpAstra
 Set-Alias -Name pyoc -Value Invoke-PinnedYoloOmpContinue
 Set-Alias -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
 Set-Alias -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
 Set-Alias -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
 Set-Alias -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
 Set-Alias -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
+Set-Alias -Name pyoac -Value Invoke-PinnedYoloOmpAstraContinue
 
 # The hyphenated base names avoid collisions with existing shortcuts whose
 # t suffix already has another meaning (yot, yxt, and pyot).
@@ -353,6 +375,7 @@ Set-Alias -Name yxtt -Value Invoke-YoloCodexTerraTemporary
 Set-Alias -Name yx-t -Value Invoke-YoloCodexTemporary
 Set-Alias -Name yxst -Value Invoke-YoloCodexSolTemporary
 Set-Alias -Name yxlt -Value Invoke-YoloCodexLunaTemporary
+Set-Alias -Name yxat -Value Invoke-YoloCodexAstraTemporary
 
 Set-Alias -Name yo-t -Value Invoke-YoloOmpTemporary
 Set-Alias -Name yoft -Value Invoke-YoloOmpFableTemporary
@@ -360,6 +383,7 @@ Set-Alias -Name yoot -Value Invoke-YoloOmpOpusTemporary
 Set-Alias -Name yost -Value Invoke-YoloOmpSolTemporary
 Set-Alias -Name yott -Value Invoke-YoloOmpTerraTemporary
 Set-Alias -Name yolt -Value Invoke-YoloOmpLunaTemporary
+Set-Alias -Name yoat -Value Invoke-YoloOmpAstraTemporary
 
 Set-Alias -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
 Set-Alias -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
@@ -367,6 +391,7 @@ Set-Alias -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
 Set-Alias -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary
 Set-Alias -Name pyott -Value Invoke-PinnedYoloOmpTerraTemporary
 Set-Alias -Name pyolt -Value Invoke-PinnedYoloOmpLunaTemporary
+Set-Alias -Name pyoat -Value Invoke-PinnedYoloOmpAstraTemporary
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'

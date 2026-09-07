@@ -15,9 +15,9 @@ try {
     . ([scriptblock]::Create($profileText))
     @(
         "yct", "yc-t", "ycft", "ycot", "ycst",
-        "yx-t", "yxst", "yxtt", "yxlt",
-        "yo-t", "yoft", "yoot", "yost", "yott", "yolt",
-        "pyo-t", "pyoft", "pyoot", "pyost", "pyott", "pyolt"
+        "yx-t", "yxst", "yxtt", "yxlt", "yxat",
+        "yo-t", "yoft", "yoot", "yost", "yott", "yolt", "yoat",
+        "pyo-t", "pyoft", "pyoot", "pyost", "pyott", "pyolt", "pyoat"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
