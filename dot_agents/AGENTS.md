@@ -8,6 +8,7 @@ Email: pedro@vezza.com.br
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
 - Run local adversarial code reviews in parallel to CI/CD. Reviewer model family (GPT/Claude) must ≠ author model. CodeRabbit suits all. Options `cr review --agent` (preferred), `claude -p '/code-review medium <base>...HEAD'`, `codex review --base <base>`.
 - Once local review cleared, trigger remote review manually `@coderabbitai review` or `@codex review`. Don't spam remote reviews or PR will be throttled.
+- Once remote review running, local reviews are optional. Useful after making big changes to address comments. Don't overlap local/remote reviews.
 - Merge bar unless stated otherwise: green CI/CD, remote review approved
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
