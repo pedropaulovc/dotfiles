@@ -1,11 +1,15 @@
 ## User info
 Full name: Pedro Paulo Vezza Campos
+Location: Seattle, WA 98109
 Email: pedro@vezza.com.br
 
 ## Git workflow
-- Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open with `gh pr create --draft` (CodeRabbit skips draft PRs by default) and `gh pr ready` as soon as you reach code-complete — before tests run — so code review runs in parallel. This overrides any "commit/push only when asked" default.
-- Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence. For non-Claude Code harnesses, append `Co-Authored-By: <model> <noreply@model-author>` e.g. `Co-Authored-By: GPT 5.6 Luna (high) <noreply@openai.com>`
-- Repos are configured with auto-code review on PR push and should acknowledge the PR within 1 minute. To force an incremental review, mention `@coderabbitai review` in a PR comment; use `@coderabbitai full review` for a complete pass.
+- Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
+- Run `gh pr ready` as soon as code-complete so CI/CD starts running.
+- Run local adversarial code reviews in parallel to CI/CD. Reviewer model family (GPT/Claude) must ≠ author model. CodeRabbit suits all. Options `cr review --agent`, `claude -p '/code-review high <base>...HEAD'`, `codex review --base <base>`.
+- Once local review cleared, trigger remote review manually `@coderabbitai review` or `@codex review`. Don't spam remote reviews or PR will be throttled.
+- Merge bar unless stated otherwise: green CI/CD, remote review approved
+- Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
 - Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
@@ -15,6 +19,7 @@ Email: pedro@vezza.com.br
 - Prefer `locate` over `find` (except under `/mnt/c`); prefer the Grep tool or `rg` over standard `grep`.
 - Install whatever tools the work needs — the user will help with `sudo`/login. Only pivot to alternatives if the user acknowledges; the right tools beat inefficient workarounds.
 - The main dev box (`amet`) has an RTX 3090 — use it for ML, audio/video processing, transcription.
+- If running OS-level UI automation that takes control of the user's mouse or keyboard, send a notification or alert immediately before starting and again immediately after finishing. Not applicable to `playwright-cli` or to operating applications through APIs.
 
 ## Research style
 - REPLACE the Fetch tool with Firecrawl + Browserbase MCP tools — far more reliable against bot-blocking. Route by task:
@@ -32,9 +37,6 @@ Email: pedro@vezza.com.br
 - Use as many `AskUserQuestion` calls as needed to be fully confident — clarifying up front beats guessing wrong and redoing work. Don't ration them.
 - If an `AskUserQuestion` times out (user likely asleep), take the maximalist path — full refactor, all edge cases, resolve dependent issues — and keep making progress.
 - External-facing docs (README, GitHub issues, PR descriptions, first emails — not internal docs): brevity, drafted for the audience. An issue's maintainer knows their software — show preliminary findings, don't declare the root cause for them; hide detail in `<details>`. Use /humanizer against AI slop.
-## UI automation
-- If OS-level UI automation would take control of the user's mouse or keyboard, send a notification or alert immediately before starting and again immediately after finishing. This requirement does not apply to `playwright-cli` or to operating applications through APIs.
-- The start notification must tell the user not to touch the mouse or keyboard until the OS-level automation is done; the completion notification must say that control has been released.
 
 ## Coding style
 - Do NOT add backwards-compatibility provisions unless told otherwise. Make sweeping changes toward what vanilla libraries/frameworks expect; git/backups are the rollback.
