@@ -68,6 +68,16 @@ sandbox = "elevated"
 source_type = "git"
 source = "https://github.com/pedropaulovc/agent-plugins.git"
 
+# Hosted Firecrawl MCP uses the existing machine-local API key as a bearer token.
+[mcp_servers.firecrawl]
+url = "https://mcp.firecrawl.dev/v2/mcp"
+bearer_token_env_var = "FIRECRAWL_API_KEY"
+
+# Browserbase accepts its API key as bearer authentication on the hosted endpoint.
+[mcp_servers.browserbase]
+url = "https://mcp.browserbase.com/mcp"
+bearer_token_env_var = "BROWSERBASE_API_KEY"
+
 # Codex identifies skill overrides by their absolute SKILL.md paths. Keep this
 # list aligned with the disabled skills in the live config when curated plugin
 # versions change.

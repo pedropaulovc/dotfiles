@@ -1,0 +1,40 @@
+# Merge chezmoi-managed MCP settings into ~/.claude.json.
+#
+# Claude Code owns this file at runtime — it stores project state, approvals,
+# OAuth credentials, and other machine-local data there. Keep the managed MCP
+# entries separate and merge them without clobbering those runtime keys.
+import json
+import os
+import tempfile
+
+MANAGED = json.loads(r'''
+{{ includeTemplate "claude-managed.json" . }}
+''')
+
+
+path = os.path.expanduser("~/.claude.json")
+if os.path.exists(path):
+    with open(path, encoding="utf-8") as f:
+        document = json.load(f)
+else:
+    document = {}
+
+servers = document.setdefault("mcpServers", {})
+if not isinstance(servers, dict):
+    raise TypeError(f"{path}: mcpServers must be an object")
+servers.update(MANAGED)
+
+parent = os.path.dirname(path)
+os.makedirs(parent, exist_ok=True)
+fd, temporary = tempfile.mkstemp(prefix=".claude.json.", dir=parent, text=True)
+try:
+    with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(document, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(temporary, path)
+except BaseException:
+    try:
+        os.unlink(temporary)
+    except FileNotFoundError:
+        pass
+    raise

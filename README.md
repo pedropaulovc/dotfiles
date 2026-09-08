@@ -73,7 +73,10 @@ strings) are sourced by `~/.bashrc` from an untracked file:
 
 `~/.config/shell/secrets.sh` is `chmod 600` and never added to chezmoi. On a
 fresh machine it won't exist; the guard makes that a harmless no-op until you
-recreate it. To make secrets reproducible across machines, upgrade to chezmoi's
+recreate it. The managed Firecrawl and Browserbase MCP entries read
+`FIRECRAWL_API_KEY` and `BROWSERBASE_API_KEY` from the environment; add the
+Browserbase key to this untracked file on machines that should connect to
+Browserbase. To make secrets reproducible across machines, upgrade to chezmoi's
 [age encryption](https://chezmoi.io/user-guide/encryption/age/) and commit the
 encrypted blob instead.
 
