@@ -33,8 +33,8 @@ Email: pedro@vezza.com.br
 - If an `AskUserQuestion` times out (user likely asleep), take the maximalist path — full refactor, all edge cases, resolve dependent issues — and keep making progress.
 - External-facing docs (README, GitHub issues, PR descriptions, first emails — not internal docs): brevity, drafted for the audience. An issue's maintainer knows their software — show preliminary findings, don't declare the root cause for them; hide detail in `<details>`. Use /humanizer against AI slop.
 ## UI automation
-- If UI automation would take control of the user's mouse or keyboard, send a notification or alert immediately before starting and again immediately after finishing.
-- The start notification must tell the user not to touch the mouse or keyboard until the automation is done; the completion notification must say that control has been released.
+- If OS-level UI automation would take control of the user's mouse or keyboard, send a notification or alert immediately before starting and again immediately after finishing. This requirement does not apply to `playwright-cli` or to operating applications through APIs.
+- The start notification must tell the user not to touch the mouse or keyboard until the OS-level automation is done; the completion notification must say that control has been released.
 
 ## Coding style
 - Do NOT add backwards-compatibility provisions unless told otherwise. Make sweeping changes toward what vanilla libraries/frameworks expect; git/backups are the rollback.
