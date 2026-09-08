@@ -203,7 +203,7 @@ path = {{ joinPath $primaryRuntimeCache "documents/26.715.12143/skills/documents
 enabled = false
 
 [[skills.config]]
-path = {{ joinPath $agentPluginCache "pr-comments/0.1.14/skills/comments/SKILL.md" | toJson }}
+path = {{ joinPath $agentPluginCache "pr-comments/0.1.15/skills/comments/SKILL.md" | toJson }}
 enabled = false
 
 [[skills.config]]
