@@ -13,7 +13,7 @@ Email: pedro@vezza.com.br
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
-- Right after `gh pr create`, babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
+- Right after publishing the PR (not draft), babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
 - Leverage stacked PRs to keep changes reviewable. Remember to use `gh stack`.
 
 ## Shell usage
