@@ -103,7 +103,7 @@ Email: pedro@vezza.com.br
 
 ### Distributed systems
  * No HTTP call over 1s — past that, replace the API with an async one: return a job ID, let clients poll.
- * Telemetry is VITAL for so many activities: error root cause analysis, performance investigation, progress tracking. OTEL makes this standardized. Always ensure you have enough telemetry to backtrack important operations. Err on the side of more telemetry rather than less. This guidance also applies to large local applications performing batch operations.
+ * Telemetry is VITAL for so many activities: error root cause analysis, performance investigation, progress tracking. OTEL makes this standardized. Always ensure you have enough telemetry to backtrack important operations. Err on the side of more telemetry rather than less. This guidance also applies to large local applications performing batch operations. If you spent too much time doing code static analysis to find a bug's root cause you are likely missing telemetry. **Add more telemetry** as part of your fix.
 
 ### Security
  * API keys are a horrible way to authenticate. They leak easily, they don't carry expiration information, etc. Try very hard to avoid them. For service-to-service auth use OIDC + workload identity federation if possible at all. Either the service can leverage cloud managed identities or mint its own tokens and then be authorized once as trusted. 
