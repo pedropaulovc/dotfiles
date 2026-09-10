@@ -62,7 +62,23 @@ PATH="$fake_bin:$PATH" \
 AZ_LOG="$az_log" \
 AZ_TOKEN='fresh-test-token' \
 PI_CODING_AGENT_DIR="$agent_dir" \
-sh "$hook" >"$tmp_dir/first-output"
+sh "$hook" >"$tmp_dir/first-output" 2>"$tmp_dir/first-trace"
+
+first_trace=$(cat "$tmp_dir/first-trace")
+case "$first_trace" in
+  *'+ az webapp config appsettings list '*)
+    ;;
+  *)
+    printf 'POSIX Hindsight hook did not print the Azure command.\n' >&2
+    exit 1
+    ;;
+esac
+case "$first_trace" in
+  *fresh-test-token*)
+    printf 'POSIX Hindsight hook leaked the refreshed token in its trace.\n' >&2
+    exit 1
+    ;;
+esac
 
 line_summary=$(awk -F= '
   $1 == "HINDSIGHT_API_TOKEN" { token_count++; token_ok = ($2 == "fresh-test-token") }

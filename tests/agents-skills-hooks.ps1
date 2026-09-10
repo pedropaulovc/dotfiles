@@ -8,7 +8,8 @@ $callLog = Join-Path $tempDir "npx-calls"
 New-Item -ItemType Directory -Path $binDir -Force | Out-Null
 New-Item -ItemType File -Path $callLog -Force | Out-Null
 
-$gitWrapper = @'
+if ($IsWindows) {
+    $gitWrapper = @'
 @echo off
 pushd "%~dp0"
 pwsh.exe -NoLogo -NoProfile -File "fake-git.ps1" %*
@@ -16,17 +17,42 @@ set "exitcode=%ERRORLEVEL%"
 popd
 exit /b %exitcode%
 '@
-$gitWrapper | Set-Content -LiteralPath (Join-Path $binDir "git.cmd") -Encoding utf8
+    $gitCommandPath = Join-Path $binDir "git.cmd"
+}
+else {
+    $gitWrapper = @'
+#!/bin/sh
+exec pwsh -NoLogo -NoProfile -File "$(dirname "$0")/fake-git.ps1" "$@"
+'@
+    $gitCommandPath = Join-Path $binDir "git"
+}
+$gitWrapper | Set-Content -LiteralPath $gitCommandPath -Encoding utf8
+if (-not $IsWindows) {
+    & chmod +x $gitCommandPath
+    if ($LASTEXITCODE -ne 0) {
+        throw "Could not make the fake Git executable."
+    }
+}
 
 $fakeGit = @'
 $ErrorActionPreference = "Stop"
 
 if ($args[0] -eq "clone") {
+    $hasBlobFilter = $args -contains "--filter=blob:none" -or (
+        $args -contains "--filter=blob" -and $args -contains "none"
+    )
+    if (
+        $args -notcontains "--depth=1" -or
+        -not $hasBlobFilter -or
+        $args -notcontains "--no-checkout"
+    ) {
+        throw "Clone was not shallow and blob-filtered: $($args -join ' ')"
+    }
     $source = $args | Where-Object { $_ -like "https://github.com/*" } | Select-Object -First 1
     $repoDir = $args[-1]
     $hashes = @{
-        "https://github.com/microsoft/playwright-cli.git" = "ef9a12fdadfb2ad4b67d512a10e840979f162c3a"
-        "https://github.com/blader/humanizer.git" = "b8a8804ed9210e539531fc26c2d84fdb603960f4"
+        "https://github.com/microsoft/playwright-cli.git" = "fe74b7fb02fe5d0697d1e1359cb44e1f48d1fc54"
+        "https://github.com/blader/humanizer.git" = "5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c"
         "https://github.com/nutlope/hallmark.git" = "747c924c4767b4d5fa6f1c59985c87a21c918334"
         "https://github.com/vectorize-io/hindsight.git" = "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7"
     }
@@ -54,7 +80,8 @@ throw "Unexpected git invocation: $($args -join ' ')"
 '@
 $fakeGit | Set-Content -LiteralPath (Join-Path $binDir "fake-git.ps1") -Encoding utf8
 
-$npxWrapper = @'
+if ($IsWindows) {
+    $npxWrapper = @'
 @echo off
 pushd "%~dp0"
 pwsh.exe -NoLogo -NoProfile -File "fake-npx.ps1" %*
@@ -62,7 +89,22 @@ set "exitcode=%ERRORLEVEL%"
 popd
 exit /b %exitcode%
 '@
-$npxWrapper | Set-Content -LiteralPath (Join-Path $binDir "npx.cmd") -Encoding utf8
+    $npxCommandPath = Join-Path $binDir "npx.cmd"
+}
+else {
+    $npxWrapper = @'
+#!/bin/sh
+exec pwsh -NoLogo -NoProfile -File "$(dirname "$0")/fake-npx.ps1" "$@"
+'@
+    $npxCommandPath = Join-Path $binDir "npx"
+}
+$npxWrapper | Set-Content -LiteralPath $npxCommandPath -Encoding utf8
+if (-not $IsWindows) {
+    & chmod +x $npxCommandPath
+    if ($LASTEXITCODE -ne 0) {
+        throw "Could not make the fake npx executable."
+    }
+}
 
 $fakeNpx = @'
 $ErrorActionPreference = "Stop"
@@ -93,10 +135,16 @@ Add-Content -LiteralPath $env:CALL_LOG -Value $actualAgents
 '@
 $fakeNpx | Set-Content -LiteralPath (Join-Path $binDir "fake-npx.ps1") -Encoding utf8
 
-$oldPath = $env:Path
+$pathVariable = if ($IsWindows) { "Path" } else { "PATH" }
+$powerShell = if ($IsWindows) { "pwsh.exe" } else { "pwsh" }
+$oldPath = [System.Environment]::GetEnvironmentVariable($pathVariable)
 $oldCallLog = $env:CALL_LOG
 try {
-    $env:Path = $binDir + [System.IO.Path]::PathSeparator + $env:Path
+    [System.Environment]::SetEnvironmentVariable(
+        $pathVariable,
+        $binDir + [System.IO.Path]::PathSeparator + $oldPath,
+        "Process"
+    )
     $env:CALL_LOG = $callLog
 
     Push-Location $repoDir
@@ -115,9 +163,16 @@ try {
 
     Push-Location $env:USERPROFILE
     try {
-        & pwsh.exe -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath
-        if ($LASTEXITCODE -ne 0) {
-            throw "The rendered Windows hook failed."
+        $hookOutputPath = Join-Path $tempDir "hook-output"
+        & $powerShell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *> $hookOutputPath
+        $hookSucceeded = $?
+        $hookExitCode = $LASTEXITCODE
+        $hookOutput = Get-Content -LiteralPath $hookOutputPath -Raw
+        if (-not $hookSucceeded -or $hookExitCode -ne 0) {
+            throw "The rendered Windows hook failed: $hookOutput"
+        }
+        if ($hookOutput -notmatch "git clone --depth=1 --filter=blob:none --no-checkout") {
+            throw "Rendered PowerShell hook did not print the shallow clone command."
         }
     }
     finally {
@@ -126,7 +181,7 @@ try {
 
     $calls = @(Get-Content -LiteralPath $callLog)
     if ($calls.Count -ne 4) {
-        throw "Expected four skill installs, got $($calls.Count)."
+        throw "Expected four skill installs, got $($calls.Count). Hook output: $hookOutput"
     }
     $lockedAgents = "amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code"
     if ($calls | Where-Object { $_ -ne $lockedAgents }) {
@@ -136,7 +191,7 @@ try {
     "Rendered PowerShell hook preserved locked agent targets across differing detection: $($calls.Count) installs."
 }
 finally {
-    $env:Path = $oldPath
+    [System.Environment]::SetEnvironmentVariable($pathVariable, $oldPath, "Process")
     if ($null -eq $oldCallLog) {
         Remove-Item Env:CALL_LOG -ErrorAction SilentlyContinue
     }

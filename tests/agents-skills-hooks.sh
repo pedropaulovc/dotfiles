@@ -15,15 +15,21 @@ cat >"$fake_bin/git" <<'EOF'
 set -eu
 
 if [ "$1" = clone ]; then
-  source="$5"
-  repo_dir="$6"
+  if [ "$2" != --depth=1 ] || [ "$3" != --filter=blob:none ] ||
+    [ "$4" != --no-checkout ] || [ "$5" != -- ]; then
+    printf 'Clone was not shallow and blob-filtered.\n' >&2
+    exit 1
+  fi
+  source="$6"
+  repo_dir="$7"
   mkdir -p "$repo_dir"
+
   case "$source" in
     https://github.com/microsoft/playwright-cli.git)
-      hash=ef9a12fdadfb2ad4b67d512a10e840979f162c3a
+      hash=fe74b7fb02fe5d0697d1e1359cb44e1f48d1fc54
       ;;
     https://github.com/blader/humanizer.git)
-      hash=b8a8804ed9210e539531fc26c2d84fdb603960f4
+      hash=5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c
       ;;
     https://github.com/nutlope/hallmark.git)
       hash=747c924c4767b4d5fa6f1c59985c87a21c918334
@@ -104,11 +110,22 @@ chmod +x "$fake_bin/npx"
 )
 
 locked_agents='amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code'
-PATH="$fake_bin:$PATH" \
-CALL_LOG="$call_log" \
-LOCKED_AGENTS="$locked_agents" \
-DETECTED_AGENTS='cursor' \
-sh "$tmp_dir/hook.sh"
+hook_output=$(
+  PATH="$fake_bin:$PATH" \
+  CALL_LOG="$call_log" \
+  LOCKED_AGENTS="$locked_agents" \
+  DETECTED_AGENTS='cursor' \
+  sh "$tmp_dir/hook.sh" 2>&1
+)
+
+case "$hook_output" in
+  *'+ git clone --depth=1 --filter=blob:none --no-checkout -- '*)
+    ;;
+  *)
+    printf 'Rendered skill hook did not print the shallow clone command.\n' >&2
+    exit 1
+    ;;
+esac
 
 call_count=$(wc -l <"$call_log")
 if [ "$call_count" -ne 4 ]; then

@@ -60,9 +60,18 @@ printf '%s' "$(cat "$lock_file")" >"$lock_without_final_newline"
 mv "$lock_without_final_newline" "$lock_file"
 
 now='2026-09-02T03:17:00.000Z'
-node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
+update_output=$(node "$repo_dir/.github/scripts/update-agent-skills-lock.mjs" \
   --lock-file "$lock_file" \
-  --now "$now"
+  --now "$now" 2>&1)
+case "$update_output" in
+  *'+ git clone --depth=1 --filter=blob:none --no-checkout -- '*)
+    ;;
+  *)
+    printf 'Updater did not print the shallow clone command.\n' >&2
+    exit 1
+    ;;
+esac
+printf '%s\n' "$update_output"
 node - "$lock_file" "$new_ref" "$new_nested_hash" "$new_root_hash" "$now" <<'NODE'
 const fs = require("node:fs");
 

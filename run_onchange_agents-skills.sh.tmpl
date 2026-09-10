@@ -3,6 +3,7 @@
 {{- if ne .platform "windows" -}}
 #!/bin/sh
 set -eu
+set -x
 
 # The metadata checksum makes this run whenever the lock file changes.
 # checksum: {{ $metadata | sha256sum }}
@@ -47,7 +48,7 @@ sync_skill() {
   fi
 
   repo_dir="$(mktemp -d "$repos_dir/repo.XXXXXX")"
-  git clone --filter=blob:none --no-checkout -- "$skill_source" "$repo_dir"
+  git clone --depth=1 --filter=blob:none --no-checkout -- "$skill_source" "$repo_dir"
   git -C "$repo_dir" fetch --depth=1 origin "$skill_revision"
   git -C "$repo_dir" checkout --detach "$skill_revision"
 

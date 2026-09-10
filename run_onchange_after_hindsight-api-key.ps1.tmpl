@@ -2,6 +2,7 @@
 {{- $hindsight := $config.hindsight | toJson -}}
 {{- if eq .platform "windows" -}}
 $ErrorActionPreference = "Stop"
+Set-PSDebug -Trace 1
 
 # The checksum makes this run whenever the rendered Hindsight section changes.
 # checksum: {{ $hindsight | sha256sum }}
@@ -46,6 +47,7 @@ try {
         --name app-hindsight-wu2 `
         --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" `
         --output tsv | Out-String)
+
     $azSucceeded = $?
     $azExitCode = $LASTEXITCODE
     if (-not $azSucceeded -or $azExitCode -ne 0) {

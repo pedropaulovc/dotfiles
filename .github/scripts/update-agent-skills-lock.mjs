@@ -50,7 +50,21 @@ function parseArguments(argumentsList) {
   return { lockFile, timestamp };
 }
 
+function formatCommandArgument(argument) {
+  const value = String(argument);
+  return /^[A-Za-z0-9_./:@%+=,-]+$/.test(value)
+    ? value
+    : JSON.stringify(value);
+}
+
+function formatCommand(command, argumentsList) {
+  return [command, ...argumentsList]
+    .map(formatCommandArgument)
+    .join(" ");
+}
+
 function runGit(argumentsList, cwd) {
+  console.error(`+ ${formatCommand("git", argumentsList)}`);
   try {
     return execFileSync("git", argumentsList, {
       cwd,
@@ -60,7 +74,7 @@ function runGit(argumentsList, cwd) {
   } catch (error) {
     const stderr = String(error.stderr || "").trim();
     const detail = stderr ? `: ${stderr}` : "";
-    throw new Error(`git ${argumentsList.join(" ")} failed${detail}`);
+    throw new Error(`${formatCommand("git", argumentsList)} failed${detail}`);
   }
 }
 
@@ -99,6 +113,7 @@ function cloneAtCommit(sourceUrl, commit, repositories, temporaryRoot) {
   runGit(
     [
       "clone",
+      "--depth=1",
       "--filter=blob:none",
       "--no-checkout",
       "--",

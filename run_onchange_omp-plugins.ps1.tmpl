@@ -1,6 +1,7 @@
 {{- $manifest := includeTemplate "omp-plugins.yml" . | fromYaml -}}
 {{- if eq .platform "windows" }}
 $ErrorActionPreference = "Stop"
+Set-PSDebug -Trace 1
 
 if (-not (Get-Command omp -ErrorAction SilentlyContinue)) {
     throw "omp is required to synchronize the plugin manifest."
@@ -10,6 +11,7 @@ $marketplaceName = {{ $manifest.marketplace.name | toJson }}
 $marketplaceSource = {{ $manifest.marketplace.source | toJson }}
 $marketplaceUrl = "https://github.com/$marketplaceSource"
 $marketplaces = (& omp plugin marketplace list | Out-String)
+
 if ($LASTEXITCODE -ne 0) {
     throw "omp could not list configured marketplaces."
 }

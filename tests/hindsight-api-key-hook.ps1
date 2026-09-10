@@ -92,11 +92,17 @@ try {
         "export HINDSIGHT_API_TOKEN=older-token"
     ) | Set-Content -LiteralPath (Join-Path $agentDir ".env") -Encoding utf8
 
-    & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath
+    $firstOutput = (& $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *>&1 | Out-String)
     $hookSucceeded = $?
     $hookExitCode = $LASTEXITCODE
     if (-not $hookSucceeded -or $hookExitCode -ne 0) {
         throw "The rendered Windows Hindsight hook failed."
+    }
+    if ($firstOutput -notmatch "az webapp config appsettings list") {
+        throw "Windows Hindsight hook did not print the Azure command."
+    }
+    if ($firstOutput -match "fresh-test-token") {
+        throw "Windows Hindsight hook leaked the refreshed token in its trace."
     }
 
     $envPath = Join-Path $agentDir ".env"

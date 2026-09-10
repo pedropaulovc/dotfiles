@@ -2,6 +2,7 @@
 {{- $lock := $metadata | fromJson -}}
 {{- if eq .platform "windows" }}
 $ErrorActionPreference = "Stop"
+Set-PSDebug -Trace 1
 
 # The metadata checksum makes this run whenever the lock file changes.
 # checksum: {{ $metadata | sha256sum }}
@@ -43,7 +44,7 @@ function Sync-Skill {
     }
 
     $repoDir = Join-Path $reposDir ([System.Guid]::NewGuid().ToString("N"))
-    & git clone --filter=blob:none --no-checkout -- $skillSource $repoDir
+    & git clone --depth=1 --filter=blob:none --no-checkout -- $skillSource $repoDir
     if ($LASTEXITCODE -ne 0) {
         throw "git could not clone the source for $skillName."
     }
@@ -73,6 +74,7 @@ function Sync-Skill {
     if ($actualHash -ne $expectedHash) {
         throw ("Skill hash mismatch for {0}: expected {1}, got {2}." -f $skillName, $expectedHash, $actualHash)
     }
+
     & npx --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes @AgentArgs
     if ($LASTEXITCODE -ne 0) {
         throw "npx could not install or upgrade skill $skillName."
