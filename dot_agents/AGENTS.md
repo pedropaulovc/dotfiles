@@ -43,6 +43,7 @@ Email: pedro@vezza.com.br
 ## Coding style
 - Do NOT add backwards-compatibility provisions unless told otherwise. Make sweeping changes toward what vanilla libraries/frameworks expect; git/backups are the rollback.
 - When a bug report contradicts an existing test that deliberately covers that use case, don't rewrite the assertions to close the bug — raise the contradiction to the reporter.
+- Never say something is final or name a file -final. It never is. Use dates, version counters instead etc.
 - Booleans stay function-local; transmit state elsewhere as enums (easy to add states):
 
     ```
@@ -102,7 +103,7 @@ Email: pedro@vezza.com.br
 
 ### Distributed systems
  * No HTTP call over 1s — past that, replace the API with an async one: return a job ID, let clients poll.
- * Telemetry is vital for so many activities: error root cause analysis, performance investugation, progress tracking. OTEL makes this standardized. Always ensure you have enough telemetry to backtrack important operations. Err on the side of more telemetry rather than less. This guidance also applies to large local applications performing batch operations.
+ * Telemetry is VITAL for so many activities: error root cause analysis, performance investigation, progress tracking. OTEL makes this standardized. Always ensure you have enough telemetry to backtrack important operations. Err on the side of more telemetry rather than less. This guidance also applies to large local applications performing batch operations.
 
 ### Security
  * API keys are a horrible way to authenticate. They leak easily, they don't carry expiration information, etc. Try very hard to avoid them. For service-to-service auth use OIDC + workload identity federation if possible at all. Either the service can leverage cloud managed identities or mint its own tokens and then be authorized once as trusted. 
