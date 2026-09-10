@@ -40,7 +40,7 @@ proseOnlyThinking: false
 advisor:
   enabled: false
 steeringMode: all
-followUpMode: one-at-a-time
+followUpMode: all
 interruptMode: wait
 doubleEscapeAction: tree
 autocompleteMaxVisible: 7
@@ -64,9 +64,9 @@ grep:
 task:
   eager: preferred
   isolation:
-    mode: auto
     merge: branch
     commits: ai
+    enabled: true
 worktree:
   base: ~/src/.omp/wt
 commands:
@@ -97,3 +97,5 @@ hindsight:
   apiUrl: https://hindsight.vza.net
   retainMode: full-session
   mentalModelsEnabled: true
+isolation:
+  backend: auto
