@@ -3,6 +3,9 @@ Full name: Pedro Paulo Vezza Campos
 Location: Seattle, WA 98109
 Email: pedro@vezza.com.br
 
+## Repository scope
+- This is Pedro's personal dotfiles repository, used only by Pedro. Prefer simple, direct solutions over abstractions or compatibility work for hypothetical users.
+
 ## Git workflow
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
