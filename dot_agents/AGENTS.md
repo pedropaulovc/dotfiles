@@ -83,6 +83,7 @@ Email: pedro@vezza.com.br
 
 - Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / `/loop` to filter out the noise.
 - IMPORTANT: if running via oh-my-pi harness / omp and need to locate file within skill folder run `realpath skill://my-skill-name` first. omp does not support glob in `skill://`.
+- Do not use OMP's read tool with query argument to describe the picture. It's not reliable. Read image yourself or via subagent.
 
 ## Engineering wisdom
 
