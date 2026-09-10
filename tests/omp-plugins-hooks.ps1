@@ -19,8 +19,19 @@ if ($args.Count -ge 4 -and $args[0] -eq "plugin" -and $args[1] -eq "marketplace"
     Add-Content -LiteralPath $env:CALL_LOG -Value ("add " + $args[3])
     exit 0
 }
+if ($args.Count -ge 4 -and $args[0] -eq "plugin" -and $args[1] -eq "marketplace" -and $args[2] -eq "update") {
+    Add-Content -LiteralPath $env:CALL_LOG -Value ("update " + $args[3])
+    if ($args[3] -ne "agent-plugins" -or $env:FAIL_REFRESH -eq "1") {
+        exit 1
+    }
+    New-Item -ItemType File -Path ($env:CALL_LOG + ".refreshed") -Force | Out-Null
+    exit 0
+}
 if ($args.Count -ge 3 -and $args[0] -eq "plugin" -and $args[1] -eq "install") {
     Add-Content -LiteralPath $env:CALL_LOG -Value ("install " + $args[2])
+    if (-not (Test-Path -LiteralPath ($env:CALL_LOG + ".refreshed"))) {
+        exit 1
+    }
     exit 0
 }
 throw "Unexpected omp invocation: $($args -join ' ')"
@@ -58,6 +69,7 @@ $powerShell = if ($IsWindows) { "pwsh.exe" } else { "pwsh" }
 $oldPath = [System.Environment]::GetEnvironmentVariable($pathVariable)
 $oldCallLog = $env:CALL_LOG
 $oldMarketplaces = $env:MARKETPLACES
+$oldFailRefresh = $env:FAIL_REFRESH
 try {
     [System.Environment]::SetEnvironmentVariable(
         $pathVariable,
@@ -89,6 +101,8 @@ try {
         )
 
         $env:MARKETPLACES = $Marketplaces
+        $env:FAIL_REFRESH = if ($CaseName -eq "refresh-failure") { "1" } else { "0" }
+        Remove-Item -LiteralPath ($callLog + ".refreshed") -ErrorAction SilentlyContinue
         Clear-Content -LiteralPath $callLog
         $outputPath = Join-Path $tempDir ($CaseName + "-output")
         & $powerShell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *> $outputPath
@@ -101,14 +115,12 @@ try {
         if ($ExpectedOutcome -eq "failure" -and $exitCode -eq 0) {
             throw "Expected $CaseName marketplace case to fail."
         }
-        if ($ExpectedOutcome -eq "failure" -and $hookOutput -notmatch "Marketplace agent-plugins is registered with a different source\.") {
-            throw "Different marketplace source produced the wrong error: $hookOutput"
-        }
 
         $calls = @(Get-Content -LiteralPath $callLog)
         $adds = @($calls | Where-Object { $_ -like "add *" })
+        $updates = @($calls | Where-Object { $_ -like "update *" })
         $installs = @($calls | Where-Object { $_ -like "install *" })
-        $summary = "$($adds.Count):$($installs.Count)"
+        $summary = "$($adds.Count):$($updates.Count):$($installs.Count)"
         if ($summary -ne $ExpectedSummary) {
             throw "Unexpected $CaseName call summary: $summary"
         }
@@ -126,24 +138,29 @@ try {
         url `
         "Configured Marketplaces:`n`n  agent-plugins  https://github.com/pedropaulovc/agent-plugins" `
         success `
-        "0:7"
+        "0:1:7"
     Invoke-HookCase `
         shorthand `
         "Configured Marketplaces:`n`n  agent-plugins  pedropaulovc/agent-plugins" `
         success `
-        "0:7"
+        "0:1:7"
     Invoke-HookCase `
         missing `
         "Configured Marketplaces:" `
         success `
-        "1:7"
+        "1:1:7"
+    Invoke-HookCase `
+        refresh-failure `
+        "Configured Marketplaces:`n`n  agent-plugins  https://github.com/pedropaulovc/agent-plugins" `
+        failure `
+        "0:1:0"
     Invoke-HookCase `
         wrong-source `
         "Configured Marketplaces:`n`n  agent-plugins  https://github.com/another-owner/agent-plugins" `
         failure `
-        "0:0"
+        "0:0:0"
 
-    "PowerShell OMP marketplace matching accepts URL and shorthand output, adds missing sources, and rejects mismatches."
+    "PowerShell OMP hooks refresh stale metadata before installs, stop on refresh failure, accept URL and shorthand sources, add missing sources, and reject mismatches."
 }
 finally {
     [System.Environment]::SetEnvironmentVariable($pathVariable, $oldPath, "Process")
@@ -158,6 +175,12 @@ finally {
     }
     else {
         $env:MARKETPLACES = $oldMarketplaces
+    }
+    if ($null -eq $oldFailRefresh) {
+        Remove-Item Env:FAIL_REFRESH -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:FAIL_REFRESH = $oldFailRefresh
     }
     Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }

@@ -46,6 +46,9 @@ if ! printf '%s\n' "$marketplaces" | awk -v name="$marketplace_name" -v source="
 
 fi
 
+# Force-install uses cached metadata; refresh it before resolving versions.
+omp plugin marketplace update "$marketplace_name"
+
 {{- range $plugin := $manifest.plugins }}
 omp plugin install {{ $plugin | toJson }} --scope user --force
 

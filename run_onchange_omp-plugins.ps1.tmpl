@@ -41,6 +41,12 @@ if (-not ($marketplaces -cmatch $expectedMarketplacePattern)) {
     }
 }
 
+# Force-install uses cached metadata; refresh it before resolving versions.
+& omp plugin marketplace update $marketplaceName
+if ($LASTEXITCODE -ne 0) {
+    throw "omp could not update marketplace $marketplaceName."
+}
+
 $plugins = @(
 {{- range $plugin := $manifest.plugins }}
     {{ $plugin | toJson }}
