@@ -9,18 +9,27 @@ if (-not (Get-Command omp -ErrorAction SilentlyContinue)) {
 
 $marketplaceName = {{ $manifest.marketplace.name | toJson }}
 $marketplaceSource = {{ $manifest.marketplace.source | toJson }}
-$expectedMarketplaceSource = $marketplaceSource
+$marketplaceUrl = "https://github.com/$marketplaceSource"
+if ($marketplaceSource -match '^https?://') {
+    $marketplaceUrl = $marketplaceSource
+}
 $marketplaces = (& omp plugin marketplace list | Out-String)
 
 if ($LASTEXITCODE -ne 0) {
     throw "omp could not list configured marketplaces."
 }
 
+$expectedMarketplaceSources = @(
+    $marketplaceSource
+    $marketplaceUrl
+) |
+    ForEach-Object { [regex]::Escape($_.TrimEnd('/')) } |
+    Select-Object -Unique
 $expectedMarketplacePattern = '(?m)^[ \t]*' +
     [regex]::Escape($marketplaceName) +
-    '[ \t]+' +
-    [regex]::Escape($expectedMarketplaceSource.TrimEnd('/')) +
-    '/?' +
+    '[ \t]+(?:' +
+    ($expectedMarketplaceSources -join '|') +
+    ')/?' +
     '(?:[ \t]+|\r?$)'
 if (-not ($marketplaces -cmatch $expectedMarketplacePattern)) {
     if ($marketplaces -cmatch ("(?m)^[ \t]*" + [regex]::Escape($marketplaceName) + "[ \t]")) {

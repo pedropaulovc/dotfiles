@@ -11,11 +11,22 @@ fi
 
 marketplace_name={{ $manifest.marketplace.name | toJson }}
 marketplace_source={{ $manifest.marketplace.source | toJson }}
-expected_marketplace_source="$marketplace_source"
+marketplace_url="https://github.com/$marketplace_source"
+case "$marketplace_source" in
+  http://*|https://*)
+    marketplace_url="$marketplace_source"
+    ;;
+esac
 marketplaces="$(omp plugin marketplace list)"
 
-if ! printf '%s\n' "$marketplaces" | awk -v name="$marketplace_name" -v source="$expected_marketplace_source" '
-  $1 == name && $2 == source { found = 1 }
+if ! printf '%s\n' "$marketplaces" | awk -v name="$marketplace_name" -v source="$marketplace_source" -v url="$marketplace_url" '
+  function normalize(value) {
+    sub(/\/+$/, "", value)
+    return value
+  }
+  $1 == name && (normalize($2) == normalize(source) || normalize($2) == normalize(url)) {
+    found = 1
+  }
   END {
     if (found) exit 0
     exit 1
