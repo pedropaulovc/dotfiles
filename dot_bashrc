@@ -199,12 +199,12 @@ yxtc() { yxt resume --last "$@"; }
 yxlc() { yxl resume --last "$@"; }
 yxac() { yxa resume --last "$@"; }
 yo() { omp --auto-approve "$@"; }
-yof() { yo --provider anthropic --model claude-fable-5.1 --thinking high "$@"; }
-yoo() { yo --provider anthropic --model claude-opus-5 --thinking high "$@"; }
-yos() { yo --provider openai-codex --model gpt-5.6-sol --thinking high "$@"; }
-yot() { yo --provider openai-codex --model gpt-5.6-terra --thinking max "$@"; }
-yol() { yo --provider openai-codex --model gpt-5.6-luna --thinking max "$@"; }
-yoa() { yo --provider openai-codex --model gpt-6-astra --thinking low "$@"; }
+yof() { yo --model anthropic/claude-fable-5.1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high "$@"; }
+yoo() { yo --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high "$@"; }
+yos() { yo --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+yot() { yo --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+yol() { yo --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+yoa() { yo --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
 yoc() { yo --continue "$@"; }
 yofc() { yof --continue "$@"; }
 yooc() { yoo --continue "$@"; }
@@ -216,12 +216,12 @@ yoac() { yoa --continue "$@"; }
 # Use the reviewed async-progress fork binary without changing production omp or yo.
 PYO_BINARY="/home/pedro/src/oh-my-pi/.wt/async-progress-e2e/packages/coding-agent/binaries/omp-linux-x64"
 pyo() { "$PYO_BINARY" --auto-approve "$@"; }
-pyof() { pyo --model anthropic/claude-fable-5.1 --thinking high "$@"; }
-pyoo() { pyo --model anthropic/claude-opus-5 --thinking high "$@"; }
-pyos() { pyo --model openai-codex/gpt-5.6-sol --thinking high "$@"; }
-pyot() { pyo --model openai-codex/gpt-5.6-terra --thinking max "$@"; }
-pyol() { pyo --model openai-codex/gpt-5.6-luna --thinking max "$@"; }
-pyoa() { pyo --model openai-codex/gpt-6-astra --thinking low "$@"; }
+pyof() { pyo --model anthropic/claude-fable-5.1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high "$@"; }
+pyoo() { pyo --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high "$@"; }
+pyos() { pyo --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+pyot() { pyo --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+pyol() { pyo --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
+pyoa() { pyo --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low "$@"; }
 pyoc() { pyo --continue "$@"; }
 pyofc() { pyof --continue "$@"; }
 pyooc() { pyoo --continue "$@"; }

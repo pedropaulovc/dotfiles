@@ -26,7 +26,9 @@ providers:
     - public
 modelRoles:
   default: openai-codex/gpt-5.6-luna:max
-symbolPreset: unicode
+  smol: openai-codex/gpt-5.6-luna:max
+  slow: openai-codex/gpt-5.6-sol:high
+  plan: openai-codex/gpt-6-astra:low
 theme:
   dark: titanium
 setupVersion: 2
@@ -99,3 +101,4 @@ hindsight:
   mentalModelsEnabled: true
 isolation:
   backend: auto
+hideThinkingBlock: true
