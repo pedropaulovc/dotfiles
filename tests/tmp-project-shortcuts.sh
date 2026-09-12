@@ -12,15 +12,37 @@ mkdir -p "$home_dir/.cargo" "$src_dir/tmp-stale" "$src_dir/tmp-fresh"
 touch -d '8 days ago' "$src_dir/tmp-stale"
 
 call_log="$tmp_dir/call-log"
+
 cat >"$tmp_dir/smoke.sh" <<'EOF'
 set -e
 . "$REPO_DIR/dot_bashrc"
 set -u
+omp() {
+    printf '%s\n' "$*" >>"$OMP_CALL_LOG"
+    if [ "$*" = 'plugin marketplace update' ] &&
+        [ "${FAIL_REFRESH:-0}" -eq 1 ]; then
+        return 17
+    fi
+}
+
+omp-plugin-upgrade
+expected_omp_calls='plugin marketplace update
+plugin upgrade'
+[ "$(cat "$OMP_CALL_LOG")" = "$expected_omp_calls" ]
+: >"$OMP_CALL_LOG"
+if FAIL_REFRESH=1 omp-plugin-upgrade; then
+    printf 'omp-plugin-upgrade continued after marketplace refresh failure.\n' >&2
+    exit 1
+fi
+[ "$(cat "$OMP_CALL_LOG")" = 'plugin marketplace update' ]
+
 for shortcut in \
+    omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
     yo-t yoft yoot yost yott yolt yoat \
     pyo-t pyoft pyoot pyost pyott pyolt pyoat; do
+
     type "$shortcut" >/dev/null
 done
 
@@ -96,6 +118,8 @@ fi
 EOF
 
 HOME="$home_dir" REPO_DIR="$repo_dir" CALL_LOG="$call_log" \
+    OMP_CALL_LOG="$tmp_dir/omp-call-log" \
     bash --noprofile --norc -i "$tmp_dir/smoke.sh"
+
 
 printf 'Temporary Bash shortcut created the project, forwarded arguments, and removed stale projects.\n'

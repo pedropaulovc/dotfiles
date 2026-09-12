@@ -96,6 +96,18 @@ function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args
 function Invoke-YoloCodexAstraContinue { Invoke-YoloCodexAstra resume --last @args }
 
 function Invoke-YoloOmp { & omp --auto-approve @args }
+function Invoke-OmpPluginUpgrade {
+    & omp plugin marketplace update
+    if ($LASTEXITCODE -ne 0) {
+        throw "omp could not update plugin marketplaces."
+    }
+
+    & omp plugin upgrade
+    if ($LASTEXITCODE -ne 0) {
+        throw "omp could not upgrade installed plugins."
+    }
+}
+
 function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5.1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
 function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
@@ -335,6 +347,8 @@ Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
 Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
 Set-Alias -Name yxac -Value Invoke-YoloCodexAstraContinue
 Set-Alias -Name yo -Value Invoke-YoloOmp
+Set-Alias -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
+
 Set-Alias -Name yof -Value Invoke-YoloOmpFable
 Set-Alias -Name yoo -Value Invoke-YoloOmpOpus
 Set-Alias -Name yos -Value Invoke-YoloOmpSol

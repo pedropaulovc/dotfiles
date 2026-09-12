@@ -8,12 +8,16 @@ New-Item -ItemType Directory -Path (Join-Path $sourcePath "tmp-stale") -Force | 
 New-Item -ItemType Directory -Path (Join-Path $sourcePath "tmp-fresh") -Force | Out-Null
 [System.IO.Directory]::SetLastWriteTimeUtc((Join-Path $sourcePath "tmp-stale"), [DateTime]::UtcNow.AddDays(-8))
 
+$ompCallLog = Join-Path $tempDir "omp-call-log"
+$oldFailRefresh = $env:FAIL_REFRESH
+
 try {
     $profilePath = Join-Path $repoDir ".chezmoitemplates/Microsoft.PowerShell_profile.ps1"
     $escapedSourcePath = $sourcePath.Replace("'", "''")
     $profileText = (Get-Content -LiteralPath $profilePath -Raw).Replace("'C:\src'", "'$escapedSourcePath'")
     . ([scriptblock]::Create($profileText))
     @(
+        "omp-plugin-upgrade",
         "yct", "yc-t", "ycft", "ycot", "ycst",
         "yx-t", "yxst", "yxtt", "yxlt", "yxat",
         "yo-t", "yoft", "yoot", "yost", "yott", "yolt", "yoat",
@@ -23,6 +27,42 @@ try {
             throw "Temporary shortcut was not defined: $_"
         }
     }
+
+    function omp {
+        $call = $args -join " "
+        Add-Content -LiteralPath $ompCallLog -Value $call
+        if ($call -eq "plugin marketplace update" -and $env:FAIL_REFRESH -eq "1") {
+            $global:LASTEXITCODE = 17
+            return
+        }
+        $global:LASTEXITCODE = 0
+    }
+    New-Item -ItemType File -Path $ompCallLog -Force | Out-Null
+
+    omp-plugin-upgrade
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 2 -or $calls[0] -ne "plugin marketplace update" -or $calls[1] -ne "plugin upgrade") {
+        throw "omp-plugin-upgrade did not refresh marketplaces before upgrading plugins."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+
+    $env:FAIL_REFRESH = "1"
+    $refreshFailed = $false
+    try {
+        omp-plugin-upgrade
+    }
+    catch {
+        $refreshFailed = $true
+    }
+    if (-not $refreshFailed) {
+        throw "omp-plugin-upgrade continued after marketplace refresh failure."
+    }
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "plugin marketplace update") {
+        throw "omp-plugin-upgrade ran plugin upgrade after marketplace refresh failure."
+    }
+    $env:FAIL_REFRESH = $oldFailRefresh
+
 
     $pwshPath = (Get-Process -Id $PID).Path
 
@@ -108,4 +148,6 @@ try {
 }
 finally {
     Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+    $env:FAIL_REFRESH = $oldFailRefresh
+
 }
