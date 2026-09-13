@@ -27,6 +27,37 @@ try {
             throw "Temporary shortcut was not defined: $_"
         }
     }
+    $dogfoodCallLog = Join-Path $tempDir "dogfood-call-log"
+    $dogfoodScript = Join-Path $tempDir "fake-omp-dogfood.ps1"
+    @'
+$args -join " " | Set-Content -LiteralPath $env:PYO_TEST_CALL_LOG
+$MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
+'@ | Set-Content -LiteralPath $dogfoodScript
+
+    $oldPyoBinary = $pyoBinary
+    $oldPyoCallLog = $env:PYO_TEST_CALL_LOG
+    try {
+        $pyoBinary = $dogfoodScript
+        $env:PYO_TEST_CALL_LOG = $dogfoodCallLog
+        Invoke-PinnedYoloOmp update --check
+        $dogfoodCalls = @(Get-Content -LiteralPath $dogfoodCallLog)
+        if ($dogfoodCalls.Count -ne 2 -or $dogfoodCalls[0] -ne "--auto-approve update --check") {
+            throw "pyo update did not forward the update command to the dogfood binary."
+        }
+        if ((Resolve-Path $dogfoodCalls[1]).Path -ne (Resolve-Path $dogfoodScript).Path) {
+            throw "pyo update invoked a temporary copy instead of the installed dogfood binary."
+        }
+    }
+    finally {
+        $pyoBinary = $oldPyoBinary
+        if ($null -eq $oldPyoCallLog) {
+            Remove-Item Env:PYO_TEST_CALL_LOG -ErrorAction SilentlyContinue
+        }
+        else {
+            $env:PYO_TEST_CALL_LOG = $oldPyoCallLog
+        }
+    }
+
 
     function omp {
         $call = $args -join " "
