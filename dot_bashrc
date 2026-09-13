@@ -219,8 +219,8 @@ yotc() { yot --continue "$@"; }
 yolc() { yol --continue "$@"; }
 yoac() { yoa --continue "$@"; }
 
-# Use the reviewed async-progress fork binary without changing production omp or yo.
-PYO_BINARY="/home/pedro/src/oh-my-pi/.wt/async-progress-e2e/packages/coding-agent/binaries/omp-linux-x64"
+# Use the self-updating fork dogfood binary without changing production omp or yo.
+PYO_BINARY="$HOME/.bun/bin/omp-dogfood"
 pyo() { "$PYO_BINARY" --auto-approve "$@"; }
 pyof() { pyo --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high "$@"; }
 pyoo() { pyo --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high "$@"; }
