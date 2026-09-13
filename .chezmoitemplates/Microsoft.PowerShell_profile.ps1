@@ -122,8 +122,8 @@ function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
 function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra --continue @args }
 
-# Run a temporary copy of the reviewed binary so pyo sessions do not lock the original.
-$pyoBinary = 'C:\src\dogfood\omp-windows-x64.exe'
+# Run a temporary copy of the self-updating fork dogfood binary so pyo sessions do not lock the original.
+$pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
 function Invoke-PinnedYoloOmp {
 	$tempBinary = Join-Path ([System.IO.Path]::GetTempPath()) "omp-pyo-$([guid]::NewGuid()).exe"
 
