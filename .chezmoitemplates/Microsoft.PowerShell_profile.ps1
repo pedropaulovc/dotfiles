@@ -108,8 +108,8 @@ function Invoke-OmpPluginUpgrade {
     }
 }
 
-function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5.1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
-function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
+function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
 function Invoke-YoloOmpSol { Invoke-YoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
 function Invoke-YoloOmpTerra { Invoke-YoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
 function Invoke-YoloOmpLuna { Invoke-YoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
@@ -135,8 +135,8 @@ function Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5.1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
-function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5.1:high @args }
+function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
+function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
 function Invoke-PinnedYoloOmpSol { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
 function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
 function Invoke-PinnedYoloOmpLuna { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
