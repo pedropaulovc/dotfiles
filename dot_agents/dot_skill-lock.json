@@ -35,11 +35,11 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "b5034cb6908f6811e39a4c4b6123ff8bf56a509c",
+      "ref": "bde55237f53bf55aacd048b01e29d7dc23b83a85",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-09-10T08:13:53.366Z"
+      "updatedAt": "2026-09-13T08:24:34.972Z"
     }
   },
   "dismissed": {
