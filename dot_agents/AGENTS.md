@@ -16,6 +16,11 @@ Email: pedro@vezza.com.br
 - No squash merges.
 - Right after publishing the PR (not draft), babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
 - Leverage stacked PRs to keep changes reviewable. Remember to use `gh stack`.
+- Make liberal use of `gh attach` (`sudosubin/gh-attach`) to attach screenshots, renders, plots, and log/trace files to PR descriptions, issue bodies, issue/PR comments, and commit comments — visual evidence beats prose, and the attachment stays readable long after the local file is gone. Default to attaching when the change is visual (UI, CAD render, chart), when a failure is easier shown than described (screenshot, terminal capture), or when a log/profile/HAR backs a claim.
+  - `gh attach shot.png build.log.zip --markdown` prints ready-to-paste Markdown; pipe the body in with `gh pr create -F -`, `gh issue comment -F -`, `gh pr comment -F -`.
+  - Images render inline; everything else (`.zip`, `.log`, `.txt`, `.pdf`, `.json`) becomes a download link. Zip up multi-file evidence rather than dumping thousands of log lines into the body.
+  - Attachments inherit the repo's visibility (private repo → signed, login-gated URLs), so they are safe for private work but never public-shareable from a private repo.
+  - Auth is a browser cookie, not the `gh` token. Sources are pinned in `~/.config/gh/attach.yml` on every platform (gh-attach reads `~/.config`, including on Windows — not gh's own `%APPDATA%\GitHub CLI`): Chrome `Profile 1` on `amet` WSL, Firefox `default-release` on Windows, since Windows Chrome cookies are v20 app-bound encrypted and unreadable. On `failed to resolve usable cookie source`, re-login to GitHub in that browser.
 
 ## Shell usage
 - Use pwsh.exe, not powershell.exe unless in rare circumstances pwsh is not available

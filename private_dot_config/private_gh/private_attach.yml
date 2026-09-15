@@ -1,0 +1,15 @@
+# gh-attach (sudosubin/gh-attach) cookie sources, tried in order; the first
+# profile whose dotcom_user matches the active `gh` account wins. gh-attach
+# always reads ~/.config/gh/attach.yml — on Windows too (C:\Users\<user>\.config),
+# not gh's own %APPDATA%\GitHub CLI dir — so one file covers every machine.
+#   - amet WSL: Chrome "Profile 1" holds the logged-in GitHub session.
+#   - Windows:  Chrome cookies are v20 app-bound encrypted and unreadable, so
+#               Firefox (plaintext cookies.sqlite) is the only working source.
+browsers:
+  - browser: chrome
+    profile: Profile 1
+  - browser: firefox
+    profile: default-release
+  - browser: chrome
+    profile: Default
+  - browser: firefox
