@@ -9,7 +9,7 @@ Email: pedro@vezza.com.br
 - Run local adversarial code reviews in parallel to CI/CD. Reviewer model family (GPT/Claude) must ≠ author model. CodeRabbit suits all. Options `cr review --agent` (preferred), `claude -p '/code-review medium <base>...HEAD'`, `codex review --base <base>`.
 - Once local review cleared, trigger remote review manually `@coderabbitai review` or `@codex review`. Don't spam remote reviews or PR will be throttled.
 - Once remote review running, local reviews are optional. Useful after making big changes to address comments. Don't overlap local/remote reviews.
-- Coderabbit and Codex must be tagged every time a (re)review is needed
+- CodeRabbit and Codex must be tagged every time a (re)review is needed
 - Merge bar unless stated otherwise: green CI/CD, remote review approved
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
@@ -83,9 +83,9 @@ Email: pedro@vezza.com.br
     return execute();
     ```
 
-- Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / `/loop` to filter out the noise.
+- Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / jobs with async progress notifications to filter out the noise.
 - IMPORTANT: if running via oh-my-pi harness / omp and need to locate file within skill folder run `realpath skill://my-skill-name` first. omp does not support glob in `skill://`.
-- Do not use OMP's read tool with query argument to describe the picture. It's not reliable. Read image yourself or via subagent.
+- Do not use OMP's read tool with query argument to describe a picture (`?q=`). It's not reliable. Read image yourself or via subagent.
 
 ## Engineering wisdom
 
