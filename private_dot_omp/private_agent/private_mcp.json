@@ -20,5 +20,8 @@
     "cloudflare:cloudflare-docs",
     "cloudflare:cloudflare-observability",
     "openaiDeveloperDocs"
+  ],
+  "enabledServers": [
+    "watch-pr:watch-pr"
   ]
 }
