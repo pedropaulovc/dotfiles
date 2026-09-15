@@ -18,6 +18,7 @@ Email: pedro@vezza.com.br
 - Leverage stacked PRs to keep changes reviewable. Remember to use `gh stack`.
 
 ## Shell usage
+- Use pwsh.exe, not powershell.exe unless in rare circumstances pwsh is not available
 - Python: ALWAYS uv, ALWAYS in a venv (never `--system`).
 - Prefer `locate` over `find` (except under `/mnt/c`); prefer the Grep tool or `rg` over standard `grep`.
 - Install whatever tools the work needs — the user will help with `sudo`/login. Only pivot to alternatives if the user acknowledges; the right tools beat inefficient workarounds.
