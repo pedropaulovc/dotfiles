@@ -16,11 +16,7 @@ Email: pedro@vezza.com.br
 - No squash merges.
 - Right after publishing the PR (not draft), babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
 - Leverage stacked PRs to keep changes reviewable. Remember to use `gh stack`.
-- Make liberal use of `gh attach` (`sudosubin/gh-attach`) to attach screenshots, renders, plots, and log/trace files to PR descriptions, issue bodies, issue/PR comments, and commit comments — visual evidence beats prose, and the attachment stays readable long after the local file is gone. Default to attaching when the change is visual (UI, CAD render, chart), when a failure is easier shown than described (screenshot, terminal capture), or when a log/profile/HAR backs a claim.
-  - `gh attach shot.png build.log.zip --markdown` prints ready-to-paste Markdown; pipe the body in with `gh pr create -F -`, `gh issue comment -F -`, `gh pr comment -F -`.
-  - Images render inline; everything else (`.zip`, `.log`, `.txt`, `.pdf`, `.json`) becomes a download link. Zip up multi-file evidence rather than dumping thousands of log lines into the body.
-  - Attachments inherit the repo's visibility (private repo → signed, login-gated URLs), so they are safe for private work but never public-shareable from a private repo.
-  - Auth is a browser cookie, not the `gh` token. Sources are pinned in `~/.config/gh/attach.yml` on every platform (gh-attach reads `~/.config`, including on Windows — not gh's own `%APPDATA%\GitHub CLI`): Chrome `Profile 1` on `amet` WSL, Firefox `default-release` on Windows, since Windows Chrome cookies are v20 app-bound encrypted and unreadable. On `failed to resolve usable cookie source`, re-login to GitHub in that browser.
+- Make liberal use of `gh attach` (`sudosubin/gh-attach`) to attach screenshots, renders, plots, and log/trace files to PR descriptions, issue bodies, issue/PR comments, and commit comments. Auth is a browser cookie, not the `gh` token. Sources are pinned in `~/.config/gh/attach.yml`. On `failed to resolve usable cookie source`, re-login to GitHub in that browser.
 
 ## Shell usage
 - Use pwsh.exe, not powershell.exe unless in rare circumstances pwsh is not available
@@ -47,6 +43,7 @@ Email: pedro@vezza.com.br
 - Use as many `AskUserQuestion` calls as needed to be fully confident — clarifying up front beats guessing wrong and redoing work. Don't ration them.
 - If an `AskUserQuestion` times out (user likely asleep), take the maximalist path — full refactor, all edge cases, resolve dependent issues — and keep making progress.
 - External-facing docs (README, GitHub issues, PR descriptions, first emails — not internal docs): brevity, drafted for the audience. An issue's maintainer knows their software — show preliminary findings, don't declare the root cause for them; hide detail in `<details>`. Use /humanizer against AI slop.
+- If you are coordinating long-running subagents, check-in on them periodically to understand if they are struggling with a problem or wasting time on repetitive work. For the former, consider dispatching a smarter agent from same family or if still stuck, an agent from a different family. For the latter, dispatch parallel agent to apply empirical skepticism, see below, and investigate how to automate repetitive work and then document the process in a resusable skill 
 
 ## Coding style
 - Do NOT add backwards-compatibility provisions unless told otherwise. Make sweeping changes toward what vanilla libraries/frameworks expect; git/backups are the rollback.
