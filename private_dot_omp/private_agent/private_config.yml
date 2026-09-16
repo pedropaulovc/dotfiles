@@ -59,7 +59,7 @@ autolearn:
 lsp:
   diagnosticsOnWrite: false
   diagnosticsOnEdit: false
-  formatOnWrite: true
+  formatOnWrite: false
 debug:
   enabled: false
 grep:
