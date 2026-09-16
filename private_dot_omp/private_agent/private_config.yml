@@ -102,4 +102,4 @@ hindsight:
   mentalModelsEnabled: true
 isolation:
   backend: auto
-hideThinkingBlock: true
+hideThinkingBlock: false
