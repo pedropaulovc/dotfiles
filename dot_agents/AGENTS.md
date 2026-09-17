@@ -90,6 +90,7 @@ Email: pedro@vezza.com.br
 - Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / jobs with async progress notifications to filter out the noise.
 - IMPORTANT: if running via oh-my-pi harness / omp and need to locate file within skill folder run `realpath skill://my-skill-name` first. omp does not support glob in `skill://`.
 - Do not use OMP's read tool with query argument to describe a picture (`?q=`). It's not reliable. Read image yourself or via subagent.
+- Write idiomatic PowerShell: use approved verbs, proper logging Write-Information, Write-Warning, ... instead of Write-Host.
 
 ## Engineering wisdom
 
