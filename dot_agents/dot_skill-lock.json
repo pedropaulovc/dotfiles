@@ -5,11 +5,11 @@
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
-      "ref": "12228454ed024c9ac89abd59df3b706ed9135fd9",
+      "ref": "74354ecc7a43da16d91a9bc54fa8db8283a3fcf5",
       "skillPath": "skills/playwright-cli/SKILL.md",
-      "skillFolderHash": "10104bd92881e5ca5688f0a2cd1372e3c0e413a9",
+      "skillFolderHash": "4b040465accc10048d4b16479bb54d6d1d3bdeb6",
       "installedAt": "2026-03-30T02:06:57.875Z",
-      "updatedAt": "2026-09-16T08:42:31.593Z"
+      "updatedAt": "2026-09-19T08:08:38.814Z"
     },
     "humanizer": {
       "source": "blader/humanizer",
@@ -35,11 +35,11 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "be0e93997a35d517250181c4dfb2d86c2dd95bc1",
+      "ref": "79a2fb152f17ad03e94882e9cb6b8b25049f38c0",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-09-16T08:42:31.593Z"
+      "updatedAt": "2026-09-19T08:08:38.814Z"
     }
   },
   "dismissed": {
