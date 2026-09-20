@@ -127,14 +127,20 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     Clear-Content -LiteralPath $ompCallLog
     yog --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --probe") {
-        throw "yog did not select the GLM 5.3 Flash model."
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe") {
+        throw "yog did not select the GLM 5.3 Flash model and Claude role models."
     }
     Clear-Content -LiteralPath $ompCallLog
     yof --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe") {
-        throw "yof did not select Claude cost-optimized role models."
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe") {
+        throw "yof did not select the Claude Fable medium model."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yoo --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe") {
+        throw "yoo did not select the Claude Opus medium model."
     }
     Clear-Content -LiteralPath $ompCallLog
     yos --probe
