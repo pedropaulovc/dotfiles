@@ -230,21 +230,21 @@ $targets
 EOF
 }
 
-yof() { yo --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
-yoo() { yo --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
-yos() { yo --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
-yot() { yo --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
-yol() { yo --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
-yoa() { yo --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
-yog() { yo --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
-yoc() { yo --continue "$@"; }
-yofc() { yof --continue "$@"; }
-yooc() { yoo --continue "$@"; }
-yosc() { yos --continue "$@"; }
-yotc() { yot --continue "$@"; }
-yolc() { yol --continue "$@"; }
-yoac() { yoa --continue "$@"; }
-yogc() { yog --continue "$@"; }
+yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
+yoo()  { yo  --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
+yos()  { yo  --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
+yot()  { yo  --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
+yol()  { yo  --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
+yoa()  { yo  --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium "$@"; }
+yog()  { yo  --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium "$@"; }
+yoc()  { yo  --continue "$@"; }
+yofc()  { yof  --continue "$@"; }
+yooc()  { yoo  --continue "$@"; }
+yosc()  { yos  --continue "$@"; }
+yotc()  { yot  --continue "$@"; }
+yolc()  { yol  --continue "$@"; }
+yoac()  { yoa  --continue "$@"; }
+yogc()  { yog  --continue "$@"; }
 
 # Use the self-updating fork dogfood binary without changing production omp or yo.
 PYO_BINARY="$HOME/.bun/bin/omp-dogfood"

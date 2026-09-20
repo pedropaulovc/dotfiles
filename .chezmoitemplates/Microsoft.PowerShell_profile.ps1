@@ -133,21 +133,21 @@ function Invoke-OmpPluginUpgrade {
     }
 }
 
-function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
-function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
-function Invoke-YoloOmpSol { Invoke-YoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
-function Invoke-YoloOmpTerra { Invoke-YoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
-function Invoke-YoloOmpLuna { Invoke-YoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
-function Invoke-YoloOmpAstra { Invoke-YoloOmp --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
-function Invoke-YoloOmpGlm { Invoke-YoloOmp --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
-function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
-function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable --continue @args }
-function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus --continue @args }
-function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
-function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
-function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
-function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra --continue @args }
-function Invoke-YoloOmpGlmContinue { Invoke-YoloOmpGlm --continue @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-YoloOmpOpus { Invoke-YoloOmp       --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-YoloOmpSol { Invoke-YoloOmp       --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpTerra { Invoke-YoloOmp       --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpLuna { Invoke-YoloOmp       --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpAstra { Invoke-YoloOmp       --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpGlm { Invoke-YoloOmp       --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-YoloOmpContinue { Invoke-YoloOmp       --continue @args }
+function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
+function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus       --continue @args }
+function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol       --continue @args }
+function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra       --continue @args }
+function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna       --continue @args }
+function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra       --continue @args }
+function Invoke-YoloOmpGlmContinue { Invoke-YoloOmpGlm       --continue @args }
 
 # Run a temporary copy of the self-updating fork dogfood binary so pyo sessions do not lock the original. `update` runs the original so the replacement persists.
 $pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
