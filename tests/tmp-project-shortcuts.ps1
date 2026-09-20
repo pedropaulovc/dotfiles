@@ -10,6 +10,7 @@ New-Item -ItemType Directory -Path (Join-Path $sourcePath "tmp-fresh") -Force | 
 
 $ompCallLog = Join-Path $tempDir "omp-call-log"
 $oldFailRefresh = $env:FAIL_REFRESH
+$oldFailUpgrade = $env:FAIL_UPGRADE
 
 try {
     $profilePath = Join-Path $repoDir ".chezmoitemplates/Microsoft.PowerShell_profile.ps1"
@@ -62,9 +63,62 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     function omp {
         $call = $args -join " "
         Add-Content -LiteralPath $ompCallLog -Value $call
-        if ($call -eq "plugin marketplace update" -and $env:FAIL_REFRESH -eq "1") {
-            $global:LASTEXITCODE = 17
-            return
+        switch ($call) {
+            "plugin marketplace update" {
+                if ($env:FAIL_REFRESH -eq "1") {
+                    $global:LASTEXITCODE = 17
+                    return
+                }
+            }
+            "plugin list --json" {
+                @'
+{
+  "npm": [],
+  "marketplace": [
+    {
+      "id": "watch-pr@agent-plugins",
+      "scope": "user",
+      "entries": [
+        {
+          "scope": "user",
+          "version": "2.0.2"
+        }
+      ]
+    },
+    {
+      "id": "watch-pr@agent-plugins",
+      "scope": "project",
+      "entries": [
+        {
+          "scope": "project",
+          "version": "2.0.2"
+        }
+      ]
+    },
+    {
+      "id": "worktree-reset@agent-plugins",
+      "scope": "project",
+      "entries": [
+        {
+          "scope": "project",
+          "version": "2.2.0"
+        }
+      ]
+    }
+  ]
+}
+'@
+            }
+            "plugin upgrade watch-pr@agent-plugins --scope user" {
+                if ($env:FAIL_UPGRADE -eq "1") {
+                    $global:LASTEXITCODE = 19
+                    return
+                }
+            }
+            "plugin upgrade watch-pr@agent-plugins --scope project" {
+            }
+            "plugin upgrade worktree-reset@agent-plugins --scope project" {
+            }
         }
         $global:LASTEXITCODE = 0
     }
@@ -72,8 +126,15 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
 
     omp-plugin-upgrade
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 2 -or $calls[0] -ne "plugin marketplace update" -or $calls[1] -ne "plugin upgrade") {
-        throw "omp-plugin-upgrade did not refresh marketplaces before upgrading plugins."
+    $expectedCalls = @(
+        "plugin marketplace update",
+        "plugin list --json",
+        "plugin upgrade watch-pr@agent-plugins --scope user",
+        "plugin upgrade watch-pr@agent-plugins --scope project",
+        "plugin upgrade worktree-reset@agent-plugins --scope project"
+    )
+    if ($null -ne (Compare-Object -ReferenceObject $expectedCalls -DifferenceObject $calls)) {
+        throw "omp-plugin-upgrade did not target every installed plugin scope."
     }
     Clear-Content -LiteralPath $ompCallLog
 
@@ -90,9 +151,32 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     }
     $calls = @(Get-Content -LiteralPath $ompCallLog)
     if ($calls.Count -ne 1 -or $calls[0] -ne "plugin marketplace update") {
-        throw "omp-plugin-upgrade ran plugin upgrade after marketplace refresh failure."
+        throw "omp-plugin-upgrade ran plugin listing after marketplace refresh failure."
     }
     $env:FAIL_REFRESH = $oldFailRefresh
+
+    Clear-Content -LiteralPath $ompCallLog
+    $env:FAIL_UPGRADE = "1"
+    $upgradeFailed = $false
+    try {
+        omp-plugin-upgrade
+    }
+    catch {
+        $upgradeFailed = $true
+    }
+    if (-not $upgradeFailed) {
+        throw "omp-plugin-upgrade hid a scoped plugin upgrade failure."
+    }
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    $expectedFailedCalls = @(
+        "plugin marketplace update",
+        "plugin list --json",
+        "plugin upgrade watch-pr@agent-plugins --scope user"
+    )
+    if ($null -ne (Compare-Object -ReferenceObject $expectedFailedCalls -DifferenceObject $calls)) {
+        throw "omp-plugin-upgrade continued after a scoped plugin upgrade failure."
+    }
+    $env:FAIL_UPGRADE = $oldFailUpgrade
 
 
     $pwshPath = (Get-Process -Id $PID).Path
@@ -180,5 +264,11 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
 finally {
     Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
     $env:FAIL_REFRESH = $oldFailRefresh
+    if ($null -eq $oldFailUpgrade) {
+        Remove-Item Env:FAIL_UPGRADE -ErrorAction SilentlyContinue
+    }
+    else {
+        $env:FAIL_UPGRADE = $oldFailUpgrade
+    }
 
 }

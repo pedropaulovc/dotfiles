@@ -102,9 +102,34 @@ function Invoke-OmpPluginUpgrade {
         throw "omp could not update plugin marketplaces."
     }
 
-    & omp plugin upgrade
+    $pluginListJson = (& omp plugin list --json | Out-String)
     if ($LASTEXITCODE -ne 0) {
-        throw "omp could not upgrade installed plugins."
+        throw "omp could not list installed plugins."
+    }
+
+    try {
+        $pluginList = $pluginListJson | ConvertFrom-Json -ErrorAction Stop
+    }
+    catch {
+        throw "omp returned invalid plugin list JSON: $($_.Exception.Message)"
+    }
+
+    foreach ($plugin in @($pluginList.marketplace)) {
+        if ($null -eq $plugin) {
+            continue
+        }
+
+        if ([string]::IsNullOrWhiteSpace([string]$plugin.id)) {
+            throw "omp returned a marketplace plugin without an ID."
+        }
+        if ($plugin.scope -ne "user" -and $plugin.scope -ne "project") {
+            throw "omp returned an invalid scope for $($plugin.id): $($plugin.scope)."
+        }
+
+        & omp plugin upgrade $plugin.id --scope $plugin.scope
+        if ($LASTEXITCODE -ne 0) {
+            throw "omp could not upgrade $($plugin.id) ($($plugin.scope) scope)."
+        }
     }
 }
 

@@ -199,10 +199,35 @@ yxtc() { yxt resume --last "$@"; }
 yxlc() { yxl resume --last "$@"; }
 yxac() { yxa resume --last "$@"; }
 yo() { omp --auto-approve "$@"; }
-# Refresh marketplace metadata before upgrading all installed OMP plugins.
+# Refresh marketplace metadata before upgrading every installed marketplace
+# plugin explicitly; OMP's no-target upgrade can miss stale scoped installs.
 omp-plugin-upgrade() {
-  omp plugin marketplace update &&
-    omp plugin upgrade
+  local plugin_list targets plugin scope
+
+  omp plugin marketplace update || return
+
+  plugin_list=$(omp plugin list --json) || return
+  targets=$(printf '%s\n' "$plugin_list" |
+    jq -r '
+      (.marketplace // [])[] |
+      if (.id | type) != "string" then
+        error("invalid marketplace plugin id")
+      elif (.id | length) == 0 then
+        error("empty marketplace plugin id")
+      elif .scope != "user" and .scope != "project" then
+        error("invalid marketplace plugin scope")
+      else
+        [.id, .scope] | @tsv
+      end
+    ') ||
+    return
+
+  while IFS="$(printf '\t')" read -r plugin scope; do
+    [ -n "$plugin" ] || continue
+    omp plugin upgrade "$plugin" --scope "$scope" || return
+  done <<EOF
+$targets
+EOF
 }
 
 yof() { yo --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high "$@"; }

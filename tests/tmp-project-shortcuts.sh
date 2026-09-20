@@ -19,22 +19,57 @@ set -e
 set -u
 omp() {
     printf '%s\n' "$*" >>"$OMP_CALL_LOG"
-    if [ "$*" = 'plugin marketplace update' ] &&
-        [ "${FAIL_REFRESH:-0}" -eq 1 ]; then
-        return 17
-    fi
+    case "$*" in
+        'plugin marketplace update')
+            [ "${FAIL_REFRESH:-0}" -eq 0 ] || return 17
+            ;;
+        'plugin list --json')
+            if [ "${EMPTY_MARKETPLACE:-0}" -eq 1 ]; then
+                printf '%s\n' '{"marketplace":[]}'
+            else
+                printf '%s\n' '{"marketplace":[{"id":"watch-pr@agent-plugins","scope":"user","entries":[{"scope":"user","version":"2.0.2"}]},{"id":"watch-pr@agent-plugins","scope":"project","entries":[{"scope":"project","version":"2.0.2"}]},{"id":"worktree-reset@agent-plugins","scope":"project","entries":[{"scope":"project","version":"2.2.0"}]}]}'
+            fi
+            ;;
+        'plugin upgrade watch-pr@agent-plugins --scope user')
+            [ "${FAIL_UPGRADE:-0}" -eq 0 ] || return 19
+            ;;
+        'plugin upgrade watch-pr@agent-plugins --scope project')
+            ;;
+        'plugin upgrade worktree-reset@agent-plugins --scope project')
+            ;;
+    esac
 }
 
 omp-plugin-upgrade
 expected_omp_calls='plugin marketplace update
-plugin upgrade'
+plugin list --json
+plugin upgrade watch-pr@agent-plugins --scope user
+plugin upgrade watch-pr@agent-plugins --scope project
+plugin upgrade worktree-reset@agent-plugins --scope project'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_omp_calls" ]
+: >"$OMP_CALL_LOG"
+if ! EMPTY_MARKETPLACE=1 omp-plugin-upgrade; then
+    printf 'omp-plugin-upgrade failed with no marketplace plugins.\n' >&2
+    exit 1
+fi
+expected_empty_calls='plugin marketplace update
+plugin list --json'
+[ "$(cat "$OMP_CALL_LOG")" = "$expected_empty_calls" ]
 : >"$OMP_CALL_LOG"
 if FAIL_REFRESH=1 omp-plugin-upgrade; then
     printf 'omp-plugin-upgrade continued after marketplace refresh failure.\n' >&2
     exit 1
 fi
 [ "$(cat "$OMP_CALL_LOG")" = 'plugin marketplace update' ]
+: >"$OMP_CALL_LOG"
+if FAIL_UPGRADE=1 omp-plugin-upgrade; then
+    printf 'omp-plugin-upgrade hid a scoped plugin upgrade failure.\n' >&2
+    exit 1
+fi
+expected_failed_upgrade_calls='plugin marketplace update
+plugin list --json
+plugin upgrade watch-pr@agent-plugins --scope user'
+[ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
 
 for shortcut in \
     omp-plugin-upgrade \
