@@ -113,19 +113,19 @@ omp usage --json | jq '
 
 - Match subagent to task complexity and cost:
 
-| Model            | Effort | Artificial Intelligence v4.3.2 | Cost per Task | Rule of thumb                                                                  |
-|------------------|--------|--------------------------------|---------------|--------------------------------------------------------------------------------|
-| GPT-5.6 Luna     | Max    | 37                             | 0.18          | Scout, summarizer, well defined bug fixer, ~1000=LoC output, default if unsure |
-| GPT-5.6 Sol      | Medium | 39                             | 0.5           | Workhorse for feature work, code reviewer                                      |
-| GPT-5.6 Sol      | XHigh  | 44                             | 1.18          | Workhorse for larger complexity feature work, integrator                       |
-| GPT-6 Astra      | Low    | 46                             | 0.82          | Work coordinator, Step-up if Sol medium not effective                          |
-| GPT-6 Astra      | High   | 51                             | 1.73          | Advisor, last resort for toughest fixes                                        |
-| Claude Opus 5    | Medium | 45                             | 2.19          | Workhorse for feature work, code reviewer                                      |
-| Claude Opus 5    | High   | 48                             | 3.61          | Workhorse for larger complexity feature work, integrator                       |
-| Claude Opus 5    | XHigh  | 50                             | 4.88          | Alternative when Fable medium/high not available                               |
-| Claude Fable 5.1 | Medium | 49                             | 2.98          | Work coordinator, planner, step-up if Opus high not effective, 3D vision tasks |
-| Claude Fable 5.1 | XHigh  | 53                             | 5.98          | Advisor, last resort for toughest fixes                                        |
-| GLM 5.3 Flash    | N/A    | 42                             | 0.25          | Scout, summarizer, well defined bug fixer, ~1000=LoC output                    |
+| Model            | Effort | Artificial Intelligence v4.3.2 | Cost per Task | Rule of thumb                                                                   |
+|------------------|--------|--------------------------------|---------------|---------------------------------------------------------------------------------|
+| GPT-5.6 Luna     | Max    | 37                             | 0.18          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature, default if unsure |
+| GPT-5.6 Sol      | Medium | 39                             | 0.5           | Workhorse for feature work, code reviewer                                       |
+| GPT-5.6 Sol      | XHigh  | 44                             | 1.18          | Workhorse for larger complexity feature work, integrator                        |
+| GPT-6 Astra      | Low    | 46                             | 0.82          | Work coordinator, Step-up if Sol medium not effective                           |
+| GPT-6 Astra      | High   | 51                             | 1.73          | Plan, advisor, last resort for toughest fixes                                   |
+| GLM 5.3 Flash    | N/A    | 42                             | 0.25          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature                    |
+| Claude Opus 5    | Medium | 45                             | 2.19          | Workhorse for feature work, code reviewer                                       |
+| Claude Opus 5    | High   | 48                             | 3.61          | Workhorse for larger complexity feature work, integrator                        |
+| Claude Opus 5    | XHigh  | 50                             | 4.88          | Alternative when Fable medium/high not available                                |
+| Claude Fable 5.1 | Medium | 49                             | 2.98          | Work coordinator, planner, step-up if Opus high not effective, 3D vision tasks  |
+| Claude Fable 5.1 | XHigh  | 53                             | 5.98          | Plan, advisor, last resort for toughest fixes                                   |
 
 ## Engineering wisdom
 
