@@ -72,7 +72,7 @@ plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
 : >"$OMP_CALL_LOG"
 yog --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 cat >"$TMP_PYO_BINARY" <<'PYOP'
 #!/bin/sh
 printf '%s\n' "$*" >>"$OMP_CALL_LOG"
@@ -81,31 +81,40 @@ chmod +x "$TMP_PYO_BINARY"
 PYO_BINARY="$TMP_PYO_BINARY"
 : >"$OMP_CALL_LOG"
 pyog --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 pyof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 pyoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+: >"$OMP_CALL_LOG"
+pyos --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+: >"$OMP_CALL_LOG"
+yot --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+: >"$OMP_CALL_LOG"
+pyot --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
-    yo yof yoo yos yot yol yoa yog yoc yofc yooc yosc yotc yolc yoac yogc \
-    pyo pyof pyoo pyos pyot pyol pyoa pyog pyoc pyofc pyooc pyosc pyotc pyolc pyoac pyogc \
-    yo-t yoft yoot yost yott yolt yoat yogt \
-    pyo-t pyoft pyoot pyost pyott pyolt pyoat pyogt; do
+    yo yof yoo yog yos yot yol yoa yoc yofc yooc yogc yosc yotc yolc yoac \
+    pyo pyof pyoo pyog pyos pyot pyol pyoa pyoc pyofc pyooc pyogc pyosc pyotc pyolc pyoac \
+    yo-t yoft yoot yogt yost yott yolt yoat \
+    pyo-t pyoft pyoot pyogt pyost pyott pyolt pyoat; do
 
     type "$shortcut" >/dev/null
 done
