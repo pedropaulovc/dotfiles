@@ -70,13 +70,33 @@ expected_failed_upgrade_calls='plugin marketplace update
 plugin list --json
 plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
+: >"$OMP_CALL_LOG"
+yog --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --probe' ]
+cat >"$TMP_PYO_BINARY" <<'PYOP'
+#!/bin/sh
+printf '%s\n' "$*" >>"$OMP_CALL_LOG"
+PYOP
+chmod +x "$TMP_PYO_BINARY"
+PYO_BINARY="$TMP_PYO_BINARY"
+: >"$OMP_CALL_LOG"
+pyog --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --probe' ]
+: >"$OMP_CALL_LOG"
+yof --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe' ]
+: >"$OMP_CALL_LOG"
+yos --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium --probe' ]
 
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
-    yo-t yoft yoot yost yott yolt yoat \
-    pyo-t pyoft pyoot pyost pyott pyolt pyoat; do
+    yo yof yoo yos yot yol yoa yog yoc yofc yooc yosc yotc yolc yoac yogc \
+    pyo pyof pyoo pyos pyot pyol pyoa pyog pyoc pyofc pyooc pyosc pyotc pyolc pyoac pyogc \
+    yo-t yoft yoot yost yott yolt yoat yogt \
+    pyo-t pyoft pyoot pyost pyott pyolt pyoat pyogt; do
 
     type "$shortcut" >/dev/null
 done
@@ -153,7 +173,7 @@ fi
 EOF
 
 HOME="$home_dir" REPO_DIR="$repo_dir" CALL_LOG="$call_log" \
-    OMP_CALL_LOG="$tmp_dir/omp-call-log" \
+    OMP_CALL_LOG="$tmp_dir/omp-call-log" TMP_PYO_BINARY="$tmp_dir/fake-pyo" \
     bash --noprofile --norc -i "$tmp_dir/smoke.sh"
 
 

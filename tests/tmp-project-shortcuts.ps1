@@ -19,10 +19,11 @@ try {
     . ([scriptblock]::Create($profileText))
     @(
         "omp-plugin-upgrade",
+        "yog", "pyog", "yogc", "pyogc",
         "yct", "yc-t", "ycft", "ycot", "ycst",
         "yx-t", "yxst", "yxtt", "yxlt", "yxat",
-        "yo-t", "yoft", "yoot", "yost", "yott", "yolt", "yoat",
-        "pyo-t", "pyoft", "pyoot", "pyost", "pyott", "pyolt", "pyoat"
+        "yo-t", "yoft", "yoot", "yost", "yott", "yolt", "yoat", "yogt",
+        "pyo-t", "pyoft", "pyoot", "pyost", "pyott", "pyolt", "pyoat", "pyogt"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
@@ -123,7 +124,25 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
         $global:LASTEXITCODE = 0
     }
     New-Item -ItemType File -Path $ompCallLog -Force | Out-Null
-
+    Clear-Content -LiteralPath $ompCallLog
+    yog --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --probe") {
+        throw "yog did not select the GLM 5.3 Flash model."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yof --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium --probe") {
+        throw "yof did not select Claude cost-optimized role models."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yos --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium --probe") {
+        throw "yos did not select Codex cost-optimized role models."
+    }
+    Clear-Content -LiteralPath $ompCallLog
     omp-plugin-upgrade
     $calls = @(Get-Content -LiteralPath $ompCallLog)
     $expectedCalls = @(

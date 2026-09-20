@@ -127,6 +127,25 @@ omp usage --json | jq '
 | Claude Fable 5.1 | Medium | 49                             | 2.98          | Work coordinator, planner, step-up if Opus high not effective, 3D vision tasks  |
 | Claude Fable 5.1 | XHigh  | 53                             | 5.98          | Plan, advisor, last resort for toughest fixes                                   |
 
+### OMP model shortcuts
+
+`yo` uses the installed OMP binary; `pyo` uses the pinned dogfood binary. The
+model-specific shortcuts configure every OMP agent role consistently:
+
+| Agent type        | `yo`   | `pyo`   | `--model`                              | `--thinking` | `--smol`                              | `--slow`                              | `--plan`                              |
+|-------------------|--------|---------|----------------------------------------|--------------|---------------------------------------|---------------------------------------|---------------------------------------|
+| Default roles     | `yo`   | `pyo`   | OMP defaults                            | OMP default  | openai-codex/gpt-5.6-luna:max         | openai-codex/gpt-5.6-sol:medium        | openai-codex/gpt-6-astra:medium        |
+| Claude Fable 5.1  | `yof`  | `pyof`  | anthropic/claude-fable-5-1:high        | high         | openrouter/z-ai/glm-5.3                | anthropic/claude-opus-5:medium        | anthropic/claude-fable-5-1:medium     |
+| Claude Opus 5     | `yoo`  | `pyoo`  | anthropic/claude-opus-5:high           | high         | openrouter/z-ai/glm-5.3                | anthropic/claude-opus-5:medium        | anthropic/claude-fable-5-1:medium     |
+| GPT-5.6 Sol       | `yos`  | `pyos`  | openai-codex/gpt-5.6-sol:high          | high         | openai-codex/gpt-5.6-luna:max         | openai-codex/gpt-5.6-sol:medium       | openai-codex/gpt-6-astra:medium       |
+| GPT-5.6 Terra     | `yot`  | `pyot`  | openai-codex/gpt-5.6-terra:max         | max          | openai-codex/gpt-5.6-luna:max         | openai-codex/gpt-5.6-sol:medium       | openai-codex/gpt-6-astra:medium       |
+| GPT-5.6 Luna      | `yol`  | `pyol`  | openai-codex/gpt-5.6-luna:max          | max          | openai-codex/gpt-5.6-luna:max         | openai-codex/gpt-5.6-sol:medium       | openai-codex/gpt-6-astra:medium       |
+| GPT-6 Astra       | `yoa`  | `pyoa`  | openai-codex/gpt-6-astra:low           | low          | openai-codex/gpt-5.6-luna:max         | openai-codex/gpt-5.6-sol:medium       | openai-codex/gpt-6-astra:medium       |
+| GLM 5.3 Flash     | `yog`  | `pyog`  | openrouter/z-ai/glm-5.3-flash           | OMP default  | OMP default                           | OMP default                           | OMP default                           |
+
+OMP's advisor role inherits the configured `--slow` reviewer model unless a
+separate advisor role is configured.
+
 ## Engineering wisdom
 
 ### Performance

@@ -133,12 +133,13 @@ function Invoke-OmpPluginUpgrade {
     }
 }
 
-function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
-function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
-function Invoke-YoloOmpSol { Invoke-YoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-YoloOmpTerra { Invoke-YoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-YoloOmpLuna { Invoke-YoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-YoloOmpAstra { Invoke-YoloOmp --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-YoloOmpOpus { Invoke-YoloOmp --model anthropic/claude-opus-5:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-YoloOmpSol { Invoke-YoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpTerra { Invoke-YoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpLuna { Invoke-YoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpAstra { Invoke-YoloOmp --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-YoloOmpGlm { Invoke-YoloOmp --model openrouter/z-ai/glm-5.3-flash @args }
 function Invoke-YoloOmpContinue { Invoke-YoloOmp --continue @args }
 function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable --continue @args }
 function Invoke-YoloOmpOpusContinue { Invoke-YoloOmpOpus --continue @args }
@@ -146,6 +147,7 @@ function Invoke-YoloOmpSolContinue { Invoke-YoloOmpSol --continue @args }
 function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra --continue @args }
 function Invoke-YoloOmpLunaContinue { Invoke-YoloOmpLuna --continue @args }
 function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra --continue @args }
+function Invoke-YoloOmpGlmContinue { Invoke-YoloOmpGlm --continue @args }
 
 # Run a temporary copy of the self-updating fork dogfood binary so pyo sessions do not lock the original. `update` runs the original so the replacement persists.
 $pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
@@ -165,12 +167,13 @@ function Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
-function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5:high --thinking high --smol anthropic/claude-opus-5:high --slow anthropic/claude-opus-5:high --plan anthropic/claude-fable-5-1:high @args }
-function Invoke-PinnedYoloOmpSol { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-PinnedYoloOmpLuna { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
-function Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:high --plan openai-codex/gpt-6-astra:low @args }
+function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-PinnedYoloOmpOpus { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5:high --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:medium @args }
+function Invoke-PinnedYoloOmpSol { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-sol:high --thinking high --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-PinnedYoloOmpLuna { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-luna:max --thinking max --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-astra:low --thinking low --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:medium @args }
+function Invoke-PinnedYoloOmpGlm { Invoke-PinnedYoloOmp --model openrouter/z-ai/glm-5.3-flash @args }
 function Invoke-PinnedYoloOmpContinue { Invoke-PinnedYoloOmp --continue @args }
 function Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
 function Invoke-PinnedYoloOmpOpusContinue { Invoke-PinnedYoloOmpOpus --continue @args }
@@ -178,6 +181,7 @@ function Invoke-PinnedYoloOmpSolContinue { Invoke-PinnedYoloOmpSol --continue @a
 function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
 function Invoke-PinnedYoloOmpLunaContinue { Invoke-PinnedYoloOmpLuna --continue @args }
 function Invoke-PinnedYoloOmpAstraContinue { Invoke-PinnedYoloOmpAstra --continue @args }
+function Invoke-PinnedYoloOmpGlmContinue { Invoke-PinnedYoloOmpGlm --continue @args }
 
 # Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
 # Temporary projects are removed after seven days without any file or
@@ -315,6 +319,7 @@ function Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
 function Invoke-YoloOmpTerraTemporary { Invoke-TemporaryProject 'yot' @args }
 function Invoke-YoloOmpLunaTemporary { Invoke-TemporaryProject 'yol' @args }
 function Invoke-YoloOmpAstraTemporary { Invoke-TemporaryProject 'yoa' @args }
+function Invoke-YoloOmpGlmTemporary { Invoke-TemporaryProject 'yog' @args }
 
 function Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
 function Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
@@ -323,6 +328,7 @@ function Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args
 function Invoke-PinnedYoloOmpTerraTemporary { Invoke-TemporaryProject 'pyot' @args }
 function Invoke-PinnedYoloOmpLunaTemporary { Invoke-TemporaryProject 'pyol' @args }
 function Invoke-PinnedYoloOmpAstraTemporary { Invoke-TemporaryProject 'pyoa' @args }
+function Invoke-PinnedYoloOmpGlmTemporary { Invoke-TemporaryProject 'pyog' @args }
 
 function Invoke-ShellGpt {
     param(
@@ -385,6 +391,7 @@ Set-Alias -Name yos -Value Invoke-YoloOmpSol
 Set-Alias -Name yot -Value Invoke-YoloOmpTerra
 Set-Alias -Name yol -Value Invoke-YoloOmpLuna
 Set-Alias -Name yoa -Value Invoke-YoloOmpAstra
+Set-Alias -Name yog -Value Invoke-YoloOmpGlm
 Set-Alias -Name yoc -Value Invoke-YoloOmpContinue
 Set-Alias -Name yofc -Value Invoke-YoloOmpFableContinue
 Set-Alias -Name yooc -Value Invoke-YoloOmpOpusContinue
@@ -392,6 +399,7 @@ Set-Alias -Name yosc -Value Invoke-YoloOmpSolContinue
 Set-Alias -Name yotc -Value Invoke-YoloOmpTerraContinue
 Set-Alias -Name yolc -Value Invoke-YoloOmpLunaContinue
 Set-Alias -Name yoac -Value Invoke-YoloOmpAstraContinue
+Set-Alias -Name yogc -Value Invoke-YoloOmpGlmContinue
 Set-Alias -Name pyo -Value Invoke-PinnedYoloOmp
 Set-Alias -Name pyof -Value Invoke-PinnedYoloOmpFable
 Set-Alias -Name pyoo -Value Invoke-PinnedYoloOmpOpus
@@ -399,6 +407,7 @@ Set-Alias -Name pyos -Value Invoke-PinnedYoloOmpSol
 Set-Alias -Name pyot -Value Invoke-PinnedYoloOmpTerra
 Set-Alias -Name pyol -Value Invoke-PinnedYoloOmpLuna
 Set-Alias -Name pyoa -Value Invoke-PinnedYoloOmpAstra
+Set-Alias -Name pyog -Value Invoke-PinnedYoloOmpGlm
 Set-Alias -Name pyoc -Value Invoke-PinnedYoloOmpContinue
 Set-Alias -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
 Set-Alias -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
@@ -406,6 +415,7 @@ Set-Alias -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
 Set-Alias -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
 Set-Alias -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
 Set-Alias -Name pyoac -Value Invoke-PinnedYoloOmpAstraContinue
+Set-Alias -Name pyogc -Value Invoke-PinnedYoloOmpGlmContinue
 
 # The hyphenated base names avoid collisions with existing shortcuts whose
 # t suffix already has another meaning (yot, yxt, and pyot).
@@ -428,6 +438,7 @@ Set-Alias -Name yost -Value Invoke-YoloOmpSolTemporary
 Set-Alias -Name yott -Value Invoke-YoloOmpTerraTemporary
 Set-Alias -Name yolt -Value Invoke-YoloOmpLunaTemporary
 Set-Alias -Name yoat -Value Invoke-YoloOmpAstraTemporary
+Set-Alias -Name yogt -Value Invoke-YoloOmpGlmTemporary
 
 Set-Alias -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
 Set-Alias -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
@@ -436,6 +447,7 @@ Set-Alias -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary
 Set-Alias -Name pyott -Value Invoke-PinnedYoloOmpTerraTemporary
 Set-Alias -Name pyolt -Value Invoke-PinnedYoloOmpLunaTemporary
 Set-Alias -Name pyoat -Value Invoke-PinnedYoloOmpAstraTemporary
+Set-Alias -Name pyogt -Value Invoke-PinnedYoloOmpGlmTemporary
 Set-Alias -Name src -Value Set-LocationSrc
 Set-Alias -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'
