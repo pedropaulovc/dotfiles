@@ -7,7 +7,7 @@ Email: pedro@vezza.com.br
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
 - Run local adversarial code reviews in parallel to CI/CD. Reviewer model family (GPT/Claude) must ≠ author model. CodeRabbit suits all. Options `cr review --agent` (preferred), `claude -p '/code-review medium <base>...HEAD'`, `codex review --base <base>`.
-- Once local review cleared, trigger remote review manually `@coderabbitai review` or `@codex review`. Don't spam remote reviews or PR will be throttled.
+- Once local review cleared, trigger remote review manually `@coderabbitai review` XOR `@codex review`. Don't spam remote reviews or PR will be throttled.
 - Once remote review running, local reviews are optional. Useful after making big changes to address comments. Don't overlap local/remote reviews.
 - If out of CodeRabbit and different family quotas, last resort: use a more advanced model. Code written by Sol/Opus to be reviewed by Astra/Fable. Code by Astra/Fable to be reviewed by Astra/Fable on high reasoning.
 - CodeRabbit and Codex must be tagged every time a (re)review is needed
