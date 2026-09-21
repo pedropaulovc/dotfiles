@@ -88,6 +88,8 @@ startup:
   showSplash: false
 dev:
   autoqaConsent: granted
+  autoqaPush:
+    endpoint: https://sessions.pedrovc.com.br/omp-qa
 disabledProviders:
   - claude
   - codex
