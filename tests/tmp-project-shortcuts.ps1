@@ -130,8 +130,8 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     Clear-Content -LiteralPath $ompCallLog
     yog --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
-        throw "yog did not select the GLM 5.3 Flash model and Claude role models."
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yog did not select the GLM 5.3 Flash model at high thinking with Claude role models."
     }
     Clear-Content -LiteralPath $ompCallLog
     yof --probe
