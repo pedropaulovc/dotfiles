@@ -19,10 +19,14 @@ try {
     . ([scriptblock]::Create($profileText))
     @(
         "omp-plugin-upgrade",
+        "yof", "yoo", "yog", "yos", "yot", "yol", "yoa",
+        "yoc", "yofc", "yooc", "yogc", "yosc", "yotc", "yolc", "yoac",
+        "pyof", "pyoo", "pyog", "pyos", "pyot", "pyol", "pyoa",
+        "pyoc", "pyofc", "pyooc", "pyogc", "pyosc", "pyotc", "pyolc", "pyoac",
         "yct", "yc-t", "ycft", "ycot", "ycst",
         "yx-t", "yxst", "yxtt", "yxlt", "yxat",
-        "yo-t", "yoft", "yoot", "yost", "yott", "yolt", "yoat",
-        "pyo-t", "pyoft", "pyoot", "pyost", "pyott", "pyolt", "pyoat"
+        "yo-t", "yoft", "yoot", "yogt", "yost", "yott", "yolt", "yoat",
+        "pyo-t", "pyoft", "pyoot", "pyogt", "pyost", "pyott", "pyolt", "pyoat"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
@@ -123,7 +127,37 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
         $global:LASTEXITCODE = 0
     }
     New-Item -ItemType File -Path $ompCallLog -Force | Out-Null
-
+    Clear-Content -LiteralPath $ompCallLog
+    yog --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/z-ai/glm-5.3-flash --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yog did not select the GLM 5.3 Flash model and Claude role models."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yof --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yof did not select the Claude Fable medium model."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yoo --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yoo did not select the Claude Opus medium model."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yos --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
+        throw "yos did not select the medium-effort Codex role models."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yot --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
+        throw "yot did not select the medium-effort Terra role models."
+    }
+    Clear-Content -LiteralPath $ompCallLog
     omp-plugin-upgrade
     $calls = @(Get-Content -LiteralPath $ompCallLog)
     $expectedCalls = @(
