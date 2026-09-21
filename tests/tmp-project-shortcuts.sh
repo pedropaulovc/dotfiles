@@ -96,16 +96,16 @@ pyoo --probe
 [ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 pyos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 yot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 pyot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 
 for shortcut in \
     omp-plugin-upgrade \

@@ -148,13 +148,13 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     Clear-Content -LiteralPath $ompCallLog
     yos --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
         throw "yos did not select the medium-effort Codex role models."
     }
     Clear-Content -LiteralPath $ompCallLog
     yot --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
         throw "yot did not select the medium-effort Terra role models."
     }
     Clear-Content -LiteralPath $ompCallLog
