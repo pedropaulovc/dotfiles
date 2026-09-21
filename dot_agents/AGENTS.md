@@ -124,7 +124,7 @@ omp usage --json | jq '
 | Claude Opus 5    | Medium | 45                             | 2.19          | Workhorse for feature work, code reviewer                                       |
 | Claude Opus 5    | High   | 48                             | 3.61          | Workhorse for larger complexity feature work, integrator                        |
 | Claude Opus 5    | XHigh  | 50                             | 4.88          | Alternative when Fable medium/high not available                                |
-| Claude Fable 5.1 | Medium | 49                             | 2.98          | Work coordinator, planner, step-up if Opus high not effective, 3D vision tasks  |
+| Claude Fable 5.1 | Medium | 49                             | 2.98          | Work coordinator, step-up if Opus high not effective, 3D vision tasks           |
 | Claude Fable 5.1 | XHigh  | 53                             | 5.98          | Plan, advisor, last resort for toughest fixes                                   |
 
 ## Engineering wisdom
