@@ -13,7 +13,7 @@ providers:
     modelOverrides:
       claude-fable-5-1:
         contextWindow: 272000
-      claude-opus-5:
+      claude-opus-5-5:
         contextWindow: 272000
       claude-sonnet-5:
         contextWindow: 272000

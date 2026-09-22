@@ -133,9 +133,9 @@ function Invoke-OmpPluginUpgrade {
     }
 }
 
-function Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5:medium    --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-YoloOmpMimo  { Invoke-YoloOmp       --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-YoloOmpMimo  { Invoke-YoloOmp       --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function Invoke-YoloOmpSol   { Invoke-YoloOmp       --model openai-codex/gpt-5.6-sol:medium   --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function Invoke-YoloOmpTerra { Invoke-YoloOmp       --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function Invoke-YoloOmpLuna  { Invoke-YoloOmp       --model openai-codex/gpt-5.6-luna:max     --thinking max    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
@@ -167,9 +167,9 @@ function Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5:medium    --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-PinnedYoloOmpMimo  { Invoke-PinnedYoloOmp --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium  --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function Invoke-PinnedYoloOmpMimo  { Invoke-PinnedYoloOmp --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function Invoke-PinnedYoloOmpSol   { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-sol:medium   --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function Invoke-PinnedYoloOmpLuna  { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-luna:max     --thinking max    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   @args }

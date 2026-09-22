@@ -130,19 +130,19 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     Clear-Content -LiteralPath $ompCallLog
     yom --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
         throw "yom did not select the MiMo v2.6 Pro model at medium thinking with Claude role models."
     }
     Clear-Content -LiteralPath $ompCallLog
     yof --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
         throw "yof did not select the Claude Fable medium model."
     }
     Clear-Content -LiteralPath $ompCallLog
     yoo --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
         throw "yoo did not select the Claude Opus medium model."
     }
     Clear-Content -LiteralPath $ompCallLog
