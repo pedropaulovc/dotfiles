@@ -17,3 +17,7 @@ providers:
         contextWindow: 272000
       claude-sonnet-5:
         contextWindow: 272000
+  openrouter:
+    modelOverrides:
+      xiaomi/mimo-v2.6-pro:
+        contextWindow: 272000
