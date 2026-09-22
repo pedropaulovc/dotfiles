@@ -71,8 +71,8 @@ plugin list --json
 plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
 : >"$OMP_CALL_LOG"
-yog --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+yom --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 cat >"$TMP_PYO_BINARY" <<'PYOP'
 #!/bin/sh
 printf '%s\n' "$*" >>"$OMP_CALL_LOG"
@@ -80,20 +80,20 @@ PYOP
 chmod +x "$TMP_PYO_BINARY"
 PYO_BINARY="$TMP_PYO_BINARY"
 : >"$OMP_CALL_LOG"
-pyog --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/z-ai/glm-5.3-flash --thinking high --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+pyom --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 pyof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 pyoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/z-ai/glm-5.3 --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yos --probe
 [ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-sol:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
@@ -111,10 +111,10 @@ for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
-    yo yof yoo yog yos yot yol yoa yoc yofc yooc yogc yosc yotc yolc yoac \
-    pyo pyof pyoo pyog pyos pyot pyol pyoa pyoc pyofc pyooc pyogc pyosc pyotc pyolc pyoac \
-    yo-t yoft yoot yogt yost yott yolt yoat \
-    pyo-t pyoft pyoot pyogt pyost pyott pyolt pyoat; do
+    yo yof yoo yom yos yot yol yoa yoc yofc yooc yomc yosc yotc yolc yoac \
+    pyo pyof pyoo pyom pyos pyot pyol pyoa pyoc pyofc pyooc pyomc pyosc pyotc pyolc pyoac \
+    yo-t yoft yoot yomt yost yott yolt yoat \
+    pyo-t pyoft pyoot pyomt pyost pyott pyolt pyoat; do
 
     type "$shortcut" >/dev/null
 done
