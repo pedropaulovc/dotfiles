@@ -115,9 +115,9 @@ omp usage --json | jq '
 
 | Model            | Effort | Artificial Intelligence v4.3.2 | Cost per Task | Rule of thumb                                                                   |
 |------------------|--------|--------------------------------|---------------|---------------------------------------------------------------------------------|
-| GPT-5.6 Luna     | Max    | 37                             | 0.18          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature, default if unsure |
-| GPT-5.6 Sol      | Medium | 39                             | 0.5           | Workhorse for feature work, code reviewer                                       |
-| GPT-5.6 Sol      | XHigh  | 44                             | 1.18          | Workhorse for larger complexity feature work, integrator                        |
+| GPT-6 Luna       | Max    | 37                             | 0.07          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature, default if unsure |
+| GPT-6 Sol        | Medium | 40                             | 0.25          | Workhorse for feature work, code reviewer                                       |
+| GPT-6 Sol        | XHigh  | 44                             | 0.53          | Workhorse for larger complexity feature work, integrator                        |
 | GPT-6 Astra      | Low    | 46                             | 0.82          | Work coordinator, Step-up if Sol medium not effective                           |
 | GPT-6 Astra      | High   | 51                             | 1.73          | Plan, advisor, last resort for toughest fixes                                   |
 | MiMo v2.6 Pro    | Medium | 46                             | 0.13          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature                    |

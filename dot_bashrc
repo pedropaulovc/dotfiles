@@ -189,9 +189,9 @@ yct() {
 }
 alias yg="gemini --yolo"
 alias yx="codex --dangerously-bypass-approvals-and-sandbox"
-yxs() { yx --model gpt-5.6-sol -c 'model_reasoning_effort="high"' "$@"; }
+yxs() { yx --model gpt-6-sol -c 'model_reasoning_effort="high"' "$@"; }
 yxt() { yx --model gpt-5.6-terra -c 'model_reasoning_effort="max"' "$@"; }
-yxl() { yx --model gpt-5.6-luna -c 'model_reasoning_effort="max"' "$@"; }
+yxl() { yx --model gpt-6-luna -c 'model_reasoning_effort="max"' "$@"; }
 yxa() { yx --model gpt-6-astra -c 'model_reasoning_effort="low"' "$@"; }
 yxc() { yx resume --last "$@"; }
 yxsc() { yxs resume --last "$@"; }
@@ -233,10 +233,10 @@ EOF
 yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yom()  { yo  --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-yos()  { yo  --model openai-codex/gpt-5.6-sol:medium   --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yot()  { yo  --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yol()  { yo  --model openai-codex/gpt-5.6-luna:max     --thinking max    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yoa()  { yo  --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
+yos()  { yo  --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+yot()  { yo  --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+yol()  { yo  --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+yoa()  { yo  --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
 yoc()  { yo  --continue "$@"; }
 yofc()  { yof  --continue "$@"; }
 yooc()  { yoo  --continue "$@"; }
@@ -252,10 +252,10 @@ pyo() { "$PYO_BINARY" --auto-approve "$@"; }
 pyof() { pyo --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyom() { pyo --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-pyos() { pyo --model openai-codex/gpt-5.6-sol:medium   --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyot() { pyo --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyol() { pyo --model openai-codex/gpt-5.6-luna:max     --thinking max    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyoa() { pyo --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-5.6-luna:max  --slow openai-codex/gpt-5.6-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
+pyos() { pyo --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+pyot() { pyo --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+pyol() { pyo --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
+pyoa() { pyo --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   "$@"; }
 pyoc() { pyo --continue "$@"; }
 pyofc() { pyof --continue "$@"; }
 pyooc() { pyoo --continue "$@"; }
