@@ -212,6 +212,66 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     }
     $env:FAIL_UPGRADE = $oldFailUpgrade
 
+    $oldProfile = $PROFILE
+    $oldPyuLog = $env:PYU_TEST_CALL_LOG
+    $oldPyuFail = $env:FAIL_PYU_STAGE
+    $pyuLog = Join-Path $tempDir "pyu-call-log"
+    $mockProfilePath = Join-Path $tempDir "updated-profile.ps1"
+    @'
+Add-Content -LiteralPath $env:PYU_TEST_CALL_LOG -Value "reload"
+if ($env:FAIL_PYU_STAGE -eq "reload") { throw "profile reload failed" }
+function global:Invoke-PyuProfileMarker { "updated" }
+Set-Alias -Scope Global -Name pyu-marker -Value Invoke-PyuProfileMarker -Force
+'@ | Set-Content -LiteralPath $mockProfilePath
+    try {
+        $PROFILE = [pscustomobject]@{ CurrentUserCurrentHost = $mockProfilePath }
+        $env:PYU_TEST_CALL_LOG = $pyuLog
+        function global:chezmoi {
+            Add-Content -LiteralPath $env:PYU_TEST_CALL_LOG -Value "chezmoi $($args -join ' ')"
+            $global:LASTEXITCODE = if ($env:FAIL_PYU_STAGE -eq "chezmoi") { 21 } else { 0 }
+        }
+        function global:Invoke-PinnedYoloOmp {
+            Add-Content -LiteralPath $env:PYU_TEST_CALL_LOG -Value "pyo $($args -join ' ')"
+            $global:LASTEXITCODE = if ($env:FAIL_PYU_STAGE -eq "pyo") { 22 } else { 0 }
+        }
+        function global:Invoke-OmpPluginUpgrade {
+            Add-Content -LiteralPath $env:PYU_TEST_CALL_LOG -Value "plugins"
+            if ($env:FAIL_PYU_STAGE -eq "plugins") { throw "plugin upgrade failed" }
+        }
+        function global:Invoke-PyuProfileMarker { "old" }
+        Set-Alias -Scope Global -Name pyu-marker -Value Invoke-PyuProfileMarker -Force
+        foreach ($scenario in @(
+            @{ Fail = "chezmoi"; Calls = "chezmoi update" },
+            @{ Fail = "reload"; Calls = "chezmoi update|reload" },
+            @{ Fail = "pyo"; Calls = "chezmoi update|reload|pyo update" },
+            @{ Fail = "plugins"; Calls = "chezmoi update|reload|pyo update|plugins" },
+            @{ Fail = ""; Calls = "chezmoi update|reload|pyo update|plugins" }
+        )) {
+            $env:FAIL_PYU_STAGE = $scenario.Fail
+            New-Item -ItemType File -Path $pyuLog -Force | Out-Null
+            Clear-Content -LiteralPath $pyuLog
+            $failed = $false
+            try { pyu } catch { $failed = $true }
+            if ($failed -ne [bool]$scenario.Fail) {
+                throw "pyu failure behavior was wrong for stage '$($scenario.Fail)'."
+            }
+            $actualCalls = @(Get-Content -LiteralPath $pyuLog) -join "|"
+            if ($actualCalls -ne $scenario.Calls) {
+                throw "pyu stage order was wrong for '$($scenario.Fail)': $actualCalls"
+            }
+        }
+        if ((Invoke-PyuProfileMarker) -ne "updated" -or (pyu-marker) -ne "updated") {
+            throw "pyu did not persist profile functions and aliases in the active session."
+        }
+    }
+    finally {
+        $PROFILE = $oldProfile
+        $env:PYU_TEST_CALL_LOG = $oldPyuLog
+        $env:FAIL_PYU_STAGE = $oldPyuFail
+        Remove-Item Function:chezmoi,Function:Invoke-PyuProfileMarker,Alias:pyu-marker -ErrorAction SilentlyContinue
+        . ([scriptblock]::Create($profileText))
+    }
+
 
     $pwshPath = (Get-Process -Id $PID).Path
 

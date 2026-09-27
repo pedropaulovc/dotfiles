@@ -106,13 +106,73 @@ yot --probe
 : >"$OMP_CALL_LOG"
 pyot --probe
 [ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max --slow openai-codex/gpt-6-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
+PYU_CALL_LOG="$HOME/pyu-calls"
+export PYU_CALL_LOG
+cat >"$HOME/.bashrc" <<'BASHRC'
+printf '%s\n' reload >>"$PYU_CALL_LOG"
+PYU_RELOADED=1
+[ "${FAIL_RELOAD:-0}" -eq 0 ]
+BASHRC
+chezmoi() {
+    printf '%s\n' "chezmoi $*" >>"$PYU_CALL_LOG"
+    [ "${FAIL_CHEZMOI:-0}" -eq 0 ] || return 17
+}
+pyo() {
+    printf '%s\n' "pyo $*" >>"$PYU_CALL_LOG"
+    [ "${FAIL_PYO:-0}" -eq 0 ] || return 18
+}
+omp-plugin-upgrade() {
+    printf '%s\n' plugin-upgrade >>"$PYU_CALL_LOG"
+    [ "${FAIL_PLUGIN:-0}" -eq 0 ] || return 19
+}
+pyu
+[ "${PYU_RELOADED:-0}" -eq 1 ]
+expected_pyu_calls='chezmoi update
+reload
+pyo update
+plugin-upgrade'
+[ "$(cat "$PYU_CALL_LOG")" = "$expected_pyu_calls" ]
+: >"$PYU_CALL_LOG"
+if FAIL_CHEZMOI=1 pyu; then
+    printf 'pyu continued after chezmoi failure.\n' >&2
+    exit 1
+else
+    [ "$?" -eq 17 ]
+fi
+[ "$(cat "$PYU_CALL_LOG")" = 'chezmoi update' ]
+: >"$PYU_CALL_LOG"
+if FAIL_RELOAD=1 pyu; then
+    printf 'pyu continued after bashrc reload failure.\n' >&2
+    exit 1
+fi
+[ "$(cat "$PYU_CALL_LOG")" = 'chezmoi update
+reload' ]
+: >"$PYU_CALL_LOG"
+if FAIL_PYO=1 pyu; then
+    printf 'pyu continued after pyo update failure.\n' >&2
+    exit 1
+else
+    [ "$?" -eq 18 ]
+fi
+[ "$(cat "$PYU_CALL_LOG")" = 'chezmoi update
+reload
+pyo update' ]
+: >"$PYU_CALL_LOG"
+if FAIL_PLUGIN=1 pyu; then
+    printf 'pyu hid plugin upgrade failure.\n' >&2
+    exit 1
+else
+    [ "$?" -eq 19 ]
+fi
+[ "$(cat "$PYU_CALL_LOG")" = "$expected_pyu_calls" ]
+
 
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
     yo yof yoo yom yos yot yol yoa yoc yofc yooc yomc yosc yotc yolc yoac \
-    pyo pyof pyoo pyom pyos pyot pyol pyoa pyoc pyofc pyooc pyomc pyosc pyotc pyolc pyoac \
+    pyo pyu pyof pyoo pyom pyos pyot pyol pyoa pyoc pyofc pyooc pyomc pyosc pyotc pyolc pyoac \
     yo-t yoft yoot yomt yost yott yolt yoat \
     pyo-t pyoft pyoot pyomt pyost pyott pyolt pyoat; do
 

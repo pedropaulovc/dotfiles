@@ -250,6 +250,12 @@ yoac()  { yoa  --continue "$@"; }
 # Use the self-updating fork dogfood binary without changing production omp or yo.
 PYO_BINARY="$HOME/.bun/bin/omp-dogfood"
 pyo() { "$PYO_BINARY" --auto-approve "$@"; }
+pyu() {
+  chezmoi update || return
+  . "$HOME/.bashrc" || return
+  pyo update || return
+  omp-plugin-upgrade
+}
 pyof() { pyo --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyom() { pyo --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }

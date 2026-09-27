@@ -4,7 +4,7 @@ $env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 $env:EDITOR = 'code --wait'
 
-function Invoke-YoloClaude {
+function global:Invoke-YoloClaude {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -15,7 +15,7 @@ function Invoke-YoloClaude {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control @Remaining
 }
 
-function Invoke-YoloClaudeFable {
+function global:Invoke-YoloClaudeFable {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -24,7 +24,7 @@ function Invoke-YoloClaudeFable {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model fable --effort high --autocompact 1M @Remaining
 }
 
-function Invoke-YoloClaudeOpus {
+function global:Invoke-YoloClaudeOpus {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -33,7 +33,7 @@ function Invoke-YoloClaudeOpus {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model opus --effort high --autocompact 500k @Remaining
 }
 
-function Invoke-YoloClaudeSonnet {
+function global:Invoke-YoloClaudeSonnet {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -42,12 +42,12 @@ function Invoke-YoloClaudeSonnet {
 	& C:\Users\pedro\.local\bin\claude.exe --verbose --disallowedTools "NotebookEdit" --dangerously-skip-permissions --name $env:COMPUTERNAME --remote-control --model sonnet --effort high --autocompact 500k @Remaining
 }
 
-function Invoke-YoloClaudeContinue { Invoke-YoloClaude --continue @args }
-function Invoke-YoloClaudeFableContinue { Invoke-YoloClaudeFable --continue @args }
-function Invoke-YoloClaudeOpusContinue { Invoke-YoloClaudeOpus --continue @args }
-function Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --continue @args }
+function global:Invoke-YoloClaudeContinue { Invoke-YoloClaude --continue @args }
+function global:Invoke-YoloClaudeFableContinue { Invoke-YoloClaudeFable --continue @args }
+function global:Invoke-YoloClaudeOpusContinue { Invoke-YoloClaudeOpus --continue @args }
+function global:Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --continue @args }
 
-function Invoke-YoloCodex {
+function global:Invoke-YoloCodex {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -56,7 +56,7 @@ function Invoke-YoloCodex {
 	& codex --dangerously-bypass-approvals-and-sandbox @Remaining
 }
 
-function Invoke-YoloCodexSol {
+function global:Invoke-YoloCodexSol {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -65,7 +65,7 @@ function Invoke-YoloCodexSol {
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-6-sol -c 'model_reasoning_effort="high"' @Remaining
 }
 
-function Invoke-YoloCodexTerra {
+function global:Invoke-YoloCodexTerra {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -74,14 +74,14 @@ function Invoke-YoloCodexTerra {
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-5.6-terra -c 'model_reasoning_effort="max"' @Remaining
 }
 
-function Invoke-YoloCodexLuna {
+function global:Invoke-YoloCodexLuna {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
     )
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-6-luna -c 'model_reasoning_effort="max"' @Remaining
 }
-function Invoke-YoloCodexAstra {
+function global:Invoke-YoloCodexAstra {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -90,14 +90,14 @@ function Invoke-YoloCodexAstra {
 	& codex --dangerously-bypass-approvals-and-sandbox --model gpt-6-astra -c 'model_reasoning_effort="low"' @Remaining
 }
 
-function Invoke-YoloCodexContinue { Invoke-YoloCodex resume --last @args }
-function Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
-function Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
-function Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
-function Invoke-YoloCodexAstraContinue { Invoke-YoloCodexAstra resume --last @args }
+function global:Invoke-YoloCodexContinue { Invoke-YoloCodex resume --last @args }
+function global:Invoke-YoloCodexSolContinue { Invoke-YoloCodexSol resume --last @args }
+function global:Invoke-YoloCodexTerraContinue { Invoke-YoloCodexTerra resume --last @args }
+function global:Invoke-YoloCodexLunaContinue { Invoke-YoloCodexLuna resume --last @args }
+function global:Invoke-YoloCodexAstraContinue { Invoke-YoloCodexAstra resume --last @args }
 
-function Invoke-YoloOmp { & omp --auto-approve @args }
-function Invoke-OmpPluginUpgrade {
+function global:Invoke-YoloOmp { & omp --auto-approve @args }
+function global:Invoke-OmpPluginUpgrade {
     & omp plugin marketplace update
     if ($LASTEXITCODE -ne 0) {
         throw "omp could not update plugin marketplaces."
@@ -134,25 +134,44 @@ function Invoke-OmpPluginUpgrade {
     }
 }
 
-function Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-YoloOmpMimo  { Invoke-YoloOmp       --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-YoloOmpSol   { Invoke-YoloOmp       --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-YoloOmpTerra { Invoke-YoloOmp       --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-YoloOmpLuna  { Invoke-YoloOmp       --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-YoloOmpAstra { Invoke-YoloOmp       --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-YoloOmpContinue      { Invoke-YoloOmp       --continue @args }
-function Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
-function Invoke-YoloOmpOpusContinue  { Invoke-YoloOmpOpus       --continue @args }
-function Invoke-YoloOmpMimoContinue  { Invoke-YoloOmpMimo       --continue @args }
-function Invoke-YoloOmpSolContinue   { Invoke-YoloOmpSol       --continue @args }
-function Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra       --continue @args }
-function Invoke-YoloOmpLunaContinue  { Invoke-YoloOmpLuna       --continue @args }
-function Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra       --continue @args }
+function global:Invoke-Pyu {
+    $ErrorActionPreference = 'Stop'
+    & chezmoi update
+    if ($LASTEXITCODE -ne 0) {
+        throw "chezmoi update failed (exit code $LASTEXITCODE)."
+    }
+
+    # The profile is deployed by chezmoi update. Its functions and aliases
+    # explicitly use global scope so dot-sourcing here refreshes this session.
+    . $PROFILE.CurrentUserCurrentHost
+
+    Invoke-PinnedYoloOmp update
+    if ($LASTEXITCODE -ne 0) {
+        throw "pyo update failed (exit code $LASTEXITCODE)."
+    }
+
+    Invoke-OmpPluginUpgrade
+}
+
+function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpMimo  { Invoke-YoloOmp       --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpSol   { Invoke-YoloOmp       --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-YoloOmpTerra { Invoke-YoloOmp       --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-YoloOmpLuna  { Invoke-YoloOmp       --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-YoloOmpAstra { Invoke-YoloOmp       --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-YoloOmpContinue      { Invoke-YoloOmp       --continue @args }
+function global:Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
+function global:Invoke-YoloOmpOpusContinue  { Invoke-YoloOmpOpus       --continue @args }
+function global:Invoke-YoloOmpMimoContinue  { Invoke-YoloOmpMimo       --continue @args }
+function global:Invoke-YoloOmpSolContinue   { Invoke-YoloOmpSol       --continue @args }
+function global:Invoke-YoloOmpTerraContinue { Invoke-YoloOmpTerra       --continue @args }
+function global:Invoke-YoloOmpLunaContinue  { Invoke-YoloOmpLuna       --continue @args }
+function global:Invoke-YoloOmpAstraContinue { Invoke-YoloOmpAstra       --continue @args }
 
 # Run a temporary copy of the self-updating fork dogfood binary so pyo sessions do not lock the original. `update` runs the original so the replacement persists.
-$pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
-function Invoke-PinnedYoloOmp {
+$global:pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
+function global:Invoke-PinnedYoloOmp {
 	if ($args -contains 'update') {
 		& $pyoBinary --auto-approve @args
 		return
@@ -168,27 +187,27 @@ function Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-PinnedYoloOmpMimo  { Invoke-PinnedYoloOmp --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function Invoke-PinnedYoloOmpSol   { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-PinnedYoloOmpLuna  { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
-function Invoke-PinnedYoloOmpContinue      { Invoke-PinnedYoloOmp --continue @args }
-function Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
-function Invoke-PinnedYoloOmpOpusContinue  { Invoke-PinnedYoloOmpOpus --continue @args }
-function Invoke-PinnedYoloOmpMimoContinue  { Invoke-PinnedYoloOmpMimo --continue @args }
-function Invoke-PinnedYoloOmpSolContinue   { Invoke-PinnedYoloOmpSol --continue @args }
-function Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
-function Invoke-PinnedYoloOmpLunaContinue  { Invoke-PinnedYoloOmpLuna --continue @args }
-function Invoke-PinnedYoloOmpAstraContinue { Invoke-PinnedYoloOmpAstra --continue @args }
+function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpMimo  { Invoke-PinnedYoloOmp --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpSol   { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-sol:medium     --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-PinnedYoloOmpLuna  { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6-sol:medium   --plan openai-codex/gpt-6-astra:high   @args }
+function global:Invoke-PinnedYoloOmpContinue      { Invoke-PinnedYoloOmp --continue @args }
+function global:Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
+function global:Invoke-PinnedYoloOmpOpusContinue  { Invoke-PinnedYoloOmpOpus --continue @args }
+function global:Invoke-PinnedYoloOmpMimoContinue  { Invoke-PinnedYoloOmpMimo --continue @args }
+function global:Invoke-PinnedYoloOmpSolContinue   { Invoke-PinnedYoloOmpSol --continue @args }
+function global:Invoke-PinnedYoloOmpTerraContinue { Invoke-PinnedYoloOmpTerra --continue @args }
+function global:Invoke-PinnedYoloOmpLunaContinue  { Invoke-PinnedYoloOmpLuna --continue @args }
+function global:Invoke-PinnedYoloOmpAstraContinue { Invoke-PinnedYoloOmpAstra --continue @args }
 
 # Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
 # Temporary projects are removed after seven days without any file or
 # directory modification. Continue shortcuts (the *c variants) are
 # intentionally not wrapped.
-function Remove-StaleTemporaryProject {
+function global:Remove-StaleTemporaryProject {
     [CmdletBinding(SupportsShouldProcess = $true)]
     param(
         [string] $SourcePath
@@ -242,7 +261,7 @@ function Remove-StaleTemporaryProject {
     }
 }
 
-function Invoke-TemporaryProject {
+function global:Invoke-TemporaryProject {
     $arguments = @($args)
     if ($arguments.Count -lt 2) {
         $shortcut = if ($arguments.Count -gt 0) { [string] $arguments[0] } else { 'temporary project shortcut' }
@@ -302,36 +321,36 @@ function Invoke-TemporaryProject {
     }
 }
 
-function Invoke-YoloClaudeTemporary { Invoke-TemporaryProject 'yc' @args }
-function Invoke-YoloClaudeFableTemporary { Invoke-TemporaryProject 'ycf' @args }
-function Invoke-YoloClaudeOpusTemporary { Invoke-TemporaryProject 'yco' @args }
-function Invoke-YoloClaudeSonnetTemporary { Invoke-TemporaryProject 'ycs' @args }
+function global:Invoke-YoloClaudeTemporary { Invoke-TemporaryProject 'yc' @args }
+function global:Invoke-YoloClaudeFableTemporary { Invoke-TemporaryProject 'ycf' @args }
+function global:Invoke-YoloClaudeOpusTemporary { Invoke-TemporaryProject 'yco' @args }
+function global:Invoke-YoloClaudeSonnetTemporary { Invoke-TemporaryProject 'ycs' @args }
 
-function Invoke-YoloCodexTemporary { Invoke-TemporaryProject 'yx' @args }
-function Invoke-YoloCodexSolTemporary { Invoke-TemporaryProject 'yxs' @args }
-function Invoke-YoloCodexTerraTemporary { Invoke-TemporaryProject 'yxt' @args }
-function Invoke-YoloCodexLunaTemporary { Invoke-TemporaryProject 'yxl' @args }
-function Invoke-YoloCodexAstraTemporary { Invoke-TemporaryProject 'yxa' @args }
+function global:Invoke-YoloCodexTemporary { Invoke-TemporaryProject 'yx' @args }
+function global:Invoke-YoloCodexSolTemporary { Invoke-TemporaryProject 'yxs' @args }
+function global:Invoke-YoloCodexTerraTemporary { Invoke-TemporaryProject 'yxt' @args }
+function global:Invoke-YoloCodexLunaTemporary { Invoke-TemporaryProject 'yxl' @args }
+function global:Invoke-YoloCodexAstraTemporary { Invoke-TemporaryProject 'yxa' @args }
 
-function Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
-function Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
-function Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
-function Invoke-YoloOmpMimoTemporary { Invoke-TemporaryProject 'yom' @args }
-function Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
-function Invoke-YoloOmpTerraTemporary { Invoke-TemporaryProject 'yot' @args }
-function Invoke-YoloOmpLunaTemporary { Invoke-TemporaryProject 'yol' @args }
-function Invoke-YoloOmpAstraTemporary { Invoke-TemporaryProject 'yoa' @args }
+function global:Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
+function global:Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
+function global:Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
+function global:Invoke-YoloOmpMimoTemporary { Invoke-TemporaryProject 'yom' @args }
+function global:Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
+function global:Invoke-YoloOmpTerraTemporary { Invoke-TemporaryProject 'yot' @args }
+function global:Invoke-YoloOmpLunaTemporary { Invoke-TemporaryProject 'yol' @args }
+function global:Invoke-YoloOmpAstraTemporary { Invoke-TemporaryProject 'yoa' @args }
 
-function Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
-function Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
-function Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @args }
-function Invoke-PinnedYoloOmpMimoTemporary { Invoke-TemporaryProject 'pyom' @args }
-function Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args }
-function Invoke-PinnedYoloOmpTerraTemporary { Invoke-TemporaryProject 'pyot' @args }
-function Invoke-PinnedYoloOmpLunaTemporary { Invoke-TemporaryProject 'pyol' @args }
-function Invoke-PinnedYoloOmpAstraTemporary { Invoke-TemporaryProject 'pyoa' @args }
+function global:Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
+function global:Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
+function global:Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @args }
+function global:Invoke-PinnedYoloOmpMimoTemporary { Invoke-TemporaryProject 'pyom' @args }
+function global:Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args }
+function global:Invoke-PinnedYoloOmpTerraTemporary { Invoke-TemporaryProject 'pyot' @args }
+function global:Invoke-PinnedYoloOmpLunaTemporary { Invoke-TemporaryProject 'pyol' @args }
+function global:Invoke-PinnedYoloOmpAstraTemporary { Invoke-TemporaryProject 'pyoa' @args }
 
-function Invoke-ShellGpt {
+function global:Invoke-ShellGpt {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
         [string[]] $Remaining
@@ -341,11 +360,11 @@ function Invoke-ShellGpt {
 	uvx --from shell-gpt sgpt.exe --no-cache --shell $request
 }
 
-function Set-LocationSrc {
+function global:Set-LocationSrc {
     Set-Location C:\src
 }
 
-function Invoke-KillAll {
+function global:Invoke-KillAll {
     param(
         [string] $Name
     )
@@ -357,7 +376,7 @@ function Invoke-KillAll {
     }
 }
 
-function Invoke-RmRf {
+function global:Invoke-RmRf {
     param(
         [string] $Path
     )
@@ -365,92 +384,93 @@ function Invoke-RmRf {
     Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-Set-Alias -Name yc -Value Invoke-YoloClaude
-Set-Alias -Name ycf -Value Invoke-YoloClaudeFable
-Set-Alias -Name yco -Value Invoke-YoloClaudeOpus
-Set-Alias -Name ycs -Value Invoke-YoloClaudeSonnet
-Set-Alias -Name ycc -Value Invoke-YoloClaudeContinue
-Set-Alias -Name ycfc -Value Invoke-YoloClaudeFableContinue
-Set-Alias -Name ycoc -Value Invoke-YoloClaudeOpusContinue
-Set-Alias -Name ycsc -Value Invoke-YoloClaudeSonnetContinue
-Set-Alias -Name yx -Value Invoke-YoloCodex
-Set-Alias -Name yxs -Value Invoke-YoloCodexSol
-Set-Alias -Name yxt -Value Invoke-YoloCodexTerra
-Set-Alias -Name yxl -Value Invoke-YoloCodexLuna
-Set-Alias -Name yxa -Value Invoke-YoloCodexAstra
-Set-Alias -Name yxc -Value Invoke-YoloCodexContinue
-Set-Alias -Name yxsc -Value Invoke-YoloCodexSolContinue
-Set-Alias -Name yxtc -Value Invoke-YoloCodexTerraContinue
-Set-Alias -Name yxlc -Value Invoke-YoloCodexLunaContinue
-Set-Alias -Name yxac -Value Invoke-YoloCodexAstraContinue
-Set-Alias -Name yo -Value Invoke-YoloOmp
-Set-Alias -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
+Set-Alias -Scope Global -Name yc -Value Invoke-YoloClaude
+Set-Alias -Scope Global -Name ycf -Value Invoke-YoloClaudeFable
+Set-Alias -Scope Global -Name yco -Value Invoke-YoloClaudeOpus
+Set-Alias -Scope Global -Name ycs -Value Invoke-YoloClaudeSonnet
+Set-Alias -Scope Global -Name ycc -Value Invoke-YoloClaudeContinue
+Set-Alias -Scope Global -Name ycfc -Value Invoke-YoloClaudeFableContinue
+Set-Alias -Scope Global -Name ycoc -Value Invoke-YoloClaudeOpusContinue
+Set-Alias -Scope Global -Name ycsc -Value Invoke-YoloClaudeSonnetContinue
+Set-Alias -Scope Global -Name yx -Value Invoke-YoloCodex
+Set-Alias -Scope Global -Name yxs -Value Invoke-YoloCodexSol
+Set-Alias -Scope Global -Name yxt -Value Invoke-YoloCodexTerra
+Set-Alias -Scope Global -Name yxl -Value Invoke-YoloCodexLuna
+Set-Alias -Scope Global -Name yxa -Value Invoke-YoloCodexAstra
+Set-Alias -Scope Global -Name yxc -Value Invoke-YoloCodexContinue
+Set-Alias -Scope Global -Name yxsc -Value Invoke-YoloCodexSolContinue
+Set-Alias -Scope Global -Name yxtc -Value Invoke-YoloCodexTerraContinue
+Set-Alias -Scope Global -Name yxlc -Value Invoke-YoloCodexLunaContinue
+Set-Alias -Scope Global -Name yxac -Value Invoke-YoloCodexAstraContinue
+Set-Alias -Scope Global -Name yo -Value Invoke-YoloOmp
+Set-Alias -Scope Global -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
+Set-Alias -Scope Global -Name pyu -Value Invoke-Pyu
 
-Set-Alias -Name yof -Value Invoke-YoloOmpFable
-Set-Alias -Name yoo -Value Invoke-YoloOmpOpus
-Set-Alias -Name yom -Value Invoke-YoloOmpMimo
-Set-Alias -Name yos -Value Invoke-YoloOmpSol
-Set-Alias -Name yot -Value Invoke-YoloOmpTerra
-Set-Alias -Name yol -Value Invoke-YoloOmpLuna
-Set-Alias -Name yoa -Value Invoke-YoloOmpAstra
-Set-Alias -Name yoc -Value Invoke-YoloOmpContinue
-Set-Alias -Name yofc -Value Invoke-YoloOmpFableContinue
-Set-Alias -Name yooc -Value Invoke-YoloOmpOpusContinue
-Set-Alias -Name yomc -Value Invoke-YoloOmpMimoContinue
-Set-Alias -Name yosc -Value Invoke-YoloOmpSolContinue
-Set-Alias -Name yotc -Value Invoke-YoloOmpTerraContinue
-Set-Alias -Name yolc -Value Invoke-YoloOmpLunaContinue
-Set-Alias -Name yoac -Value Invoke-YoloOmpAstraContinue
-Set-Alias -Name pyo -Value Invoke-PinnedYoloOmp
-Set-Alias -Name pyof -Value Invoke-PinnedYoloOmpFable
-Set-Alias -Name pyoo -Value Invoke-PinnedYoloOmpOpus
-Set-Alias -Name pyom -Value Invoke-PinnedYoloOmpMimo
-Set-Alias -Name pyos -Value Invoke-PinnedYoloOmpSol
-Set-Alias -Name pyot -Value Invoke-PinnedYoloOmpTerra
-Set-Alias -Name pyol -Value Invoke-PinnedYoloOmpLuna
-Set-Alias -Name pyoa -Value Invoke-PinnedYoloOmpAstra
-Set-Alias -Name pyoc -Value Invoke-PinnedYoloOmpContinue
-Set-Alias -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
-Set-Alias -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
-Set-Alias -Name pyomc -Value Invoke-PinnedYoloOmpMimoContinue
-Set-Alias -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
-Set-Alias -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
-Set-Alias -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
-Set-Alias -Name pyoac -Value Invoke-PinnedYoloOmpAstraContinue
+Set-Alias -Scope Global -Name yof -Value Invoke-YoloOmpFable
+Set-Alias -Scope Global -Name yoo -Value Invoke-YoloOmpOpus
+Set-Alias -Scope Global -Name yom -Value Invoke-YoloOmpMimo
+Set-Alias -Scope Global -Name yos -Value Invoke-YoloOmpSol
+Set-Alias -Scope Global -Name yot -Value Invoke-YoloOmpTerra
+Set-Alias -Scope Global -Name yol -Value Invoke-YoloOmpLuna
+Set-Alias -Scope Global -Name yoa -Value Invoke-YoloOmpAstra
+Set-Alias -Scope Global -Name yoc -Value Invoke-YoloOmpContinue
+Set-Alias -Scope Global -Name yofc -Value Invoke-YoloOmpFableContinue
+Set-Alias -Scope Global -Name yooc -Value Invoke-YoloOmpOpusContinue
+Set-Alias -Scope Global -Name yomc -Value Invoke-YoloOmpMimoContinue
+Set-Alias -Scope Global -Name yosc -Value Invoke-YoloOmpSolContinue
+Set-Alias -Scope Global -Name yotc -Value Invoke-YoloOmpTerraContinue
+Set-Alias -Scope Global -Name yolc -Value Invoke-YoloOmpLunaContinue
+Set-Alias -Scope Global -Name yoac -Value Invoke-YoloOmpAstraContinue
+Set-Alias -Scope Global -Name pyo -Value Invoke-PinnedYoloOmp
+Set-Alias -Scope Global -Name pyof -Value Invoke-PinnedYoloOmpFable
+Set-Alias -Scope Global -Name pyoo -Value Invoke-PinnedYoloOmpOpus
+Set-Alias -Scope Global -Name pyom -Value Invoke-PinnedYoloOmpMimo
+Set-Alias -Scope Global -Name pyos -Value Invoke-PinnedYoloOmpSol
+Set-Alias -Scope Global -Name pyot -Value Invoke-PinnedYoloOmpTerra
+Set-Alias -Scope Global -Name pyol -Value Invoke-PinnedYoloOmpLuna
+Set-Alias -Scope Global -Name pyoa -Value Invoke-PinnedYoloOmpAstra
+Set-Alias -Scope Global -Name pyoc -Value Invoke-PinnedYoloOmpContinue
+Set-Alias -Scope Global -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
+Set-Alias -Scope Global -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
+Set-Alias -Scope Global -Name pyomc -Value Invoke-PinnedYoloOmpMimoContinue
+Set-Alias -Scope Global -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
+Set-Alias -Scope Global -Name pyotc -Value Invoke-PinnedYoloOmpTerraContinue
+Set-Alias -Scope Global -Name pyolc -Value Invoke-PinnedYoloOmpLunaContinue
+Set-Alias -Scope Global -Name pyoac -Value Invoke-PinnedYoloOmpAstraContinue
 
 # The hyphenated base names avoid collisions with existing shortcuts whose
 # t suffix already has another meaning (yot, yxt, and pyot).
-Set-Alias -Name yct -Value Invoke-YoloClaudeTemporary
-Set-Alias -Name yc-t -Value Invoke-YoloClaudeTemporary
-Set-Alias -Name ycft -Value Invoke-YoloClaudeFableTemporary
-Set-Alias -Name ycot -Value Invoke-YoloClaudeOpusTemporary
-Set-Alias -Name ycst -Value Invoke-YoloClaudeSonnetTemporary
+Set-Alias -Scope Global -Name yct -Value Invoke-YoloClaudeTemporary
+Set-Alias -Scope Global -Name yc-t -Value Invoke-YoloClaudeTemporary
+Set-Alias -Scope Global -Name ycft -Value Invoke-YoloClaudeFableTemporary
+Set-Alias -Scope Global -Name ycot -Value Invoke-YoloClaudeOpusTemporary
+Set-Alias -Scope Global -Name ycst -Value Invoke-YoloClaudeSonnetTemporary
 
-Set-Alias -Name yxtt -Value Invoke-YoloCodexTerraTemporary
-Set-Alias -Name yx-t -Value Invoke-YoloCodexTemporary
-Set-Alias -Name yxst -Value Invoke-YoloCodexSolTemporary
-Set-Alias -Name yxlt -Value Invoke-YoloCodexLunaTemporary
-Set-Alias -Name yxat -Value Invoke-YoloCodexAstraTemporary
+Set-Alias -Scope Global -Name yxtt -Value Invoke-YoloCodexTerraTemporary
+Set-Alias -Scope Global -Name yx-t -Value Invoke-YoloCodexTemporary
+Set-Alias -Scope Global -Name yxst -Value Invoke-YoloCodexSolTemporary
+Set-Alias -Scope Global -Name yxlt -Value Invoke-YoloCodexLunaTemporary
+Set-Alias -Scope Global -Name yxat -Value Invoke-YoloCodexAstraTemporary
 
-Set-Alias -Name yo-t -Value Invoke-YoloOmpTemporary
-Set-Alias -Name yoft -Value Invoke-YoloOmpFableTemporary
-Set-Alias -Name yoot -Value Invoke-YoloOmpOpusTemporary
-Set-Alias -Name yomt -Value Invoke-YoloOmpMimoTemporary
-Set-Alias -Name yost -Value Invoke-YoloOmpSolTemporary
-Set-Alias -Name yott -Value Invoke-YoloOmpTerraTemporary
-Set-Alias -Name yolt -Value Invoke-YoloOmpLunaTemporary
-Set-Alias -Name yoat -Value Invoke-YoloOmpAstraTemporary
+Set-Alias -Scope Global -Name yo-t -Value Invoke-YoloOmpTemporary
+Set-Alias -Scope Global -Name yoft -Value Invoke-YoloOmpFableTemporary
+Set-Alias -Scope Global -Name yoot -Value Invoke-YoloOmpOpusTemporary
+Set-Alias -Scope Global -Name yomt -Value Invoke-YoloOmpMimoTemporary
+Set-Alias -Scope Global -Name yost -Value Invoke-YoloOmpSolTemporary
+Set-Alias -Scope Global -Name yott -Value Invoke-YoloOmpTerraTemporary
+Set-Alias -Scope Global -Name yolt -Value Invoke-YoloOmpLunaTemporary
+Set-Alias -Scope Global -Name yoat -Value Invoke-YoloOmpAstraTemporary
 
-Set-Alias -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
-Set-Alias -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
-Set-Alias -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
-Set-Alias -Name pyomt -Value Invoke-PinnedYoloOmpMimoTemporary
-Set-Alias -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary
-Set-Alias -Name pyott -Value Invoke-PinnedYoloOmpTerraTemporary
-Set-Alias -Name pyolt -Value Invoke-PinnedYoloOmpLunaTemporary
-Set-Alias -Name pyoat -Value Invoke-PinnedYoloOmpAstraTemporary
-Set-Alias -Name src -Value Set-LocationSrc
-Set-Alias -Name ?? -Value Invoke-ShellGpt
-Set-Alias -Name which -Value 'C:\Windows\System32\where.exe'
-Set-Alias -Name killall -Value Invoke-KillAll
-Set-Alias -Name rmrf -Value Invoke-RmRf
+Set-Alias -Scope Global -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
+Set-Alias -Scope Global -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
+Set-Alias -Scope Global -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
+Set-Alias -Scope Global -Name pyomt -Value Invoke-PinnedYoloOmpMimoTemporary
+Set-Alias -Scope Global -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary
+Set-Alias -Scope Global -Name pyott -Value Invoke-PinnedYoloOmpTerraTemporary
+Set-Alias -Scope Global -Name pyolt -Value Invoke-PinnedYoloOmpLunaTemporary
+Set-Alias -Scope Global -Name pyoat -Value Invoke-PinnedYoloOmpAstraTemporary
+Set-Alias -Scope Global -Name src -Value Set-LocationSrc
+Set-Alias -Scope Global -Name ?? -Value Invoke-ShellGpt
+Set-Alias -Scope Global -Name which -Value 'C:\Windows\System32\where.exe'
+Set-Alias -Scope Global -Name killall -Value Invoke-KillAll
+Set-Alias -Scope Global -Name rmrf -Value Invoke-RmRf

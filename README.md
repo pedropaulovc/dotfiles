@@ -117,3 +117,8 @@ chezmoi add ~/.somefile     # start managing a new file
 chezmoi update              # git pull + apply
 chezmoi re-add              # pull local edits back into the source
 ```
+
+`pyu` runs `chezmoi update`, reloads the current shell profile (`~/.bashrc`
+or `$PROFILE`), updates the pinned OMP dogfood binary, then upgrades every
+installed OMP marketplace plugin. The plugin upgrade is separate from
+chezmoi's manifest-based plugin sync.
