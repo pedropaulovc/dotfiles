@@ -51,10 +51,11 @@ if ($args[0] -eq "clone") {
     $source = $args | Where-Object { $_ -like "https://github.com/*" } | Select-Object -First 1
     $repoDir = $args[-1]
     $hashes = @{
-        "https://github.com/microsoft/playwright-cli.git" = "fe74b7fb02fe5d0697d1e1359cb44e1f48d1fc54"
+        "https://github.com/microsoft/playwright-cli.git" = "4b040465accc10048d4b16479bb54d6d1d3bdeb6"
         "https://github.com/blader/humanizer.git" = "5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c"
         "https://github.com/nutlope/hallmark.git" = "747c924c4767b4d5fa6f1c59985c87a21c918334"
         "https://github.com/vectorize-io/hindsight.git" = "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7"
+        "https://github.com/jl-cmd/claude-dev-env.git" = "b6f2252039424911d7e23f2c9bd6e5a7f149af12"
     }
     if (-not $hashes.ContainsKey($source)) {
         throw "Unexpected clone source: $source"
@@ -180,8 +181,8 @@ try {
     }
 
     $calls = @(Get-Content -LiteralPath $callLog)
-    if ($calls.Count -ne 4) {
-        throw "Expected four skill installs, got $($calls.Count). Hook output: $hookOutput"
+    if ($calls.Count -ne 5) {
+        throw "Expected five skill installs, got $($calls.Count). Hook output: $hookOutput"
     }
     $lockedAgents = "amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code"
     if ($calls | Where-Object { $_ -ne $lockedAgents }) {

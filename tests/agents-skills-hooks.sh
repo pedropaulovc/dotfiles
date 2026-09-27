@@ -26,7 +26,7 @@ if [ "$1" = clone ]; then
 
   case "$source" in
     https://github.com/microsoft/playwright-cli.git)
-      hash=fe74b7fb02fe5d0697d1e1359cb44e1f48d1fc54
+      hash=4b040465accc10048d4b16479bb54d6d1d3bdeb6
       ;;
     https://github.com/blader/humanizer.git)
       hash=5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c
@@ -36,6 +36,9 @@ if [ "$1" = clone ]; then
       ;;
     https://github.com/vectorize-io/hindsight.git)
       hash=38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7
+      ;;
+    https://github.com/jl-cmd/claude-dev-env.git)
+      hash=b6f2252039424911d7e23f2c9bd6e5a7f149af12
       ;;
     *)
       printf 'Unexpected clone source: %s\n' "$source" >&2
@@ -128,8 +131,8 @@ case "$hook_output" in
 esac
 
 call_count=$(wc -l <"$call_log")
-if [ "$call_count" -ne 4 ]; then
-  printf 'Expected four skill installs, got %s.\n' "$call_count" >&2
+if [ "$call_count" -ne 5 ]; then
+  printf 'Expected five skill installs, got %s.\n' "$call_count" >&2
   exit 1
 fi
 
