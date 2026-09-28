@@ -45,11 +45,11 @@
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "25dfcd2b965dbfaeb6477127b57ca8a0067240b8",
+      "ref": "23142ded49734ec718179c468f041ac26544d98b",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
       "skillFolderHash": "b6f2252039424911d7e23f2c9bd6e5a7f149af12",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-09-27T02:54:45.928Z"
+      "updatedAt": "2026-09-28T03:41:35.309Z"
     }
   },
   "dismissed": {
