@@ -42,7 +42,7 @@ except ModuleNotFoundError:
 MANAGED = tomlkit.parse(r'''
 {{ includeTemplate "codex-managed.toml" . }}
 ''')
-REMOVED = (("plugins", "command-chain-separator@agent-plugins"),)
+REMOVED = (("plugins", "command-chain-separator@agent-plugins"), ("tui", "model_availability_nux", "gpt-6-sol"))
 
 
 def upsert(dst, src):

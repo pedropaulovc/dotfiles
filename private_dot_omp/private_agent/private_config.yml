@@ -4,7 +4,7 @@ providers:
     - firecrawl
 modelRoles:
   smol: openai-codex/gpt-6-luna:max
-  slow: openai-codex/gpt-6-sol:medium
+  slow: openai-codex/gpt-6.1-sol:medium
   plan: openai-codex/gpt-6-astra:high
   web: web/firecrawl
   default: openrouter/xiaomi/mimo-v2.6-pro
