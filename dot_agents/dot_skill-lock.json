@@ -5,21 +5,21 @@
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
-      "ref": "74354ecc7a43da16d91a9bc54fa8db8283a3fcf5",
+      "ref": "b85c7a736bb473bf55b584e54a09ffa698d6d871",
       "skillPath": "skills/playwright-cli/SKILL.md",
-      "skillFolderHash": "4b040465accc10048d4b16479bb54d6d1d3bdeb6",
+      "skillFolderHash": "6b746b43751be277378e0ee04fe0db69f24da045",
       "installedAt": "2026-03-30T02:06:57.875Z",
-      "updatedAt": "2026-09-19T08:08:38.814Z"
+      "updatedAt": "2026-10-01T03:42:01.674Z"
     },
     "humanizer": {
       "source": "blader/humanizer",
       "sourceType": "github",
       "sourceUrl": "https://github.com/blader/humanizer.git",
-      "ref": "9862685f575c65a8247f90369951df1b3416e3d6",
+      "ref": "225a6f39ac85f76ee48dbad772ea4abe4ed6c9d8",
       "skillPath": "SKILL.md",
-      "skillFolderHash": "5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c",
+      "skillFolderHash": "8ed37b6d1d98a0bbdb599d0399a4a2185eb8fa03",
       "installedAt": "2026-05-19T18:11:52.074Z",
-      "updatedAt": "2026-09-07T08:26:41.364Z"
+      "updatedAt": "2026-10-01T03:42:01.674Z"
     },
     "hallmark": {
       "source": "nutlope/hallmark",
@@ -35,21 +35,21 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "ccfe85b4851957ac2adf88b4a9ddf9668b2882f1",
+      "ref": "f2c33cc405023dcaa8aa8ef4c0120e1f262f05ad",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-09-27T03:54:57.298Z"
+      "updatedAt": "2026-10-01T03:42:01.674Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "23142ded49734ec718179c468f041ac26544d98b",
+      "ref": "42c8e8177bb803a23c8df57fe497fdbb6a8105d5",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
       "skillFolderHash": "b6f2252039424911d7e23f2c9bd6e5a7f149af12",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-09-28T03:41:35.309Z"
+      "updatedAt": "2026-10-01T03:42:01.674Z"
     }
   },
   "dismissed": {
