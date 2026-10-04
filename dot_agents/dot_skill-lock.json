@@ -35,21 +35,21 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "f2c33cc405023dcaa8aa8ef4c0120e1f262f05ad",
+      "ref": "f7dd3f4fd7420f7beec60c32c965e5e5cf7be066",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-10-01T03:42:01.674Z"
+      "updatedAt": "2026-10-04T04:44:09.904Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "42c8e8177bb803a23c8df57fe497fdbb6a8105d5",
+      "ref": "788c319546edc768033118d8998c15197b9a6222",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
-      "skillFolderHash": "b6f2252039424911d7e23f2c9bd6e5a7f149af12",
+      "skillFolderHash": "96dd5c50181244bf72a8ff06896a14800c6213a9",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-10-01T03:42:01.674Z"
+      "updatedAt": "2026-10-04T04:44:09.904Z"
     }
   },
   "dismissed": {
