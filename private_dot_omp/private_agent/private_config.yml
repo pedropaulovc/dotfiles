@@ -45,6 +45,7 @@ grep:
   contextBefore: 1
 task:
   eager: preferred
+  softRequestBudget: 600
   isolation:
     merge: branch
     commits: ai
