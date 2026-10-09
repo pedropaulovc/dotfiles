@@ -63,6 +63,8 @@ fetch:
   enabled: true
 completion:
   notify: "off"
+ask:
+  timeout: 3600
 startup:
   quiet: true
   showSplash: false
