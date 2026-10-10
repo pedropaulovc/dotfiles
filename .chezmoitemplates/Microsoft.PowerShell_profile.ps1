@@ -153,8 +153,9 @@ function global:Invoke-Pyu {
     Invoke-OmpPluginUpgrade
 }
 
-function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-YoloOmpHaiku { Invoke-YoloOmp --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function global:Invoke-YoloOmpMimo  { Invoke-YoloOmp       --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function global:Invoke-YoloOmpSol   { Invoke-YoloOmp       --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function global:Invoke-YoloOmpTerra { Invoke-YoloOmp       --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
@@ -162,6 +163,7 @@ function global:Invoke-YoloOmpLuna  { Invoke-YoloOmp       --model openai-codex/
 function global:Invoke-YoloOmpAstra { Invoke-YoloOmp       --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function global:Invoke-YoloOmpContinue      { Invoke-YoloOmp       --continue @args }
 function global:Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
+function global:Invoke-YoloOmpHaikuContinue { Invoke-YoloOmpHaiku --continue @args }
 function global:Invoke-YoloOmpOpusContinue  { Invoke-YoloOmpOpus       --continue @args }
 function global:Invoke-YoloOmpMimoContinue  { Invoke-YoloOmpMimo       --continue @args }
 function global:Invoke-YoloOmpSolContinue   { Invoke-YoloOmpSol       --continue @args }
@@ -187,8 +189,9 @@ function global:Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
-function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
+function global:Invoke-PinnedYoloOmpHaiku { Invoke-PinnedYoloOmp --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function global:Invoke-PinnedYoloOmpMimo  { Invoke-PinnedYoloOmp --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh @args }
 function global:Invoke-PinnedYoloOmpSol   { Invoke-PinnedYoloOmp --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function global:Invoke-PinnedYoloOmpTerra { Invoke-PinnedYoloOmp --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
@@ -196,6 +199,7 @@ function global:Invoke-PinnedYoloOmpLuna  { Invoke-PinnedYoloOmp --model openai-
 function global:Invoke-PinnedYoloOmpAstra { Invoke-PinnedYoloOmp --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   @args }
 function global:Invoke-PinnedYoloOmpContinue      { Invoke-PinnedYoloOmp --continue @args }
 function global:Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
+function global:Invoke-PinnedYoloOmpHaikuContinue { Invoke-PinnedYoloOmpHaiku --continue @args }
 function global:Invoke-PinnedYoloOmpOpusContinue  { Invoke-PinnedYoloOmpOpus --continue @args }
 function global:Invoke-PinnedYoloOmpMimoContinue  { Invoke-PinnedYoloOmpMimo --continue @args }
 function global:Invoke-PinnedYoloOmpSolContinue   { Invoke-PinnedYoloOmpSol --continue @args }
@@ -334,6 +338,7 @@ function global:Invoke-YoloCodexAstraTemporary { Invoke-TemporaryProject 'yxa' @
 
 function global:Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
 function global:Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
+function global:Invoke-YoloOmpHaikuTemporary { Invoke-TemporaryProject 'yoh' @args }
 function global:Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
 function global:Invoke-YoloOmpMimoTemporary { Invoke-TemporaryProject 'yom' @args }
 function global:Invoke-YoloOmpSolTemporary { Invoke-TemporaryProject 'yos' @args }
@@ -343,6 +348,7 @@ function global:Invoke-YoloOmpAstraTemporary { Invoke-TemporaryProject 'yoa' @ar
 
 function global:Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
 function global:Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
+function global:Invoke-PinnedYoloOmpHaikuTemporary { Invoke-TemporaryProject 'pyoh' @args }
 function global:Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @args }
 function global:Invoke-PinnedYoloOmpMimoTemporary { Invoke-TemporaryProject 'pyom' @args }
 function global:Invoke-PinnedYoloOmpSolTemporary { Invoke-TemporaryProject 'pyos' @args }
@@ -407,6 +413,7 @@ Set-Alias -Scope Global -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
 Set-Alias -Scope Global -Name pyu -Value Invoke-Pyu
 
 Set-Alias -Scope Global -Name yof -Value Invoke-YoloOmpFable
+Set-Alias -Scope Global -Name yoh -Value Invoke-YoloOmpHaiku
 Set-Alias -Scope Global -Name yoo -Value Invoke-YoloOmpOpus
 Set-Alias -Scope Global -Name yom -Value Invoke-YoloOmpMimo
 Set-Alias -Scope Global -Name yos -Value Invoke-YoloOmpSol
@@ -415,6 +422,7 @@ Set-Alias -Scope Global -Name yol -Value Invoke-YoloOmpLuna
 Set-Alias -Scope Global -Name yoa -Value Invoke-YoloOmpAstra
 Set-Alias -Scope Global -Name yoc -Value Invoke-YoloOmpContinue
 Set-Alias -Scope Global -Name yofc -Value Invoke-YoloOmpFableContinue
+Set-Alias -Scope Global -Name yohc -Value Invoke-YoloOmpHaikuContinue
 Set-Alias -Scope Global -Name yooc -Value Invoke-YoloOmpOpusContinue
 Set-Alias -Scope Global -Name yomc -Value Invoke-YoloOmpMimoContinue
 Set-Alias -Scope Global -Name yosc -Value Invoke-YoloOmpSolContinue
@@ -423,6 +431,7 @@ Set-Alias -Scope Global -Name yolc -Value Invoke-YoloOmpLunaContinue
 Set-Alias -Scope Global -Name yoac -Value Invoke-YoloOmpAstraContinue
 Set-Alias -Scope Global -Name pyo -Value Invoke-PinnedYoloOmp
 Set-Alias -Scope Global -Name pyof -Value Invoke-PinnedYoloOmpFable
+Set-Alias -Scope Global -Name pyoh -Value Invoke-PinnedYoloOmpHaiku
 Set-Alias -Scope Global -Name pyoo -Value Invoke-PinnedYoloOmpOpus
 Set-Alias -Scope Global -Name pyom -Value Invoke-PinnedYoloOmpMimo
 Set-Alias -Scope Global -Name pyos -Value Invoke-PinnedYoloOmpSol
@@ -431,6 +440,7 @@ Set-Alias -Scope Global -Name pyol -Value Invoke-PinnedYoloOmpLuna
 Set-Alias -Scope Global -Name pyoa -Value Invoke-PinnedYoloOmpAstra
 Set-Alias -Scope Global -Name pyoc -Value Invoke-PinnedYoloOmpContinue
 Set-Alias -Scope Global -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
+Set-Alias -Scope Global -Name pyohc -Value Invoke-PinnedYoloOmpHaikuContinue
 Set-Alias -Scope Global -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
 Set-Alias -Scope Global -Name pyomc -Value Invoke-PinnedYoloOmpMimoContinue
 Set-Alias -Scope Global -Name pyosc -Value Invoke-PinnedYoloOmpSolContinue
@@ -454,6 +464,7 @@ Set-Alias -Scope Global -Name yxat -Value Invoke-YoloCodexAstraTemporary
 
 Set-Alias -Scope Global -Name yo-t -Value Invoke-YoloOmpTemporary
 Set-Alias -Scope Global -Name yoft -Value Invoke-YoloOmpFableTemporary
+Set-Alias -Scope Global -Name yoht -Value Invoke-YoloOmpHaikuTemporary
 Set-Alias -Scope Global -Name yoot -Value Invoke-YoloOmpOpusTemporary
 Set-Alias -Scope Global -Name yomt -Value Invoke-YoloOmpMimoTemporary
 Set-Alias -Scope Global -Name yost -Value Invoke-YoloOmpSolTemporary
@@ -463,6 +474,7 @@ Set-Alias -Scope Global -Name yoat -Value Invoke-YoloOmpAstraTemporary
 
 Set-Alias -Scope Global -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
 Set-Alias -Scope Global -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
+Set-Alias -Scope Global -Name pyoht -Value Invoke-PinnedYoloOmpHaikuTemporary
 Set-Alias -Scope Global -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
 Set-Alias -Scope Global -Name pyomt -Value Invoke-PinnedYoloOmpMimoTemporary
 Set-Alias -Scope Global -Name pyost -Value Invoke-PinnedYoloOmpSolTemporary

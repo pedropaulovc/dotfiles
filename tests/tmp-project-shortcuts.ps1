@@ -19,14 +19,14 @@ try {
     . ([scriptblock]::Create($profileText))
     @(
         "omp-plugin-upgrade",
-        "yof", "yoo", "yom", "yos", "yot", "yol", "yoa",
-        "yoc", "yofc", "yooc", "yomc", "yosc", "yotc", "yolc", "yoac",
-        "pyof", "pyoo", "pyom", "pyos", "pyot", "pyol", "pyoa",
-        "pyoc", "pyofc", "pyooc", "pyomc", "pyosc", "pyotc", "pyolc", "pyoac",
+        "yof", "yoh", "yoo", "yom", "yos", "yot", "yol", "yoa",
+        "yoc", "yofc", "yohc", "yooc", "yomc", "yosc", "yotc", "yolc", "yoac",
+        "pyof", "pyoh", "pyoo", "pyom", "pyos", "pyot", "pyol", "pyoa",
+        "pyoc", "pyofc", "pyohc", "pyooc", "pyomc", "pyosc", "pyotc", "pyolc", "pyoac",
         "yct", "yc-t", "ycft", "ycot", "ycst",
         "yx-t", "yxst", "yxtt", "yxlt", "yxat",
-        "yo-t", "yoft", "yoot", "yomt", "yost", "yott", "yolt", "yoat",
-        "pyo-t", "pyoft", "pyoot", "pyomt", "pyost", "pyott", "pyolt", "pyoat"
+        "yo-t", "yoft", "yoht", "yoot", "yomt", "yost", "yott", "yolt", "yoat",
+        "pyo-t", "pyoft", "pyoht", "pyoot", "pyomt", "pyost", "pyott", "pyolt", "pyoat"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
@@ -136,14 +136,48 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
     Clear-Content -LiteralPath $ompCallLog
     yof --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
         throw "yof did not select the Claude Fable medium model."
+    }
+    Clear-Content -LiteralPath $ompCallLog
+    yoh --probe
+    $calls = @(Get-Content -LiteralPath $ompCallLog)
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yoh did not select Claude Haiku 5.5 at max effort."
     }
     Clear-Content -LiteralPath $ompCallLog
     yoo --probe
     $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
-        throw "yoo did not select the Claude Opus medium model."
+    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+        throw "yoo did not select the Claude Opus medium model with the Haiku max scout."
+    }
+    $originalPinnedYoloOmp = (Get-Command Invoke-PinnedYoloOmp -CommandType Function).ScriptBlock
+    try {
+        function global:Invoke-PinnedYoloOmp {
+            $call = @("--auto-approve") + $args
+            Add-Content -LiteralPath $ompCallLog -Value ($call -join " ")
+        }
+        Clear-Content -LiteralPath $ompCallLog
+        pyof --probe
+        $calls = @(Get-Content -LiteralPath $ompCallLog)
+        if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+            throw "pyof did not select the Claude Fable medium model with the Haiku scout."
+        }
+        Clear-Content -LiteralPath $ompCallLog
+        pyoh --probe
+        $calls = @(Get-Content -LiteralPath $ompCallLog)
+        if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+            throw "pyoh did not select Claude Haiku 5.5 at max effort."
+        }
+        Clear-Content -LiteralPath $ompCallLog
+        pyoo --probe
+        $calls = @(Get-Content -LiteralPath $ompCallLog)
+        if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe") {
+            throw "pyoo did not select the Claude Opus medium model with the Haiku scout."
+        }
+    }
+    finally {
+        Set-Item -Path Function:\global:Invoke-PinnedYoloOmp -Value $originalPinnedYoloOmp
     }
     Clear-Content -LiteralPath $ompCallLog
     yos --probe

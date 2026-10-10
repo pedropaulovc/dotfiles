@@ -231,8 +231,9 @@ $targets
 EOF
 }
 
-yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+yoh()  { yo  --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yom()  { yo  --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yos()  { yo  --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 yot()  { yo  --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
@@ -240,6 +241,7 @@ yol()  { yo  --model openai-codex/gpt-6-luna:max       --thinking max    --smol 
 yoa()  { yo  --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 yoc()  { yo  --continue "$@"; }
 yofc()  { yof  --continue "$@"; }
+yohc()  { yoh --continue "$@"; }
 yooc()  { yoo  --continue "$@"; }
 yomc()  { yom  --continue "$@"; }
 yosc()  { yos  --continue "$@"; }
@@ -256,8 +258,9 @@ pyu() {
   pyo update || return
   omp-plugin-upgrade
 }
-pyof() { pyo --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+pyof() { pyo --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+pyoh() { pyo --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyom() { pyo --model openrouter/xiaomi/mimo-v2.6-pro   --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 pyos() { pyo --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 pyot() { pyo --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
@@ -265,6 +268,7 @@ pyol() { pyo --model openai-codex/gpt-6-luna:max       --thinking max    --smol 
 pyoa() { pyo --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6-luna:max    --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 pyoc() { pyo --continue "$@"; }
 pyofc() { pyof --continue "$@"; }
+pyohc() { pyoh --continue "$@"; }
 pyooc() { pyoo --continue "$@"; }
 pyomc() { pyom --continue "$@"; }
 pyosc() { pyos --continue "$@"; }
@@ -353,6 +357,7 @@ yxat() { __tmp_project "${1-}" yxa "${@:2}"; }
 
 yo-t() { __tmp_project "${1-}" yo "${@:2}"; }
 yoft() { __tmp_project "${1-}" yof "${@:2}"; }
+yoht() { __tmp_project "${1-}" yoh "${@:2}"; }
 yoot() { __tmp_project "${1-}" yoo "${@:2}"; }
 yomt() { __tmp_project "${1-}" yom "${@:2}"; }
 yost() { __tmp_project "${1-}" yos "${@:2}"; }
@@ -362,6 +367,7 @@ yoat() { __tmp_project "${1-}" yoa "${@:2}"; }
 
 pyo-t() { __tmp_project "${1-}" pyo "${@:2}"; }
 pyoft() { __tmp_project "${1-}" pyof "${@:2}"; }
+pyoht() { __tmp_project "${1-}" pyoh "${@:2}"; }
 pyoot() { __tmp_project "${1-}" pyoo "${@:2}"; }
 pyomt() { __tmp_project "${1-}" pyom "${@:2}"; }
 pyost() { __tmp_project "${1-}" pyos "${@:2}"; }
