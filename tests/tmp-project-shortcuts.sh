@@ -71,8 +71,8 @@ plugin list --json
 plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
 : >"$OMP_CALL_LOG"
-yom --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+yoh --probe
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 cat >"$TMP_PYO_BINARY" <<'PYOP'
 #!/bin/sh
 printf '%s\n' "$*" >>"$OMP_CALL_LOG"
@@ -80,26 +80,8 @@ PYOP
 chmod +x "$TMP_PYO_BINARY"
 PYO_BINARY="$TMP_PYO_BINARY"
 : >"$OMP_CALL_LOG"
-pyom --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/xiaomi/mimo-v2.6-pro --thinking medium --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-yof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-yoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-yoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-pyof --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-fable-5-1:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-pyoo --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-opus-5-5:medium --thinking medium --smol openrouter/anthropic/claude-haiku-5.5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
 pyoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openrouter/anthropic/claude-haiku-5.5 --thinking max --smol openrouter/xiaomi/mimo-v2.6-pro --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yos --probe
 [ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6-luna:max --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
@@ -177,10 +159,10 @@ for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
     yx-t yxst yxtt yxlt yxat \
-    yo yof yoh yoo yom yos yot yol yoa yoc yofc yohc yooc yomc yosc yotc yolc yoac \
-    pyo pyu pyof pyoh pyoo pyom pyos pyot pyol pyoa pyoc pyofc pyohc pyooc pyomc pyosc pyotc pyolc pyoac \
-    yo-t yoft yoht yoot yomt yost yott yolt yoat \
-    pyo-t pyoft pyoht pyoot pyomt pyost pyott pyolt pyoat; do
+    yo yof yoh yoo yos yot yol yoa yoc yofc yohc yooc yosc yotc yolc yoac \
+    pyo pyu pyof pyoh pyoo pyos pyot pyol pyoa pyoc pyofc pyohc pyooc pyosc pyotc pyolc pyoac \
+    yo-t yoft yoht yoot yost yott yolt yoat \
+    pyo-t pyoft pyoht pyoot pyost pyott pyolt pyoat; do
 
     type "$shortcut" >/dev/null
 done

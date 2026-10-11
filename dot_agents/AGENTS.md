@@ -120,7 +120,6 @@ omp usage --json | jq '
 | GPT-6.1 Sol      | XHigh  | 51                             | 0.39          | Workhorse for larger complexity feature work, integrator                        |
 | GPT-6 Astra      | Low    | 46                             | 0.82          | Work coordinator, Step-up if Sol medium not effective                           |
 | GPT-6 Astra      | High   | 51                             | 1.73          | Plan, advisor, last resort for toughest fixes                                   |
-| MiMo v2.6 Pro    | Medium | 46                             | 0.13          | Scout, summarizer, well defined bug fixer, ~1000=LoC feature                    |
 | Claude Haiku 5.5 | Max    | 43                             | 0.21          | Best when paired with other Claude models as a scout                            |
 | Claude Opus 5.5  | Medium | 51                             | 1.34          | Workhorse for feature work, code reviewer                                       |
 | Claude Opus 5.5  | High   | 54                             | 1.82          | Workhorse for larger complexity feature work, integrator                        |

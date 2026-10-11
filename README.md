@@ -122,3 +122,8 @@ chezmoi re-add              # pull local edits back into the source
 or `$PROFILE`), updates the pinned OMP dogfood binary, then upgrades every
 installed OMP marketplace plugin. The plugin upgrade is separate from
 chezmoi's manifest-based plugin sync.
+
+`yoh` and `pyoh` route Haiku 5.5 directly through Anthropic
+(`anthropic/claude-haiku-5-5`) with max thinking. The Fable (`yof`/`pyof`)
+and Opus (`yoo`/`pyoo`) shortcuts use the same direct Haiku model as their
+max-effort scout (`anthropic/claude-haiku-5-5:max`) in Bash and PowerShell.

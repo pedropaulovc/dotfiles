@@ -7,7 +7,7 @@ modelRoles:
   slow: openai-codex/gpt-6.1-sol:medium
   plan: openai-codex/gpt-6-astra:high
   web: web/firecrawl
-  default: openrouter/xiaomi/mimo-v2.6-pro
+  default: anthropic/claude-haiku-5-5
 symbolPreset: unicode
 theme:
   dark: titanium
@@ -92,7 +92,7 @@ retry:
     web:
       - web/perplexity
       - google/gemini-2.5-flash
-      - anthropic/claude-haiku-4-5
+      - anthropic/claude-haiku-5-5
       - openai-codex/gpt-6-luna
       - xai/grok-4.5
       - web/zai
