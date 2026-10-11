@@ -98,13 +98,10 @@ PYU_CALL_LOG="$HOME/pyu-calls"
 export PYU_CALL_LOG
 cat >"$HOME/.bashrc" <<'BASHRC'
 printf '%s\n' reload >>"$PYU_CALL_LOG"
+set +u
+. "$REPO_DIR/dot_bashrc"
+set -u
 PYU_RELOADED=1
-[ "${FAIL_RELOAD:-0}" -eq 0 ]
-BASHRC
-chezmoi() {
-    printf '%s\n' "chezmoi $*" >>"$PYU_CALL_LOG"
-    [ "${FAIL_CHEZMOI:-0}" -eq 0 ] || return 17
-}
 pyo() {
     printf '%s\n' "pyo $*" >>"$PYU_CALL_LOG"
     [ "${FAIL_PYO:-0}" -eq 0 ] || return 18
@@ -113,8 +110,26 @@ omp-plugin-upgrade() {
     printf '%s\n' plugin-upgrade >>"$PYU_CALL_LOG"
     [ "${FAIL_PLUGIN:-0}" -eq 0 ] || return 19
 }
+[ "${FAIL_RELOAD:-0}" -eq 0 ]
+BASHRC
+chezmoi() {
+    printf '%s\n' "chezmoi $*" >>"$PYU_CALL_LOG"
+    [ "${FAIL_CHEZMOI:-0}" -eq 0 ] || return 17
+}
+yom() { :; }
+yomc() { :; }
+yomt() { :; }
+pyom() { :; }
+pyomc() { :; }
+pyomt() { :; }
 pyu
 [ "${PYU_RELOADED:-0}" -eq 1 ]
+for shortcut in yom yomc yomt pyom pyomc pyomt; do
+    if type "$shortcut" >/dev/null 2>&1; then
+        printf 'Bash profile reload retained retired shortcut: %s\n' "$shortcut" >&2
+        exit 1
+    fi
+done
 expected_pyu_calls='chezmoi update
 reload
 pyo update

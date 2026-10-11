@@ -32,6 +32,31 @@ try {
             throw "Temporary shortcut was not defined: $_"
         }
     }
+
+    function global:Invoke-YoloOmpMimo { }
+    function global:Invoke-YoloOmpMimoContinue { }
+    function global:Invoke-YoloOmpMimoTemporary { }
+    function global:Invoke-PinnedYoloOmpMimo { }
+    function global:Invoke-PinnedYoloOmpMimoContinue { }
+    function global:Invoke-PinnedYoloOmpMimoTemporary { }
+    Set-Alias -Scope Global -Name yom -Value Invoke-YoloOmpMimo -Force
+    Set-Alias -Scope Global -Name yomc -Value Invoke-YoloOmpMimoContinue -Force
+    Set-Alias -Scope Global -Name yomt -Value Invoke-YoloOmpMimoTemporary -Force
+    Set-Alias -Scope Global -Name pyom -Value Invoke-PinnedYoloOmpMimo -Force
+    Set-Alias -Scope Global -Name pyomc -Value Invoke-PinnedYoloOmpMimoContinue -Force
+    Set-Alias -Scope Global -Name pyomt -Value Invoke-PinnedYoloOmpMimoTemporary -Force
+    . ([scriptblock]::Create($profileText))
+    $retiredShortcutNames = @(
+        "yom", "yomc", "yomt", "pyom", "pyomc", "pyomt",
+        "Invoke-YoloOmpMimo", "Invoke-YoloOmpMimoContinue", "Invoke-YoloOmpMimoTemporary",
+        "Invoke-PinnedYoloOmpMimo", "Invoke-PinnedYoloOmpMimoContinue", "Invoke-PinnedYoloOmpMimoTemporary"
+    )
+    $remainingRetiredShortcutNames = @($retiredShortcutNames | Where-Object {
+        $null -ne (Get-Command -Name $_ -ErrorAction SilentlyContinue)
+    })
+    if ($remainingRetiredShortcutNames.Count -gt 0) {
+        throw "Removed shortcut commands remained after profile reload: $($remainingRetiredShortcutNames -join ', ')"
+    }
     $dogfoodCallLog = Join-Path $tempDir "dogfood-call-log"
     $dogfoodScript = Join-Path $tempDir "fake-omp-dogfood.ps1"
     @'

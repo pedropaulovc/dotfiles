@@ -1,5 +1,20 @@
 $InformationPreference = 'Continue'
 
+Remove-Item -Path @(
+    'Alias:yom'
+    'Alias:yomc'
+    'Alias:yomt'
+    'Alias:pyom'
+    'Alias:pyomc'
+    'Alias:pyomt'
+    'Function:Invoke-YoloOmpMimo'
+    'Function:Invoke-YoloOmpMimoContinue'
+    'Function:Invoke-YoloOmpMimoTemporary'
+    'Function:Invoke-PinnedYoloOmpMimo'
+    'Function:Invoke-PinnedYoloOmpMimoContinue'
+    'Function:Invoke-PinnedYoloOmpMimoTemporary'
+) -ErrorAction SilentlyContinue
+
 $env:PYTHONUTF8 = "1"
 $env:PYTHONIOENCODING = "utf-8"
 $env:EDITOR = 'code --wait'

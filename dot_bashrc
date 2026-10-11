@@ -231,6 +231,8 @@ $targets
 EOF
 }
 
+unset -f yom yomc yomt pyom pyomc pyomt
+
 yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
 yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
