@@ -77,13 +77,27 @@
       "autoUpdate": true
     }
   },
+  "feedbackDrafts": "notify",
   "effortLevel": "high",
   "advisorModel": "fable",
   "autoUpdatesChannel": "latest",
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
   "verbose": true,
-  "preferredNotifChannel": "terminal_bell",
+  "preferredNotifChannel": "notifications_disabled",
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt|elicitation_dialog|elicitation_url_dialog|agent_needs_input|quota_auto_resume_stale",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"terminalSequence\":\"\\u0007\"}'"
+          }
+        ]
+      }
+    ]
+  },
   "autoCompactEnabled": true,
   "switchModelsOnFlag": false,
   "leftArrowOpensAgents": false,
