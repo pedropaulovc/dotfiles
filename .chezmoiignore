@@ -14,6 +14,7 @@ tests/
 .tmux.conf
 .config/nvtop
 .config/ccstatusline
+.config/systemd
 reminder-update-claude-ai.sh
 # extensionless symlink isn't runnable from Windows PATH (needs PATHEXT); use the .cmd shim there.
 .local/bin/claude-creds

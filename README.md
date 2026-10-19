@@ -14,6 +14,7 @@ the source tree renders byte-identical to what's already installed on each OS.
 | `~/.tmux.conf`                              | `dot_tmux.conf`                                                   | WSL/Linux        |
 | `~/.config/nvtop/interface.ini`             | `private_dot_config/nvtop/interface.ini`                          | WSL/Linux        |
 | `~/.config/hindsight/compose.yaml`           | `private_dot_config/private_hindsight/compose.yaml`                 | WSL/Linux        |
+| `~/.config/systemd/user/solidworks-screens.service` | `private_dot_config/systemd/user/solidworks-screens.service` | WSL/Linux |
 | `$PROFILE` (PowerShell 7)                   | `OneDrive/Documentos/PowerShell/Microsoft.PowerShell_profile.ps1` | Windows          |
 | `~/.gitconfig`                              | `dot_gitconfig.tmpl`                                              | both (templated) |
 | `~/.agents/AGENTS.md`                       | `dot_agents/AGENTS.md`                                            | both             |
@@ -60,6 +61,24 @@ Use it in any `.tmpl` file:
 {{ else if eq .platform "wsl" }}export CACHE="$HOME/.cache"   # WSL-specific
 {{ else }}export CACHE="$HOME/.cache"{{ end }}
 ```
+
+## SOLIDWORKS screens service
+
+The user service runs `uv run python farm.py screens --no-browser --port 8766`
+from `~/src/solidworks-pool` and restarts on failure. Requires the checkout,
+its credentials, and `uv` installed at `~/.local/bin/uv`.
+
+After applying the unit:
+
+```bash
+systemctl --user daemon-reload
+systemctl --user enable --now solidworks-screens.service
+journalctl --user -u solidworks-screens.service -f
+```
+
+Open `http://localhost:8766`. Enable user lingering with
+`loginctl enable-linger "$USER"` to start without an interactive login.
+On WSL, the distro must be running.
 
 ## Secrets
 

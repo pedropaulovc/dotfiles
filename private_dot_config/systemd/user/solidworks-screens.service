@@ -1,0 +1,13 @@
+[Unit]
+Description=SOLIDWORKS farm screens dashboard
+
+[Service]
+Type=simple
+WorkingDirectory=%h/src/solidworks-pool
+ExecStart=%h/.local/bin/uv run python farm.py screens --no-browser --port 8766
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
