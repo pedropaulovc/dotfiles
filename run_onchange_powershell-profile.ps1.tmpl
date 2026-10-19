@@ -4,7 +4,7 @@
 # $PROFILE already accounts for OneDrive-redirected Documents, non-redirected
 # Documents, locale-specific folder names, etc.
 # Re-runs only when the profile content changes (hash below pins the re-run):
-# a51fdc1d1882db1bd15c581d0dd01d29440d890bbacc8df560cede8ef3940f0a
+# aeaa42bbeb47e44ba6ca570c071bb0275c59886f999fc080401bfbaac8fca7a7
 $profileDir = Split-Path $PROFILE.CurrentUserCurrentHost -Parent
 if (-not (Test-Path $profileDir)) {
     New-Item -ItemType Directory -Path $profileDir -Force | Out-Null

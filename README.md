@@ -146,3 +146,7 @@ chezmoi's manifest-based plugin sync.
 (`anthropic/claude-haiku-5-5`) with max thinking. The Fable (`yof`/`pyof`)
 and Opus (`yoo`/`pyoo`) shortcuts use the same direct Haiku model as their
 max-effort scout (`anthropic/claude-haiku-5-5:max`) in Bash and PowerShell.
+
+The Codex-backed OMP shortcuts (`yos`, `yot`, `yol`, `yoa` and their pinned
+`pyo` variants) use Sol low (`--smol openai-codex/gpt-6.1-sol:low`) in Bash
+and PowerShell.
