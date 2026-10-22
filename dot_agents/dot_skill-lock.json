@@ -5,11 +5,11 @@
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
-      "ref": "b85c7a736bb473bf55b584e54a09ffa698d6d871",
+      "ref": "b1a5903c5b633b8c9f843ad7b629c2a78437040c",
       "skillPath": "skills/playwright-cli/SKILL.md",
       "skillFolderHash": "6b746b43751be277378e0ee04fe0db69f24da045",
       "installedAt": "2026-03-30T02:06:57.875Z",
-      "updatedAt": "2026-10-01T03:42:01.674Z"
+      "updatedAt": "2026-10-22T03:35:36.840Z"
     },
     "humanizer": {
       "source": "blader/humanizer",
@@ -35,21 +35,21 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "5331da2f4db369528bb122075341a7de9c3df6df",
+      "ref": "5ecc639c275b8bd3df9f50a29d5cc96965fe8183",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-10-19T03:37:52.319Z"
+      "updatedAt": "2026-10-22T03:35:36.840Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "f99fb7b303380edf2cd24e4d9b802b9cf9c68433",
+      "ref": "1519be8d1a59d021033c9d9d3fcf12b81f7db731",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
-      "skillFolderHash": "96dd5c50181244bf72a8ff06896a14800c6213a9",
+      "skillFolderHash": "c2e475815dca7efc6d390e3e8660afc924d668e3",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-10-19T03:37:52.319Z"
+      "updatedAt": "2026-10-22T03:35:36.840Z"
     }
   },
   "dismissed": {
