@@ -25,31 +25,31 @@
       "source": "nutlope/hallmark",
       "sourceType": "github",
       "sourceUrl": "https://github.com/nutlope/hallmark.git",
-      "ref": "13ac0ec7e148655948100b6396439e481361d690",
+      "ref": "7ec868225c6caa040558c321ee0fefa0e73f83a8",
       "skillPath": "skills/hallmark/SKILL.md",
-      "skillFolderHash": "747c924c4767b4d5fa6f1c59985c87a21c918334",
+      "skillFolderHash": "9bef0978c1448d6e5fbeacfa7302326d6183a06c",
       "installedAt": "2026-09-01T05:25:40.014Z",
-      "updatedAt": "2026-09-01T05:26:51.150Z"
+      "updatedAt": "2026-10-25T03:37:28.710Z"
     },
     "hindsight-self-hosted": {
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "5ecc639c275b8bd3df9f50a29d5cc96965fe8183",
+      "ref": "4822d66e093dadfd6b2b80186fd0395ef80926ca",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-10-22T03:35:36.840Z"
+      "updatedAt": "2026-10-25T03:37:28.710Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "1519be8d1a59d021033c9d9d3fcf12b81f7db731",
+      "ref": "90317f960f86c79992676d8bc4c7222a5f0e25e2",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
       "skillFolderHash": "c2e475815dca7efc6d390e3e8660afc924d668e3",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-10-22T03:35:36.840Z"
+      "updatedAt": "2026-10-25T03:37:28.710Z"
     }
   },
   "dismissed": {
