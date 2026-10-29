@@ -148,5 +148,7 @@ and Opus (`yoo`/`pyoo`) shortcuts use the same direct Haiku model as their
 max-effort scout (`anthropic/claude-haiku-5-5:max`) in Bash and PowerShell.
 
 The Codex-backed OMP shortcuts (`yos`, `yot`, `yol`, `yoa` and their pinned
-`pyo` variants) use Sol low (`--smol openai-codex/gpt-6.1-sol:low`) in Bash
-and PowerShell.
+`pyo` variants) use Terra 6.1 medium
+(`--smol openai-codex/gpt-6.1-terra:medium`) in Bash and PowerShell.
+`yot` and `pyot` also select Terra 6.1 medium as their primary model.
+The named OMP subagent is `codex-gpt-6-1-terra-medium`.

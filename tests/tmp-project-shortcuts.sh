@@ -84,16 +84,16 @@ pyoh --probe
 [ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh --probe' ]
 : >"$OMP_CALL_LOG"
 yos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-sol:low --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 pyos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-sol:low --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 yot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6.1-sol:low --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 : >"$OMP_CALL_LOG"
 pyot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-5.6-terra:medium --thinking medium --smol openai-codex/gpt-6.1-sol:low --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 PYU_CALL_LOG="$HOME/pyu-calls"
 export PYU_CALL_LOG
 cat >"$HOME/.bashrc" <<'BASHRC'
