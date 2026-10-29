@@ -115,16 +115,16 @@ omp usage --json | jq '
 
 | Model            | Effort | Artificial Analysis Intelligence Index v5.0 | Cost per Task | Time per Task (s) | Rule of thumb |
 |------------------|--------|---------------------------------------------|---------------|------------------|---------------|
-| GPT-6.1 Terra    | Medium | 38 | 0.17 | [118.75](https://artificialanalysis.ai/models/comparisons/gpt-6-1-terra-medium-vs-gpt-6-1-sol-medium) | Scout, summarizer, well-defined tasks and bug fixes, ~1000-LoC feature, default if unsure |
-| GPT-6.1 Sol      | Medium | 46 | 0.36 | [214.76](https://artificialanalysis.ai/models/comparisons/gpt-6-1-terra-medium-vs-gpt-6-1-sol-medium) | Workhorse for feature work, code reviewer |
-| GPT-6 Astra      | Low    | 43 | 1.42 | [152.59](https://artificialanalysis.ai/models/comparisons/gpt-6-astra-low-vs-gpt-6-astra-high) | Work coordinator, step-up if Sol medium not effective |
-| GPT-6 Astra      | High   | 55 | 3.24 | [374.22](https://artificialanalysis.ai/models/comparisons/gpt-6-astra-low-vs-gpt-6-astra-high) | Workhorse for larger complexity feature work, integrator; plan, advisor, toughest fixes |
-| Claude Haiku 5.5 | Max    | 36 | 0.41 | [595.79](https://artificialanalysis.ai/models/comparisons/claude-haiku-5-5-vs-claude-opus-5-5-medium) | Best when paired with other Claude models as a scout |
-| Claude Opus 5.5  | Medium | 48 | 2.45 | [341.43](https://artificialanalysis.ai/models/comparisons/claude-haiku-5-5-vs-claude-opus-5-5-medium) | Workhorse for feature work, code reviewer |
-| Claude Opus 5.5  | High   | 52 | 3.46 | [465.77](https://artificialanalysis.ai/models/comparisons/claude-opus-5-5-high-vs-claude-opus-5-5-xhigh) | Workhorse for larger complexity feature work, integrator |
-| Claude Opus 5.5  | XHigh  | 57 | 6.05 | [787.27](https://artificialanalysis.ai/models/comparisons/claude-opus-5-5-high-vs-claude-opus-5-5-xhigh) | Alternative when Fable medium/high not available |
-| Claude Fable 5.1 | Medium | 43 | 5.56 | [496.42](https://artificialanalysis.ai/models/comparisons/claude-fable-5-1-medium-vs-claude-fable-5-1-xhigh) | Work coordinator, step-up if Opus high not effective, 3D vision tasks |
-| Claude Fable 5.1 | XHigh  | 50 | 10.85 | [961.05](https://artificialanalysis.ai/models/comparisons/claude-fable-5-1-medium-vs-claude-fable-5-1-xhigh) | Plan, advisor, last resort for toughest fixes |
+| GPT-6.1 Terra    | Medium | 38 | 0.17 | 118.75 | Scout, summarizer, well-defined tasks and bug fixes, ~1000-LoC feature, default if unsure |
+| GPT-6.1 Sol      | Medium | 46 | 0.36 | 214.76 | Workhorse for feature work, code reviewer |
+| GPT-6 Astra      | Low    | 43 | 1.42 | 152.59 | Work coordinator, step-up if Sol medium not effective |
+| GPT-6 Astra      | High   | 55 | 3.24 | 374.22 | Workhorse for larger complexity feature work, integrator; plan, advisor, toughest fixes |
+| Claude Haiku 5.5 | Max    | 36 | 0.41 | 595.79 | Best when paired with other Claude models as a scout |
+| Claude Opus 5.5  | Medium | 48 | 2.45 | 341.43 | Workhorse for feature work, code reviewer |
+| Claude Opus 5.5  | High   | 52 | 3.46 | 465.77 | Workhorse for larger complexity feature work, integrator |
+| Claude Opus 5.5  | XHigh  | 57 | 6.05 | 787.27 | Alternative when Fable medium/high not available |
+| Claude Fable 5.1 | Medium | 43 | 5.56 | 496.42 | Work coordinator, step-up if Opus high not effective, 3D vision tasks |
+| Claude Fable 5.1 | XHigh  | 50 | 10.85 | 961.05 | Plan, advisor, last resort for toughest fixes |
 
 ## Engineering wisdom
 
