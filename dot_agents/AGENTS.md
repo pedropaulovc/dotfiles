@@ -6,11 +6,11 @@ Email: pedro@vezza.com.br
 ## Git workflow
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
-- Default PR review: post `@codjiflo review` in a new PR comment. Agents choose when to invoke it, but must run it at least once before merging.
+- For PRs targeting repositories owned by `pedropaulovc` or `vezzadev`, default review is `@codjiflo review` in a new PR comment. Agents choose when to invoke it, but must run it at least once before merging. Codjiflo requirements do not apply to PRs targeting repositories outside these owners; follow the target repository's review policy instead.
 - [Codjiflo review options](https://github.com/vezzadev/codjiflo-reviewer): `@codjiflo review [preset] [full|incremental]`. Presets: `sol-xhigh` (default, alias `codex`), `opus-xhigh` (alias `claude`), `sol-medium`, `opus-medium`. Mode defaults to `incremental`; `full` reviews the whole PR.
 - Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset, `codex review --base <base>`, or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
 - If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence, then use `@codex review` as the fallback.
-- Merge bar unless stated otherwise: green CI/CD and an approved Codjiflo review (or Codex fallback).
+- Merge bar unless stated otherwise: green CI/CD and the target repository's required reviews; for `pedropaulovc` and `vezzadev`, require an approved Codjiflo review (or Codex fallback).
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
