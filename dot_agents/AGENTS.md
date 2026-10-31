@@ -6,16 +6,15 @@ Email: pedro@vezza.com.br
 ## Git workflow
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
-- Run local adversarial code reviews in parallel to CI/CD. Reviewer model family (GPT/Claude) must ≠ author model. CodeRabbit suits all. Options `cr review --agent` (preferred), `claude -p '/code-review medium <base>...HEAD'`, `codex review --base <base>`.
-- Once local review cleared, trigger remote review manually `@coderabbitai review` XOR `@codex review`. Don't spam remote reviews or PR will be throttled.
-- Once remote review running, local reviews are optional. Useful after making big changes to address comments. Don't overlap local/remote reviews.
-- If out of CodeRabbit and different family quotas, last resort: use a more advanced model. Code written by Sol/Opus to be reviewed by Astra/Fable. Code by Astra/Fable to be reviewed by Astra/Fable on high reasoning.
-- CodeRabbit and Codex must be tagged every time a (re)review is needed
-- Merge bar unless stated otherwise: green CI/CD, remote review approved
+- Default PR review: post `@codjiflo review` in a new PR comment. Agents choose when to invoke it, but must run it at least once before merging.
+- [Codjiflo review options](https://github.com/vezzadev/codjiflo-reviewer): `@codjiflo review [preset] [full|incremental]`. Presets: `sol-xhigh` (default, alias `codex`), `opus-xhigh` (alias `claude`), `sol-medium`, `opus-medium`. Mode defaults to `incremental`; `full` reviews the whole PR.
+- Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset, `codex review --base <base>`, or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
+- If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence, then use `@codex review` as the fallback.
+- Merge bar unless stated otherwise: green CI/CD and an approved Codjiflo review (or Codex fallback).
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
-- Right after publishing the PR (not draft), babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams every state change — CI settling on each push, BEHIND/DIRTY rebase-needed vs the base, CodeRabbit review/comments with bodies inline, COMMENTED/CHANGES_REQUESTED/APPROVED review states, MERGED/CLOSED — and you act on each (fix red CI, `git pull --rebase`, drive the reply flow). Don't hand-roll it with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch` (goes silent after the first settle).
+- Right after publishing the PR (not draft), babysit the PR's whole lifecycle with the **`watch-pr`** skill: `/watch-pr <PR>` runs one persistent Monitor that streams CI, review feedback, mergeability, and merge/closure changes. Act on failures, rebase needs, and review comments. Don't hand-roll polling with `sleep` loops, repeated `gh pr view`, or `gh pr checks --watch`.
 - Leverage stacked PRs to keep changes reviewable. Remember to use `gh stack`.
 - Make liberal use of `gh attach` (`sudosubin/gh-attach`) to attach screenshots, renders, plots, and log/trace files to PR descriptions, issue bodies, issue/PR comments, and commit comments. Auth is a browser cookie, not the `gh` token. Sources are pinned in `~/.config/gh/attach.yml`. On `failed to resolve usable cookie source`, re-login to GitHub in that browser.
 
