@@ -1,11 +1,11 @@
 # Merge chezmoi-managed Codex settings into ~/.codex/config.toml.
 #
 # Codex owns this file at runtime — it rewrites [projects.*] trust, [hooks.state]
-# hashes, [marketplaces.*] revisions, and stores the Firecrawl MCP api key in it. So we
-# can't manage it as a plain file (chezmoi would clobber those). Instead this script
+# hashes and [marketplaces.*] revisions, so we can't manage it as a plain file
+# (chezmoi would clobber those). Instead this script
 # runs on `chezmoi apply` whenever the managed settings change, surgically upserts
 # those keys, and deletes explicit tombstones via tomlkit. Every other key — including
-# the secret and all machine-local state — stays byte-for-byte untouched.
+# unmanaged settings and all machine-local state — stays byte-for-byte untouched.
 #
 # The managed settings live in .chezmoitemplates/codex-managed.toml and are injected
 # below via includeTemplate (the rendered script stays self-contained, since a

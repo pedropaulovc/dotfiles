@@ -1,12 +1,12 @@
 providers:
   fetch: auto
   webSearchOrder:
-    - firecrawl
+    - exa
 modelRoles:
   smol: openai-codex/gpt-6-luna:max
   slow: openai-codex/gpt-6.1-sol:medium
   plan: openai-codex/gpt-6-astra:high
-  web: web/firecrawl
+  web: web/exa
   default: anthropic/claude-haiku-5-5
 symbolPreset: unicode
 theme:

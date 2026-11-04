@@ -28,10 +28,10 @@ Email: pedro@vezza.com.br
 - Make liberal use of Playwright via `/playwright-cli` skill (ALWAYS append `--headed` when starting new session so the user can follow).
 
 ## Research style
-- REPLACE the Fetch tool with Firecrawl + Browserbase MCP tools — far more reliable against bot-blocking. Route by task:
-  - **Read** (one page, search, crawl, schema extraction) → Firecrawl: `firecrawl_{scrape,search,map,crawl,check_crawl_status,extract,search_feedback}`. `scrape` with JSON+schema for specific fields, markdown for whole pages. If `scrape` returns thin content, `firecrawl_map` with a `search` term finds the real URL — cheaper than an agent.
-  - **Interact** (login, multi-step click/fill, persistent page state) → Browserbase: `browserbase_{start,navigate,observe,act,extract,end}`. For a couple of clicks after a read, Firecrawl `scrape` → `interact` → `interact_stop` also works.
-  - `firecrawl_browser_{create,delete,list}` are deprecated — use scrape + interact.
+- Use Exa for web search and Scrapfly for scraping. Route by task:
+  - **Search** → Exa. In OMP, use `omp search` with the Exa provider.
+  - **Read** (one page, crawl, schema extraction) → Scrapfly. Follow the installed `scrapfly-scraper`, `scrapfly-crawler`, and `scrapfly-extraction` skills; use `SCRAPFLY_API_KEY` from the environment.
+  - **Interact** (login, multi-step click/fill, persistent page state) → `/playwright-cli` with `--headed`, or the `scrapfly-browser` skill for a cloud browser.
 - Mirrors: Reddit → redlib (redlib.{us,de}.catsarch.com), teddit, libreddit; Twitter/X → nitter (xcancel.com); YouTube → piped/invidious, or `yt-dlp` (`--cookies-from-browser firefox/chrome` for gated videos); archives → `https://web.archive.org/web/2026/<url>`, `https://archive.{today,ph,is,li,md,vn,fo}/<url>`.
 - Fallback: `/playwright-cli` skill as above 
 - During research, leverage video subtitles via `yt-dlp --write-auto-subs --skip-download`. UI-heavy activities have the best content in videos.

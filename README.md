@@ -92,17 +92,14 @@ strings) are sourced by `~/.bashrc` from an untracked file:
 
 `~/.config/shell/secrets.sh` is `chmod 600` and never added to chezmoi. On a
 fresh machine it won't exist; the guard makes that a harmless no-op until you
-recreate it. The managed Firecrawl and Browserbase MCP entries read
-`FIRECRAWL_API_KEY` and `BROWSERBASE_API_KEY` from the environment; add the
-Browserbase key to this untracked file on machines that should connect to
-Browserbase. To make secrets reproducible across machines, upgrade to chezmoi's
-[age encryption](https://chezmoi.io/user-guide/encryption/age/) and commit the
-encrypted blob instead.
+recreate it.
 
 OMP secrets are kept in the untracked `~/.omp/agent/.env`. The post-update
 hook refreshes `HINDSIGHT_API_TOKEN` from the Azure app setting and imports every
 secret's latest value from `kv-chezmoi-wu2`, replacing `-` with `_` in names
-(for example, `EXA-API-KEY` becomes `EXA_API_KEY`). It replaces imported keys,
+(for example, `EXA-API-KEY` becomes `EXA_API_KEY`). Exa provides web search;
+Scrapfly uses `SCRAPFLY_API_KEY` for scraping through the installed skills.
+The hook replaces imported keys,
 preserves unrelated entries, and leaves the file unchanged if any fetch fails.
 The POSIX hook requires `az` and `jq` and enforces mode `600`; the Windows hook
 requires `az` and applies a user-only ACL. Values must fit OMP's single-line
