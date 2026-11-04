@@ -1,196 +1,121 @@
 $ErrorActionPreference = "Stop"
 
-$repoDir = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("hindsight-api-key-test-" + [System.Guid]::NewGuid().ToString("N"))
-$binDir = Join-Path $tempDir "bin"
-$agentDir = Join-Path $tempDir "omp-agent"
-$hookPath = Join-Path $tempDir "hindsight-api-key-hook.ps1"
-$callLog = Join-Path $tempDir "az-calls"
-New-Item -ItemType Directory -Path $binDir, $agentDir -Force | Out-Null
-New-Item -ItemType File -Path $callLog -Force | Out-Null
-
-$fakeAz = @'
-$ErrorActionPreference = "Stop"
-
-Add-Content -LiteralPath $env:AZ_LOG -Value ($args -join " ")
-if ($env:AZ_FAIL -eq "1") {
-    exit 42
+$repoDir = (Resolve-Path (Join-Path $PSScriptRoot "..")).ProviderPath
+$tempDir = Join-Path ([System.IO.Path]::GetTempPath()) ("omp-secrets-test-" + [System.Guid]::NewGuid().ToString("N"))
+$agentDir = Join-Path $tempDir "agent"
+$fixtures = Join-Path $tempDir "azure"
+$hookPath = Join-Path $tempDir "hook.ps1"
+$runnerPath = Join-Path $tempDir "run.ps1"
+New-Item -ItemType Directory -Path $agentDir, $fixtures -Force | Out-Null
+$oldEnvironment = @{}
+foreach ($name in @("AZ_FIXTURES", "AZ_FAIL", "PI_CODING_AGENT_DIR")) {
+    $oldEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
 }
-[Console]::Write($env:AZ_TOKEN)
-'@
-$fakeAz | Set-Content -LiteralPath (Join-Path $binDir "fake-az.ps1") -Encoding utf8
-
-if ($IsWindows) {
-    $azWrapper = @'
-@echo off
-pwsh.exe -NoLogo -NoProfile -File "%~dp0fake-az.ps1" %*
-set "exitcode=%ERRORLEVEL%"
-exit /b %exitcode%
-'@
-    $azWrapper | Set-Content -LiteralPath (Join-Path $binDir "az.cmd") -Encoding ascii
-}
-else {
-    $azWrapper = @'
-#!/bin/sh
-set -eu
-
-printf '%s\n' "$*" >>"$AZ_LOG"
-if [ "${AZ_FAIL-0}" = 1 ]; then
-  exit 42
-fi
-printf '%s' "${AZ_TOKEN-}"
-'@
-    $azWrapper | Set-Content -LiteralPath (Join-Path $binDir "az") -Encoding utf8
-    & chmod +x (Join-Path $binDir "az")
-    if ($LASTEXITCODE -ne 0) {
-        throw "Could not make the fake Azure CLI executable."
-    }
-}
-
-$pathVariable = if ($IsWindows) { "Path" } else { "PATH" }
-$oldPath = [System.Environment]::GetEnvironmentVariable($pathVariable)
-$oldAzLog = $env:AZ_LOG
-$oldAzToken = $env:AZ_TOKEN
-$oldAzFail = $env:AZ_FAIL
-$oldAgentDir = $env:PI_CODING_AGENT_DIR
-$pathSeparator = [System.IO.Path]::PathSeparator
-$pwshCommand = if ($IsWindows) { "pwsh.exe" } else { "pwsh" }
 try {
-    [System.Environment]::SetEnvironmentVariable(
-        $pathVariable,
-        $binDir + $pathSeparator + $oldPath,
-        "Process"
-    )
-    $env:AZ_LOG = $callLog
-    $env:AZ_TOKEN = "fresh-test-token"
-    Remove-Item Env:AZ_FAIL -ErrorAction SilentlyContinue
+    $env:AZ_FIXTURES = $fixtures
     $env:PI_CODING_AGENT_DIR = $agentDir
-    $resolvedAz = (Get-Command az).Path
-    if ($resolvedAz -ne (Join-Path $binDir "az")) {
-        throw "Unexpected Azure CLI resolution: $resolvedAz"
+    Remove-Item Env:AZ_FAIL -ErrorAction SilentlyContinue
+    # Keep Azure mocked inside the child so the same test runs on Windows and Linux.
+    @'
+$ErrorActionPreference = "Stop"
+function az {
+    $command = $args -join " "
+    if ($command.StartsWith("webapp config appsettings list ")) { $file = "token" }
+    elseif ($command.StartsWith("keyvault secret list ")) { $file = "names" }
+    elseif ($command.StartsWith("keyvault secret show ")) {
+        $index = [Array]::IndexOf($args, "--name")
+        $file = $args[$index + 1]
     }
+    else { throw "Unexpected Azure command." }
+    if ($env:AZ_FAIL -eq $file) {
+        $global:LASTEXITCODE = 42
+        return
+    }
+    $global:LASTEXITCODE = 0
+    [IO.File]::ReadAllText((Join-Path $env:AZ_FIXTURES ($file + ".json")))
+}
+# Exercise the hook with caller tracing enabled as well.
+Set-PSDebug -Trace 2
+. (Join-Path $PSScriptRoot "hook.ps1")
+'@ | Set-Content -LiteralPath $runnerPath -Encoding utf8
+    '"fresh-test-token"' | Set-Content (Join-Path $fixtures "token.json")
+    '["EXA-API-KEY","QUOTED-KEY","EMPTY-KEY"]' | Set-Content (Join-Path $fixtures "names.json")
+    '"fresh-exa-secret"' | Set-Content (Join-Path $fixtures "EXA-API-KEY.json")
+    '"  quote\u0027s # $dollar \\path  "' | Set-Content (Join-Path $fixtures "QUOTED-KEY.json")
+    '""' | Set-Content (Join-Path $fixtures "EMPTY-KEY.json")
 
-    Push-Location $repoDir
-    try {
-        & chezmoi execute-template `
-            --file run_onchange_after_hindsight-api-key.ps1.tmpl `
-            --override-data '{"platform":"windows"}' `
-            --output $hookPath
-        $renderSucceeded = $?
-        $renderExitCode = $LASTEXITCODE
-        if (-not $renderSucceeded -or $renderExitCode -ne 0) {
-            throw "chezmoi failed to render the Windows Hindsight hook."
-        }
-    }
-    finally {
-        Pop-Location
-    }
-
+    & chezmoi execute-template --source $repoDir `
+        --file (Join-Path $repoDir "run_onchange_after_hindsight-api-key.ps1.tmpl") `
+        --override-data '{"platform":"windows"}' --output $hookPath
+    if ($LASTEXITCODE -ne 0) { throw "Could not render Windows secrets hook." }
+    $envPath = Join-Path $agentDir ".env"
     @(
         "OTHER_SETTING=keep"
+        "# keep this comment"
         "HINDSIGHT_API_TOKEN=stale-token"
         "export HINDSIGHT_API_TOKEN=older-token"
-    ) | Set-Content -LiteralPath (Join-Path $agentDir ".env") -Encoding utf8
-
-    $firstOutput = (& $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *>&1 | Out-String)
-    $hookSucceeded = $?
-    $hookExitCode = $LASTEXITCODE
-    if (-not $hookSucceeded -or $hookExitCode -ne 0) {
-        throw "The rendered Windows Hindsight hook failed."
+        "EXA_API_KEY=stale-exa"
+        "export EXA_API_KEY=older-exa"
+    ) | Set-Content -LiteralPath $envPath -Encoding utf8
+    $expected = @(
+        "OTHER_SETTING=keep"
+        "# keep this comment"
+        "HINDSIGHT_API_TOKEN='fresh-test-token'"
+        "EXA_API_KEY='fresh-exa-secret'"
+        'QUOTED_KEY="  quote''s # $dollar \path  "'
+        "EMPTY_KEY=''"
+    )
+    $pwshCommand = (Get-Process -Id $PID).Path
+    $firstOutput = (& $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $runnerPath *>&1 | Out-String)
+    if ($LASTEXITCODE -ne 0) {
+        $diagnostic = $firstOutput.Replace("fresh-test-token", "[redacted]").Replace("fresh-exa-secret", "[redacted]").Replace('  quote''s # $dollar \path  ', "[redacted]")
+        throw "Windows secrets hook failed: $diagnostic"
     }
-    if ($firstOutput -notmatch "az webapp config appsettings list") {
-        throw "Windows Hindsight hook did not print the Azure command."
+    if ($firstOutput -match 'fresh-test-token|fresh-exa-secret|quote.s # ') {
+        throw "Windows hook leaked a secret in output or tracing."
     }
-    if ($firstOutput -match "fresh-test-token") {
-        throw "Windows Hindsight hook leaked the refreshed token in its trace."
+    if (Compare-Object $expected ([IO.File]::ReadAllLines($envPath))) {
+        throw "Windows hook did not preserve and import dotenv entries correctly."
     }
-
-    $envPath = Join-Path $agentDir ".env"
-    $lines = @(Get-Content -LiteralPath $envPath)
-    $tokenLines = @($lines | Where-Object { $_ -match '^HINDSIGHT_API_TOKEN=' })
-    if ($tokenLines.Count -ne 1 -or $tokenLines[0] -ne "HINDSIGHT_API_TOKEN=fresh-test-token") {
-        throw "The Windows hook did not write exactly one fresh Hindsight token."
+    if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) {
+        $acl = Get-Acl -LiteralPath $envPath
+        $identity = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+        if (-not $acl.AreAccessRulesProtected -or @($acl.Access | Where-Object { $_.IdentityReference.Value -ne $identity }).Count) {
+            throw "Windows dotenv ACL is not user-only."
+        }
     }
-    if (-not ($lines -contains "OTHER_SETTING=keep")) {
-        throw "The Windows hook did not preserve unrelated dotenv settings."
-    }
-    if ($lines | Where-Object { $_ -match '^export\s+HINDSIGHT_API_TOKEN=' }) {
-        throw "The Windows hook left an old exported Hindsight token behind."
-    }
-
     $firstHash = (Get-FileHash -LiteralPath $envPath -Algorithm SHA256).Hash
-    & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath
-    $hookSucceeded = $?
-    $hookExitCode = $LASTEXITCODE
-    if (-not $hookSucceeded -or $hookExitCode -ne 0) {
-        throw "The repeated Windows Hindsight hook failed."
+    & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $runnerPath *> (Join-Path $tempDir "repeat-output")
+    if ($LASTEXITCODE -ne 0) {
+        $diagnostic = [IO.File]::ReadAllText((Join-Path $tempDir "repeat-output")).Replace("fresh-test-token", "[redacted]").Replace("fresh-exa-secret", "[redacted]").Replace('  quote''s # $dollar \path  ', "[redacted]")
+        throw "Repeated hook execution failed: $diagnostic"
     }
-    $secondHash = (Get-FileHash -LiteralPath $envPath -Algorithm SHA256).Hash
-    if ($firstHash -ne $secondHash) {
-        throw "Repeated Windows hook execution changed identical dotenv content."
+    if ((Get-FileHash $envPath -Algorithm SHA256).Hash -ne $firstHash) {
+        throw "Repeated hook execution changed dotenv content."
     }
-
-    $env:AZ_TOKEN = ""
-    & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *> (Join-Path $tempDir "empty-token-output")
-    $hookSucceeded = $?
-    $hookExitCode = $LASTEXITCODE
-    if ($hookSucceeded -and $hookExitCode -eq 0) {
-        throw "The Windows hook succeeded with an empty Azure token."
+    foreach ($failure in @("token", "names", "QUOTED-KEY")) {
+        $env:AZ_FAIL = $failure
+        & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $runnerPath *> (Join-Path $tempDir "failure-output")
+        if ($LASTEXITCODE -eq 0) { throw "Hook succeeded despite Azure failure: $failure" }
+        if ((Get-FileHash $envPath -Algorithm SHA256).Hash -ne $firstHash) {
+            throw "Failed Azure fetch partially updated dotenv."
+        }
     }
-    $thirdHash = (Get-FileHash -LiteralPath $envPath -Algorithm SHA256).Hash
-    if ($secondHash -ne $thirdHash) {
-        throw "An empty Azure token changed the existing dotenv file."
+    Remove-Item Env:AZ_FAIL
+    foreach ($invalid in @(@("token", '""'), @("QUOTED-KEY", '"line one\nline two"'))) {
+        $invalid[1] | Set-Content (Join-Path $fixtures ($invalid[0] + ".json"))
+        & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $runnerPath *> (Join-Path $tempDir "invalid-output")
+        if ($LASTEXITCODE -eq 0) { throw "Hook accepted invalid secret content." }
+        if ((Get-FileHash $envPath -Algorithm SHA256).Hash -ne $firstHash) {
+            throw "Invalid secret partially updated dotenv."
+        }
+        '"fresh-test-token"' | Set-Content (Join-Path $fixtures "token.json")
     }
-
-    $env:AZ_TOKEN = "fresh-test-token"
-    $env:AZ_FAIL = "1"
-    & $pwshCommand -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass -File $hookPath *> (Join-Path $tempDir "command-failure-output")
-    $hookSucceeded = $?
-    $hookExitCode = $LASTEXITCODE
-    if ($hookSucceeded -and $hookExitCode -eq 0) {
-        throw "The Windows hook succeeded when Azure CLI failed."
-    }
-    $fourthHash = (Get-FileHash -LiteralPath $envPath -Algorithm SHA256).Hash
-    if ($secondHash -ne $fourthHash) {
-        throw "An Azure CLI failure changed the existing dotenv file."
-    }
-
-    $expectedCall = "webapp config appsettings list --resource-group rg-hindsight-wu2 --name app-hindsight-wu2 --query [?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0] --output tsv"
-    $calls = @(Get-Content -LiteralPath $callLog)
-    if ($calls.Count -ne 4) {
-        throw "Expected four Azure CLI calls, got $($calls.Count)."
-    }
-    if ($calls | Where-Object { $_ -ne $expectedCall }) {
-        throw "At least one Azure CLI call used unexpected arguments."
-    }
-
-    "Windows Hindsight hook fetched, preserved, and failure-guarded correctly."
+    "OMP secrets imported, quoted, preserved, idempotent, and failure-guarded."
 }
 finally {
-    [System.Environment]::SetEnvironmentVariable($pathVariable, $oldPath, "Process")
-    if ($null -eq $oldAzLog) {
-        Remove-Item Env:AZ_LOG -ErrorAction SilentlyContinue
-    }
-    else {
-        $env:AZ_LOG = $oldAzLog
-    }
-    if ($null -eq $oldAzToken) {
-        Remove-Item Env:AZ_TOKEN -ErrorAction SilentlyContinue
-    }
-    else {
-        $env:AZ_TOKEN = $oldAzToken
-    }
-    if ($null -eq $oldAzFail) {
-        Remove-Item Env:AZ_FAIL -ErrorAction SilentlyContinue
-    }
-    else {
-        $env:AZ_FAIL = $oldAzFail
-    }
-    if ($null -eq $oldAgentDir) {
-        Remove-Item Env:PI_CODING_AGENT_DIR -ErrorAction SilentlyContinue
-    }
-    else {
-        $env:PI_CODING_AGENT_DIR = $oldAgentDir
+    foreach ($name in $oldEnvironment.Keys) {
+        [Environment]::SetEnvironmentVariable($name, $oldEnvironment[$name])
     }
     Remove-Item -LiteralPath $tempDir -Recurse -Force -ErrorAction SilentlyContinue
 }

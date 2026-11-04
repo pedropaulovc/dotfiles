@@ -2,7 +2,8 @@
 {{- $hindsight := $config.hindsight | toJson -}}
 {{- if eq .platform "windows" -}}
 $ErrorActionPreference = "Stop"
-Set-PSDebug -Trace 1
+# Keep tracing off while handling secrets, including values returned by functions.
+Set-PSDebug -Off
 
 # The checksum makes this run whenever the rendered Hindsight section changes.
 # checksum: {{ $hindsight | sha256sum }}
@@ -13,11 +14,10 @@ $tempPath = $null
 function Set-PrivateFileAcl {
     param([string] $Path)
 
-    $acl = Get-Acl -LiteralPath $Path
+    # Persist only access rules through .NET. Set-Acl can require audit-related
+    # SeSecurityPrivilege when refreshing an already protected file.
+    $acl = [System.Security.AccessControl.FileSecurity]::new()
     $acl.SetAccessRuleProtection($true, $false)
-    foreach ($existingRule in @($acl.Access)) {
-        [void]$acl.RemoveAccessRule($existingRule)
-    }
     $identity = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
     $rule = [System.Security.AccessControl.FileSystemAccessRule]::new(
         $identity,
@@ -25,12 +25,18 @@ function Set-PrivateFileAcl {
         [System.Security.AccessControl.AccessControlType]::Allow
     )
     $acl.SetAccessRule($rule)
-    Set-Acl -LiteralPath $Path -AclObject $acl
+    $file = [System.IO.FileInfo]::new($Path)
+    if ($PSVersionTable.PSEdition -eq "Core") {
+        [System.IO.FileSystemAclExtensions]::SetAccessControl($file, $acl)
+    }
+    else {
+        $file.SetAccessControl($acl)
+    }
 }
 
 try {
     if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
-        throw "az is required to refresh the Hindsight API token."
+        throw "az is required to refresh OMP secrets."
     }
 
     $agentDir = if ($env:PI_CODING_AGENT_DIR) {
@@ -42,11 +48,12 @@ try {
     $envFile = Join-Path $agentDir ".env"
     New-Item -ItemType Directory -Path $agentDir -Force | Out-Null
 
+    Write-Output "Reading Azure Hindsight app setting and kv-chezmoi-wu2 secrets."
     $tokenOutput = (& az webapp config appsettings list `
         --resource-group rg-hindsight-wu2 `
         --name app-hindsight-wu2 `
         --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" `
-        --output tsv | Out-String)
+        --output json | Out-String)
 
     $azSucceeded = $?
     $azExitCode = $LASTEXITCODE
@@ -54,7 +61,7 @@ try {
         throw "Azure CLI could not read HINDSIGHT_API_TENANT_API_KEY."
     }
 
-    $token = $tokenOutput.Trim()
+    $token = ConvertFrom-Json -InputObject $tokenOutput
     if ([string]::IsNullOrWhiteSpace($token)) {
         throw "Azure app setting HINDSIGHT_API_TENANT_API_KEY is empty or missing."
     }
@@ -63,15 +70,56 @@ try {
         throw "Expected $envFile to be a regular file."
     }
 
+    $secrets = [ordered]@{ HINDSIGHT_API_TOKEN = $token }
+    $namesOutput = (& az keyvault secret list --vault-name kv-chezmoi-wu2 --query '[].name' --output json | Out-String)
+    if (-not $? -or $LASTEXITCODE -ne 0) {
+        throw "Azure CLI could not list kv-chezmoi-wu2 secrets."
+    }
+    foreach ($name in (ConvertFrom-Json -InputObject $namesOutput)) {
+        $key = $name.Replace("-", "_")
+        if ($key -cnotmatch '^[A-Za-z_][A-Za-z0-9_]*$') {
+            throw "Invalid dotenv secret name: $name"
+        }
+        if ($key -ceq "HINDSIGHT_API_TOKEN") {
+            throw "Vault secret conflicts with HINDSIGHT_API_TOKEN."
+        }
+        $valueOutput = (& az keyvault secret show --vault-name kv-chezmoi-wu2 --name $name --query value --output json | Out-String)
+        if (-not $? -or $LASTEXITCODE -ne 0) {
+            throw "Azure CLI could not read vault secret $name."
+        }
+        $secrets[$key] = ConvertFrom-Json -InputObject $valueOutput
+    }
+
+    $imports = [System.Collections.Generic.List[string]]::new()
+    foreach ($entry in $secrets.GetEnumerator()) {
+        $value = $entry.Value
+        if ($value -isnot [string] -or $value -match '[\x00\r\n]') {
+            throw "Secret cannot be represented in OMP dotenv."
+        }
+        # OMP strips literal quotes but does not decode backslash escapes.
+        $delimiter = @("'", '"', '`') | Where-Object { -not $value.Contains($_) } | Select-Object -First 1
+        if ($null -ne $delimiter -and -not $value.EndsWith("\")) {
+            $encoded = $delimiter + $value + $delimiter
+        }
+        elseif (($value.Length -eq 0 -or $value -match '^[^''"`\s]') -and $value -notmatch '[ \t]#|[ \t]$') {
+            $encoded = $value
+        }
+        else {
+            throw "Secret cannot be represented in OMP dotenv."
+        }
+        [void]$imports.Add($entry.Key + "=" + $encoded)
+    }
     $lines = [System.Collections.Generic.List[string]]::new()
     if (Test-Path -LiteralPath $envFile -PathType Leaf) {
         foreach ($line in [System.IO.File]::ReadAllLines($envFile)) {
-            if ($line -notmatch '^\s*(?:export\s+)?HINDSIGHT_API_TOKEN\s*=') {
-                [void]$lines.Add($line)
+            if ($line -match '^\s*(?:export\s+)?([A-Za-z_][A-Za-z0-9_]*)\s*=' -and
+                @($secrets.Keys) -ccontains $Matches[1]) {
+                continue
             }
+            [void]$lines.Add($line)
         }
     }
-    [void]$lines.Add("HINDSIGHT_API_TOKEN=$token")
+    $lines.AddRange($imports)
 
     $tempPath = Join-Path $agentDir (".env.tmp-" + [System.Guid]::NewGuid().ToString("N"))
     $utf8 = [System.Text.UTF8Encoding]::new($false)
@@ -79,11 +127,20 @@ try {
     if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
         Set-PrivateFileAcl $tempPath
     }
-    Move-Item -LiteralPath $tempPath -Destination $envFile -Force
+    if (Test-Path -LiteralPath $envFile -PathType Leaf) {
+        [System.IO.File]::Replace($tempPath, $envFile, [System.Management.Automation.Language.NullString]::Value)
+    }
+    else {
+        [System.IO.File]::Move($tempPath, $envFile)
+    }
+    if ([System.Environment]::OSVersion.Platform -eq [System.PlatformID]::Win32NT) {
+        # File.Replace preserves the old destination ACL.
+        Set-PrivateFileAcl $envFile
+    }
     $tempPath = $null
     $token = $null
     $tokenOutput = $null
-    Write-Output "Updated $envFile from the Azure Hindsight app setting."
+    Write-Output "Updated $envFile from Azure Hindsight and kv-chezmoi-wu2."
 }
 finally {
     if ($null -ne $tempPath) {

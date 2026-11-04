@@ -99,10 +99,20 @@ Browserbase. To make secrets reproducible across machines, upgrade to chezmoi's
 [age encryption](https://chezmoi.io/user-guide/encryption/age/) and commit the
 encrypted blob instead.
 
-The Hindsight API token is kept separately in the untracked
-`~/.omp/agent/.env`; the POSIX hook enforces mode `600`, and the Windows hook
-applies a user-only ACL. The post-update hook refreshes it from Azure whenever
-the tracked Hindsight settings change.
+OMP secrets are kept in the untracked `~/.omp/agent/.env`. The post-update
+hook refreshes `HINDSIGHT_API_TOKEN` from the Azure app setting and imports every
+secret's latest value from `kv-chezmoi-wu2`, replacing `-` with `_` in names
+(for example, `EXA-API-KEY` becomes `EXA_API_KEY`). It replaces imported keys,
+preserves unrelated entries, and leaves the file unchanged if any fetch fails.
+The POSIX hook requires `az` and `jq` and enforces mode `600`; the Windows hook
+requires `az` and applies a user-only ACL. Values must fit OMP's single-line
+dotenv parser; the hooks reject values they cannot quote without changing.
+
+The hook runs when its source or tracked Hindsight settings change. Adding or
+rotating vault secrets alone does not trigger it. To refresh manually on POSIX,
+run `chezmoi execute-template --file "$(chezmoi source-path)/run_onchange_after_hindsight-api-key.sh.tmpl" | sh`.
+In PowerShell, run
+`chezmoi execute-template --file "$(chezmoi source-path)/run_onchange_after_hindsight-api-key.ps1.tmpl" | Out-String | Invoke-Expression`.
 
 ## Bootstrap
 

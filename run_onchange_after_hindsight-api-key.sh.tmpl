@@ -10,58 +10,84 @@ umask 077
 # The checksum makes this run whenever the rendered Hindsight section changes.
 # checksum: {{ $hindsight | sha256sum }}
 
-if ! command -v az >/dev/null 2>&1; then
-  printf '%s\n' 'az is required to refresh the Hindsight API token.' >&2
-  exit 1
-fi
+for dependency in az jq; do
+  if ! command -v "$dependency" >/dev/null 2>&1; then
+    printf '%s is required to refresh OMP secrets.\n' "$dependency" >&2
+    exit 1
+  fi
+done
 
 agent_dir="${PI_CODING_AGENT_DIR:-$HOME/.omp/agent}"
 env_file="$agent_dir/.env"
 mkdir -p "$agent_dir"
-
-set +x
-token="$(
-  set -x
-  az webapp config appsettings list \
-    --resource-group rg-hindsight-wu2 \
-    --name app-hindsight-wu2 \
-    --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" \
-    --output tsv
-)"
-
-if [ -z "$token" ]; then
-  printf '%s\n' 'Azure app setting HINDSIGHT_API_TENANT_API_KEY is empty or missing.' >&2
-  exit 1
-fi
-set -x
-
 if [ -e "$env_file" ] && [ ! -f "$env_file" ]; then
   printf 'Expected %s to be a regular file.\n' "$env_file" >&2
   exit 1
 fi
 
-tmp_file=
-cleanup() {
-  if [ -n "$tmp_file" ]; then
-    rm -f "$tmp_file"
-  fi
-}
-trap cleanup EXIT HUP INT TERM
+work_dir="$(mktemp -d "$agent_dir/.env.tmp.XXXXXX")"
+trap 'rm -rf -- "$work_dir"' EXIT HUP INT TERM
 
-tmp_file="$(mktemp "$agent_dir/.env.tmp.XXXXXX")"
-if [ -f "$env_file" ]; then
-  awk '
-    $0 !~ /^[[:space:]]*(export[[:space:]]+)?HINDSIGHT_API_TOKEN[[:space:]]*=/
-  ' "$env_file" >"$tmp_file"
-fi
+# Redirect JSON output to private files; never expand secret values under tracing.
+az webapp config appsettings list \
+  --resource-group rg-hindsight-wu2 \
+  --name app-hindsight-wu2 \
+  --query "[?name=='HINDSIGHT_API_TENANT_API_KEY'].value | [0]" \
+  --output json >"$work_dir/token.json"
+az keyvault secret list --vault-name kv-chezmoi-wu2 \
+  --query '[].name' --output json >"$work_dir/names.json"
 set +x
 
-printf 'HINDSIGHT_API_TOKEN=%s\n' "$token" >>"$tmp_file"
-chmod 600 "$tmp_file"
-mv -f -- "$tmp_file" "$env_file"
-tmp_file=
-unset token
-set -x
+jq -e 'type == "string" and length > 0' "$work_dir/token.json" >/dev/null || {
+  printf '%s\n' 'Azure app setting HINDSIGHT_API_TENANT_API_KEY is empty or missing.' >&2
+  exit 1
+}
+jq -e 'type == "array" and all(.[]; type == "string" and test("^[A-Za-z0-9-]+$"))' \
+  "$work_dir/names.json" >/dev/null
+jq -r '.[]' "$work_dir/names.json" >"$work_dir/names"
+jq '{key: "HINDSIGHT_API_TOKEN", value: .}' "$work_dir/token.json" >"$work_dir/entries.json"
+while IFS= read -r name; do
+  key=$(printf '%s' "$name" | tr '-' '_')
+  case "$key" in
+    [0-9]*) printf 'Invalid dotenv secret name: %s\n' "$name" >&2; exit 1 ;;
+  esac
+  # Hindsight retains its dedicated Azure app-setting source.
+  if [ "$key" = HINDSIGHT_API_TOKEN ]; then
+    printf '%s\n' 'Vault secret conflicts with HINDSIGHT_API_TOKEN.' >&2
+    exit 1
+  fi
+  (set -x; az keyvault secret show --vault-name kv-chezmoi-wu2 \
+    --name "$name" --query value --output json) >"$work_dir/value.json"
+  jq --arg key "$key" '{key: $key, value: .}' "$work_dir/value.json" >>"$work_dir/entries.json"
+done <"$work_dir/names"
 
-printf 'Updated %s from the Azure Hindsight app setting.\n' "$env_file"
+# OMP does not decode backslash escapes or multiline dotenv values. Select a
+# literal quote delimiter, or use an unquoted value when that is lossless.
+jq -rs '
+  def encode:
+    if type != "string" or test("[\u0000\r\n]") then error("Secret cannot be represented in OMP dotenv")
+    else . as $value |
+      (["\u0027", "\"", "`"] | map(select(. as $q | $value | contains($q) | not))) as $quotes |
+      if ($quotes | length) > 0 and (endswith("\\") | not) then $quotes[0] + . + $quotes[0]
+      elif (test("^[^\u0027\"`\\s]") or length == 0) and (test("[ \t]#|[ \t]$") | not) then .
+      else error("Secret cannot be represented in OMP dotenv") end
+    end;
+  .[] | .key + "=" + (.value | encode)
+' "$work_dir/entries.json" >"$work_dir/imports"
+
+if [ -f "$env_file" ]; then
+  awk '
+    NR == FNR { key = $0; sub(/=.*/, "", key); imported[key] = 1; next }
+    { key = $0; sub(/^[[:space:]]*(export[[:space:]]+)?/, "", key);
+      if (key ~ /=/) { sub(/[[:space:]]*=.*/, "", key); if (key in imported) next }
+      print }
+  ' "$work_dir/imports" "$env_file" >"$work_dir/merged"
+else
+  : >"$work_dir/merged"
+fi
+cat "$work_dir/imports" >>"$work_dir/merged"
+chmod 600 "$work_dir/merged"
+mv -f -- "$work_dir/merged" "$env_file"
+set -x
+printf 'Updated %s from Azure Hindsight and kv-chezmoi-wu2.\n' "$env_file"
 {{- end }}
