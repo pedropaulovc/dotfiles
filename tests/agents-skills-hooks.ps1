@@ -7,6 +7,13 @@ $hookPath = Join-Path $tempDir "hook.ps1"
 $callLog = Join-Path $tempDir "npx-calls"
 New-Item -ItemType Directory -Path $binDir -Force | Out-Null
 New-Item -ItemType File -Path $callLog -Force | Out-Null
+$sourceDir = Join-Path $tempDir "source"
+$lockDir = Join-Path $sourceDir "dot_agents"
+New-Item -ItemType Directory -Path $lockDir -Force | Out-Null
+'{"skills":{"fixture":{"sourceUrl":"https://github.com/example/skills.git","ref":"1111111111111111111111111111111111111111","skillPath":"skills/fixture/SKILL.md","skillFolderHash":"2222222222222222222222222222222222222222"}},"lastSelectedAgents":["codex","claude-code"]}' |
+    Set-Content -LiteralPath (Join-Path $lockDir "dot_skill-lock.json") -Encoding utf8
+Copy-Item (Join-Path $repoDir "run_onchange_agents-skills.ps1.tmpl") $sourceDir
+
 
 if ($IsWindows) {
     $gitWrapper = @'
@@ -50,18 +57,11 @@ if ($args[0] -eq "clone") {
     }
     $source = $args | Where-Object { $_ -like "https://github.com/*" } | Select-Object -First 1
     $repoDir = $args[-1]
-    $hashes = @{
-        "https://github.com/microsoft/playwright-cli.git" = "4b040465accc10048d4b16479bb54d6d1d3bdeb6"
-        "https://github.com/blader/humanizer.git" = "5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c"
-        "https://github.com/nutlope/hallmark.git" = "747c924c4767b4d5fa6f1c59985c87a21c918334"
-        "https://github.com/vectorize-io/hindsight.git" = "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7"
-        "https://github.com/jl-cmd/claude-dev-env.git" = "b6f2252039424911d7e23f2c9bd6e5a7f149af12"
-    }
-    if (-not $hashes.ContainsKey($source)) {
+    if ($source -ne "https://github.com/example/skills.git") {
         throw "Unexpected clone source: $source"
     }
     New-Item -ItemType Directory -Path $repoDir -Force | Out-Null
-    $hashes[$source] | Set-Content -LiteralPath (Join-Path $repoDir ".expected-hash")
+    "2222222222222222222222222222222222222222" | Set-Content -LiteralPath (Join-Path $repoDir ".expected-hash")
     exit 0
 }
 
@@ -126,7 +126,7 @@ for ($index = 0; $index -lt $args.Count; $index++) {
     $index++
 }
 
-$lockedAgents = "amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code"
+$lockedAgents = "codex claude-code"
 $detectedAgents = "promptscript"
 $actualAgents = if ($agents.Count -eq 0) { $detectedAgents } else { $agents -join " " }
 if ($actualAgents -ne $lockedAgents) {
@@ -148,10 +148,10 @@ try {
     )
     $env:CALL_LOG = $callLog
 
-    Push-Location $repoDir
+    Push-Location $sourceDir
     try {
-        & chezmoi execute-template `
-            --file run_onchange_agents-skills.ps1.tmpl `
+        & chezmoi --source $sourceDir execute-template `
+            --file (Join-Path $sourceDir "run_onchange_agents-skills.ps1.tmpl") `
             --override-data '{"platform":"windows"}' `
             --output $hookPath
         if ($LASTEXITCODE -ne 0) {
@@ -181,10 +181,10 @@ try {
     }
 
     $calls = @(Get-Content -LiteralPath $callLog)
-    if ($calls.Count -ne 5) {
-        throw "Expected five skill installs, got $($calls.Count). Hook output: $hookOutput"
+    if ($calls.Count -ne 1) {
+        throw "Expected one fixture skill install, got $($calls.Count). Hook output: $hookOutput"
     }
-    $lockedAgents = "amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code"
+    $lockedAgents = "codex claude-code"
     if ($calls | Where-Object { $_ -ne $lockedAgents }) {
         throw "At least one Windows install used an unexpected agent list."
     }

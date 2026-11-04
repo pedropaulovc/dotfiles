@@ -9,6 +9,12 @@ fake_bin="$tmp_dir/bin"
 call_log="$tmp_dir/npx-calls"
 mkdir -p "$fake_bin"
 : >"$call_log"
+mkdir -p "$tmp_dir/source/dot_agents"
+cat >"$tmp_dir/source/dot_agents/dot_skill-lock.json" <<'EOF'
+{"skills":{"fixture":{"sourceUrl":"https://github.com/example/skills.git","ref":"1111111111111111111111111111111111111111","skillPath":"skills/fixture/SKILL.md","skillFolderHash":"2222222222222222222222222222222222222222"}},"lastSelectedAgents":["codex","claude-code"]}
+EOF
+cp "$repo_dir/run_onchange_agents-skills.sh.tmpl" "$tmp_dir/source/"
+
 
 cat >"$fake_bin/git" <<'EOF'
 #!/bin/sh
@@ -24,27 +30,11 @@ if [ "$1" = clone ]; then
   repo_dir="$7"
   mkdir -p "$repo_dir"
 
-  case "$source" in
-    https://github.com/microsoft/playwright-cli.git)
-      hash=4b040465accc10048d4b16479bb54d6d1d3bdeb6
-      ;;
-    https://github.com/blader/humanizer.git)
-      hash=5a7260aab6ed0b28f1f464f1757f4704d3a7ab5c
-      ;;
-    https://github.com/nutlope/hallmark.git)
-      hash=747c924c4767b4d5fa6f1c59985c87a21c918334
-      ;;
-    https://github.com/vectorize-io/hindsight.git)
-      hash=38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7
-      ;;
-    https://github.com/jl-cmd/claude-dev-env.git)
-      hash=b6f2252039424911d7e23f2c9bd6e5a7f149af12
-      ;;
-    *)
-      printf 'Unexpected clone source: %s\n' "$source" >&2
-      exit 1
-      ;;
-  esac
+  if [ "$source" != "https://github.com/example/skills.git" ]; then
+    printf 'Unexpected clone source: %s\n' "$source" >&2
+    exit 1
+  fi
+  hash=2222222222222222222222222222222222222222
   printf '%s\n' "$hash" >"$repo_dir/.expected_hash"
   exit 0
 fi
@@ -105,14 +95,14 @@ EOF
 chmod +x "$fake_bin/npx"
 
 (
-  cd "$repo_dir"
-  chezmoi execute-template \
-    --file run_onchange_agents-skills.sh.tmpl \
+  cd "$tmp_dir/source"
+  chezmoi --source "$tmp_dir/source" execute-template \
+    --file "$tmp_dir/source/run_onchange_agents-skills.sh.tmpl" \
     --override-data '{"platform":"linux"}' \
     --output "$tmp_dir/hook.sh"
 )
 
-locked_agents='amp antigravity antigravity-cli cline codex cursor deepagents gemini-cli github-copilot kimi-code-cli opencode warp zed claude-code'
+locked_agents='codex claude-code'
 hook_output=$(
   PATH="$fake_bin:$PATH" \
   CALL_LOG="$call_log" \
@@ -131,8 +121,8 @@ case "$hook_output" in
 esac
 
 call_count=$(wc -l <"$call_log")
-if [ "$call_count" -ne 5 ]; then
-  printf 'Expected five skill installs, got %s.\n' "$call_count" >&2
+if [ "$call_count" -ne 1 ]; then
+  printf 'Expected one fixture skill install, got %s.\n' "$call_count" >&2
   exit 1
 fi
 
