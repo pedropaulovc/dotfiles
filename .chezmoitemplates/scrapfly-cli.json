@@ -1,0 +1,17 @@
+{
+  "version": "v0.4.1",
+  "archives": {
+    "linux-amd64": {
+      "name": "scrapfly-linux-amd64.tar.gz",
+      "sha256": "92e9b3d4282cb6a8e6aa8a274c2efc106ce180d5f6ce431b754e10a86431fe86"
+    },
+    "linux-arm64": {
+      "name": "scrapfly-linux-arm64.tar.gz",
+      "sha256": "34737e88688396dd90f8793d016c630dc7f6910f932d8ed3923275425d0a6c7e"
+    },
+    "windows-amd64": {
+      "name": "scrapfly-windows-amd64.zip",
+      "sha256": "334d391d6a0b70dc5620f64d8bda22a8b749cb20b3df88d2ecbdc61eb6518c07"
+    }
+  }
+}

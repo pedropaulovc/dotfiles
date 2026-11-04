@@ -62,6 +62,18 @@ Use it in any `.tmpl` file:
 {{ else }}export CACHE="$HOME/.cache"{{ end }}
 ```
 
+## Scrapfly CLI
+
+`chezmoi apply` installs Scrapfly CLI v0.4.1 to `~/.local/bin/scrapfly` on
+Linux/WSL (amd64 or arm64), or `%USERPROFILE%\.local\bin\scrapfly.exe` on
+Windows (amd64). Both locations are already on PATH. The paired `run_onchange`
+hooks verify the release archive's SHA256 before extracting and installing it.
+The version and checksums live in `.chezmoitemplates/scrapfly-cli.json`;
+changing that manifest reruns the installer on the next apply.
+
+Run `scrapfly --help` to list commands. The installer does not change credentials
+or configuration; scraping uses the separately managed `SCRAPFLY_API_KEY`.
+
 ## SOLIDWORKS screens service
 
 The user service runs `uv run python farm.py screens --no-browser --port 8766`

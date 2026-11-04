@@ -1,0 +1,36 @@
+{{- $manifest := includeTemplate "scrapfly-cli.json" . | fromJson -}}
+{{- if ne .platform "windows" -}}
+#!/bin/sh
+set -eu
+set -x
+
+case "$(uname -m)" in
+  x86_64)
+    archive_name={{ (index $manifest.archives "linux-amd64").name | toJson }}
+    archive_sha256={{ (index $manifest.archives "linux-amd64").sha256 | toJson }}
+    ;;
+  aarch64|arm64)
+    archive_name={{ (index $manifest.archives "linux-arm64").name | toJson }}
+    archive_sha256={{ (index $manifest.archives "linux-arm64").sha256 | toJson }}
+    ;;
+  *)
+    printf 'Unsupported Scrapfly CLI architecture: %s\n' "$(uname -m)" >&2
+    exit 1
+    ;;
+esac
+
+version={{ $manifest.version | toJson }}
+tmp_dir=$(mktemp -d)
+trap 'rm -rf "$tmp_dir"' EXIT HUP INT TERM
+archive="$tmp_dir/$archive_name"
+curl --fail --location --silent --show-error \
+  "https://github.com/scrapfly/scrapfly-cli/releases/download/$version/$archive_name" \
+  --output "$archive"
+if ! printf '%s  %s\n' "$archive_sha256" "$archive" | sha256sum --check --status; then
+  printf 'Scrapfly CLI archive SHA256 mismatch.\n' >&2
+  exit 1
+fi
+tar -xzf "$archive" -C "$tmp_dir" scrapfly
+mkdir -p "$HOME/.local/bin"
+install -m 755 "$tmp_dir/scrapfly" "$HOME/.local/bin/scrapfly"
+{{- end }}

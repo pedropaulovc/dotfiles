@@ -30,7 +30,7 @@ Email: pedro@vezza.com.br
 ## Research style
 - Use Exa for web search and Scrapfly for scraping. Route by task:
   - **Search** → Exa. In OMP, use `omp search` with the Exa provider.
-  - **Read** (one page, crawl, schema extraction) → Scrapfly. Follow the installed `scrapfly-scraper`, `scrapfly-crawler`, and `scrapfly-extraction` skills; use `SCRAPFLY_API_KEY` from the environment.
+  - **Read** (one page, crawl, schema extraction) → prefer the **Scrapfly CLI**. For a single URL, start with `scrapfly scrape "<url>" --format markdown`; add `--render-js` only for JavaScript content and `--proxy-pool auto` when blocked. Use `scrapfly crawl` or `scrapfly extract` for their respective tasks. Follow the installed `scrapfly-cli` skill; authentication comes from `SCRAPFLY_API_KEY`, never a literal key in command arguments.
   - **Interact** (login, multi-step click/fill, persistent page state) → `/playwright-cli` with `--headed`, or the `scrapfly-browser` skill for a cloud browser.
 - Mirrors: Reddit → redlib (redlib.{us,de}.catsarch.com), teddit, libreddit; Twitter/X → nitter (xcancel.com); YouTube → piped/invidious, or `yt-dlp` (`--cookies-from-browser firefox/chrome` for gated videos); archives → `https://web.archive.org/web/2026/<url>`, `https://archive.{today,ph,is,li,md,vn,fo}/<url>`.
 - Fallback: `/playwright-cli` skill as above 
