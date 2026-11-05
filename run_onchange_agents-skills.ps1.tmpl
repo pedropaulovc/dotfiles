@@ -8,7 +8,10 @@ Set-PSDebug -Trace 1
 # checksum: {{ $metadata | sha256sum }}
 # Lock values are base64 encoded before they enter this script.
 
-if (-not (Get-Command npx -ErrorAction SilentlyContinue)) {
+# npm's npx.ps1 shim re-parses the caller's source text and runs it via
+# Invoke-Expression in its own scope, so variable arguments arrive empty or
+# mangled. npx.cmd receives the real argument values.
+if (-not (Get-Command npx.cmd -ErrorAction SilentlyContinue)) {
     throw "npx is required to synchronize agent skills."
 }
 
@@ -75,7 +78,7 @@ function Sync-Skill {
         throw ("Skill hash mismatch for {0}: expected {1}, got {2}." -f $skillName, $expectedHash, $actualHash)
     }
 
-    & npx --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes @AgentArgs
+    & npx.cmd --yes skills@1.5.23 add $skillDir --skill $skillName --global --yes @AgentArgs
     if ($LASTEXITCODE -ne 0) {
         throw "npx could not install or upgrade skill $skillName."
     }
