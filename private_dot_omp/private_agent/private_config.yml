@@ -1,7 +1,5 @@
 providers:
   fetch: auto
-  webSearchOrder:
-    - exa
 modelRoles:
   smol: openai-codex/gpt-6-luna:max
   slow: openai-codex/gpt-6.1-sol:medium
@@ -11,7 +9,7 @@ modelRoles:
 symbolPreset: unicode
 theme:
   dark: titanium
-setupVersion: 2
+setupVersion: 3
 statusLine:
   preset: default
   sessionAccent: true
@@ -113,7 +111,8 @@ retry:
       - web/mojeek
       - web/public
       - google-antigravity/gemini-2.5-flash
-      - openai-codex/gpt-5.6
-      - openai-codex/gpt-5.5
+      - openai-codex/gpt-5.6-sol
       - xai-oauth/grok-4.5
       - web/ollama
+update:
+  auto: true
