@@ -58,7 +58,7 @@ commands:
   enableOpencodeUser: false
   enableOpencodeProject: false
 codexResets:
-  autoRedeem: unset
+  autoRedeem: "yes"
 fetch:
   enabled: true
 completion:
