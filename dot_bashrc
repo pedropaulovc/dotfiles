@@ -233,9 +233,9 @@ EOF
 
 unset -f yom yomc yomt pyom pyomc pyomt
 
-yof()  { yo  --model anthropic/claude-fable-5-1:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+yof()  { yo  --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
 yos()  { yo  --model openai-codex/gpt-6.1-sol:medium   --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 yot()  { yo  --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 yol()  { yo  --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
@@ -258,9 +258,9 @@ pyu() {
   pyo update || return
   omp-plugin-upgrade
 }
-pyof() { pyo --model anthropic/claude-fable-5-1:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
-pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-1:xhigh "$@"; }
+pyof() { pyo --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
 pyos() { pyo --model openai-codex/gpt-6.1-sol:medium   --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 pyot() { pyo --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
 pyol() { pyo --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
