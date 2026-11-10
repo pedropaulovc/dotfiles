@@ -62,6 +62,8 @@ function global:Invoke-YoloClaudeFableContinue { Invoke-YoloClaudeFable --contin
 function global:Invoke-YoloClaudeOpusContinue { Invoke-YoloClaudeOpus --continue @args }
 function global:Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --continue @args }
 
+
+function global:Invoke-YoloOmp { & omp --auto-approve @args }
 function global:Invoke-OmpPluginUpgrade {
     & omp plugin marketplace update
     if ($LASTEXITCODE -ne 0) {
@@ -118,6 +120,14 @@ function global:Invoke-Pyu {
     Invoke-OmpPluginUpgrade
 }
 
+function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpHaiku { Invoke-YoloOmp --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpContinue      { Invoke-YoloOmp       --continue @args }
+function global:Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
+function global:Invoke-YoloOmpHaikuContinue { Invoke-YoloOmpHaiku --continue @args }
+function global:Invoke-YoloOmpOpusContinue  { Invoke-YoloOmpOpus       --continue @args }
+
 # Run a temporary copy of the self-updating fork dogfood binary so pyo sessions do not lock the original. `update` runs the original so the replacement persists.
 $global:pyoBinary = Join-Path $HOME '.bun\bin\omp-dogfood.exe'
 function global:Invoke-PinnedYoloOmp {
@@ -136,6 +146,13 @@ function global:Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
+function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpHaiku { Invoke-PinnedYoloOmp --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpContinue      { Invoke-PinnedYoloOmp --continue @args }
+function global:Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
+function global:Invoke-PinnedYoloOmpHaikuContinue { Invoke-PinnedYoloOmpHaiku --continue @args }
+function global:Invoke-PinnedYoloOmpOpusContinue  { Invoke-PinnedYoloOmpOpus --continue @args }
 
 # Run an agent shortcut in a temporary project under C:\src\tmp-<name>.
 # Temporary projects are removed after seven days without any file or
@@ -260,6 +277,16 @@ function global:Invoke-YoloClaudeFableTemporary { Invoke-TemporaryProject 'ycf' 
 function global:Invoke-YoloClaudeOpusTemporary { Invoke-TemporaryProject 'yco' @args }
 function global:Invoke-YoloClaudeSonnetTemporary { Invoke-TemporaryProject 'ycs' @args }
 
+function global:Invoke-YoloOmpTemporary { Invoke-TemporaryProject 'yo' @args }
+function global:Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @args }
+function global:Invoke-YoloOmpHaikuTemporary { Invoke-TemporaryProject 'yoh' @args }
+function global:Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
+
+function global:Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
+function global:Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
+function global:Invoke-PinnedYoloOmpHaikuTemporary { Invoke-TemporaryProject 'pyoh' @args }
+function global:Invoke-PinnedYoloOmpOpusTemporary { Invoke-TemporaryProject 'pyoo' @args }
+
 function global:Invoke-ShellGpt {
     param(
         [Parameter(ValueFromRemainingArguments = $true)]
@@ -302,10 +329,25 @@ Set-Alias -Scope Global -Name ycc -Value Invoke-YoloClaudeContinue
 Set-Alias -Scope Global -Name ycfc -Value Invoke-YoloClaudeFableContinue
 Set-Alias -Scope Global -Name ycoc -Value Invoke-YoloClaudeOpusContinue
 Set-Alias -Scope Global -Name ycsc -Value Invoke-YoloClaudeSonnetContinue
+Set-Alias -Scope Global -Name yo -Value Invoke-YoloOmp
 Set-Alias -Scope Global -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
 Set-Alias -Scope Global -Name pyu -Value Invoke-Pyu
 
+Set-Alias -Scope Global -Name yof -Value Invoke-YoloOmpFable
+Set-Alias -Scope Global -Name yoh -Value Invoke-YoloOmpHaiku
+Set-Alias -Scope Global -Name yoo -Value Invoke-YoloOmpOpus
+Set-Alias -Scope Global -Name yoc -Value Invoke-YoloOmpContinue
+Set-Alias -Scope Global -Name yofc -Value Invoke-YoloOmpFableContinue
+Set-Alias -Scope Global -Name yohc -Value Invoke-YoloOmpHaikuContinue
+Set-Alias -Scope Global -Name yooc -Value Invoke-YoloOmpOpusContinue
 Set-Alias -Scope Global -Name pyo -Value Invoke-PinnedYoloOmp
+Set-Alias -Scope Global -Name pyof -Value Invoke-PinnedYoloOmpFable
+Set-Alias -Scope Global -Name pyoh -Value Invoke-PinnedYoloOmpHaiku
+Set-Alias -Scope Global -Name pyoo -Value Invoke-PinnedYoloOmpOpus
+Set-Alias -Scope Global -Name pyoc -Value Invoke-PinnedYoloOmpContinue
+Set-Alias -Scope Global -Name pyofc -Value Invoke-PinnedYoloOmpFableContinue
+Set-Alias -Scope Global -Name pyohc -Value Invoke-PinnedYoloOmpHaikuContinue
+Set-Alias -Scope Global -Name pyooc -Value Invoke-PinnedYoloOmpOpusContinue
 
 # The hyphenated base names avoid collisions with existing shortcuts whose
 # t suffix already has another meaning (yct).
@@ -315,6 +357,16 @@ Set-Alias -Scope Global -Name ycft -Value Invoke-YoloClaudeFableTemporary
 Set-Alias -Scope Global -Name ycot -Value Invoke-YoloClaudeOpusTemporary
 Set-Alias -Scope Global -Name ycst -Value Invoke-YoloClaudeSonnetTemporary
 
+
+Set-Alias -Scope Global -Name yo-t -Value Invoke-YoloOmpTemporary
+Set-Alias -Scope Global -Name yoft -Value Invoke-YoloOmpFableTemporary
+Set-Alias -Scope Global -Name yoht -Value Invoke-YoloOmpHaikuTemporary
+Set-Alias -Scope Global -Name yoot -Value Invoke-YoloOmpOpusTemporary
+
+Set-Alias -Scope Global -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
+Set-Alias -Scope Global -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary
+Set-Alias -Scope Global -Name pyoht -Value Invoke-PinnedYoloOmpHaikuTemporary
+Set-Alias -Scope Global -Name pyoot -Value Invoke-PinnedYoloOmpOpusTemporary
 Set-Alias -Scope Global -Name src -Value Set-LocationSrc
 Set-Alias -Scope Global -Name ?? -Value Invoke-ShellGpt
 Set-Alias -Scope Global -Name which -Value 'C:\Windows\System32\where.exe'

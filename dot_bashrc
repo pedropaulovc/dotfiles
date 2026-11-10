@@ -189,6 +189,7 @@ yct() {
   tmux attach-session -t "$session"
 }
 alias yg="gemini --yolo"
+yo() { omp --auto-approve "$@"; }
 # Refresh marketplace metadata before upgrading every installed marketplace
 # plugin explicitly; OMP's no-target upgrade can miss stale scoped installs.
 omp-plugin-upgrade() {
@@ -222,7 +223,15 @@ EOF
 
 unset -f yom yomc yomt pyom pyomc pyomt
 
-# Use the self-updating fork dogfood binary without changing production omp.
+yof()  { yo  --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoc()  { yo  --continue "$@"; }
+yofc()  { yof  --continue "$@"; }
+yohc()  { yoh --continue "$@"; }
+yooc()  { yoo  --continue "$@"; }
+
+# Use the self-updating fork dogfood binary without changing production omp or yo.
 PYO_BINARY="$HOME/.bun/bin/omp-dogfood"
 pyo() { "$PYO_BINARY" --auto-approve "$@"; }
 pyu() {
@@ -231,6 +240,13 @@ pyu() {
   pyo update || return
   omp-plugin-upgrade
 }
+pyof() { pyo --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoc() { pyo --continue "$@"; }
+pyofc() { pyof --continue "$@"; }
+pyohc() { pyoh --continue "$@"; }
+pyooc() { pyoo --continue "$@"; }
 
 # Run an agent shortcut in a temporary project under ~/src/tmp-<name>.
 # Temporary projects are removed after seven days without any file or
@@ -305,6 +321,16 @@ ycot() { __tmp_project "${1-}" yco "${@:2}"; }
 ycst() { __tmp_project "${1-}" ycs "${@:2}"; }
 
 ygt() { __tmp_project "${1-}" gemini --yolo "${@:2}"; }
+
+yo-t() { __tmp_project "${1-}" yo "${@:2}"; }
+yoft() { __tmp_project "${1-}" yof "${@:2}"; }
+yoht() { __tmp_project "${1-}" yoh "${@:2}"; }
+yoot() { __tmp_project "${1-}" yoo "${@:2}"; }
+
+pyo-t() { __tmp_project "${1-}" pyo "${@:2}"; }
+pyoft() { __tmp_project "${1-}" pyof "${@:2}"; }
+pyoht() { __tmp_project "${1-}" pyoh "${@:2}"; }
+pyoot() { __tmp_project "${1-}" pyoo "${@:2}"; }
 
 alias findall="find . -type f -name"
 
