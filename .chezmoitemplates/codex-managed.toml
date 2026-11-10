@@ -10,16 +10,9 @@
 {{ $bundledCache := joinPath $codexHome "plugins/cache/openai-bundled" -}}
 {{ $agentPluginCache := joinPath $codexHome "plugins/cache/agent-plugins" -}}
 {{ $systemSkills := joinPath $codexHome "skills/.system" -}}
-model = "gpt-6.1-sol"
-model_reasoning_effort = "high"
-plan_mode_reasoning_effort = "high"
 
 [features]
 memories = true
-
-# Suppress Codex's nudge to switch models as you approach rate/usage limits.
-[notice]
-hide_rate_limit_model_nudge = true
 
 [shell_environment_policy]
 inherit = "core"
@@ -34,9 +27,6 @@ CLAUDE_AFK_TIMEOUT_MS = "1800000"
 [tui]
 status_line = ["model", "context-remaining", "five-hour-limit", "weekly-limit", "current-dir", "git-branch", "branch-changes"]
 status_line_use_colors = true
-
-[tui.model_availability_nux]
-"gpt-6.1-sol" = 4
 
 [windows]
 sandbox = "elevated"

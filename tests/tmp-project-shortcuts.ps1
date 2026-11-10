@@ -19,44 +19,13 @@ try {
     . ([scriptblock]::Create($profileText))
     @(
         "omp-plugin-upgrade",
-        "yof", "yoh", "yoo", "yos", "yot", "yol", "yoa",
-        "yoc", "yofc", "yohc", "yooc", "yosc", "yotc", "yolc", "yoac",
-        "pyof", "pyoh", "pyoo", "pyos", "pyot", "pyol", "pyoa",
-        "pyoc", "pyofc", "pyohc", "pyooc", "pyosc", "pyotc", "pyolc", "pyoac",
-        "yct", "yc-t", "ycft", "ycot", "ycst",
-        "yx-t", "yxst", "yxtt", "yxlt", "yxat",
-        "yo-t", "yoft", "yoht", "yoot", "yost", "yott", "yolt", "yoat",
-        "pyo-t", "pyoft", "pyoht", "pyoot", "pyost", "pyott", "pyolt", "pyoat"
+        "yct", "yc-t", "ycft", "ycot", "ycst"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
         }
     }
 
-    function global:Invoke-YoloOmpMimo { }
-    function global:Invoke-YoloOmpMimoContinue { }
-    function global:Invoke-YoloOmpMimoTemporary { }
-    function global:Invoke-PinnedYoloOmpMimo { }
-    function global:Invoke-PinnedYoloOmpMimoContinue { }
-    function global:Invoke-PinnedYoloOmpMimoTemporary { }
-    Set-Alias -Scope Global -Name yom -Value Invoke-YoloOmpMimo -Force
-    Set-Alias -Scope Global -Name yomc -Value Invoke-YoloOmpMimoContinue -Force
-    Set-Alias -Scope Global -Name yomt -Value Invoke-YoloOmpMimoTemporary -Force
-    Set-Alias -Scope Global -Name pyom -Value Invoke-PinnedYoloOmpMimo -Force
-    Set-Alias -Scope Global -Name pyomc -Value Invoke-PinnedYoloOmpMimoContinue -Force
-    Set-Alias -Scope Global -Name pyomt -Value Invoke-PinnedYoloOmpMimoTemporary -Force
-    . ([scriptblock]::Create($profileText))
-    $retiredShortcutNames = @(
-        "yom", "yomc", "yomt", "pyom", "pyomc", "pyomt",
-        "Invoke-YoloOmpMimo", "Invoke-YoloOmpMimoContinue", "Invoke-YoloOmpMimoTemporary",
-        "Invoke-PinnedYoloOmpMimo", "Invoke-PinnedYoloOmpMimoContinue", "Invoke-PinnedYoloOmpMimoTemporary"
-    )
-    $remainingRetiredShortcutNames = @($retiredShortcutNames | Where-Object {
-        $null -ne (Get-Command -Name $_ -ErrorAction SilentlyContinue)
-    })
-    if ($remainingRetiredShortcutNames.Count -gt 0) {
-        throw "Removed shortcut commands remained after profile reload: $($remainingRetiredShortcutNames -join ', ')"
-    }
     $dogfoodCallLog = Join-Path $tempDir "dogfood-call-log"
     $dogfoodScript = Join-Path $tempDir "fake-omp-dogfood.ps1"
     @'
@@ -152,49 +121,6 @@ $MyInvocation.MyCommand.Path | Add-Content -LiteralPath $env:PYO_TEST_CALL_LOG
         $global:LASTEXITCODE = 0
     }
     New-Item -ItemType File -Path $ompCallLog -Force | Out-Null
-    Clear-Content -LiteralPath $ompCallLog
-    yoh --probe
-    $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe") {
-        throw "yoh did not use Claude Haiku 5.5 for its primary and smol model."
-    }
-    Clear-Content -LiteralPath $ompCallLog
-    $oldPyoBinary = $pyoBinary
-    $oldPyoCallLog = $env:PYO_TEST_CALL_LOG
-    try {
-        $pyoBinary = $dogfoodScript
-        $env:PYO_TEST_CALL_LOG = $dogfoodCallLog
-        Clear-Content -LiteralPath $dogfoodCallLog
-        pyoh update --probe
-        $dogfoodCalls = @(Get-Content -LiteralPath $dogfoodCallLog)
-        if ($dogfoodCalls.Count -ne 2 -or $dogfoodCalls[0] -ne "--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh update --probe") {
-            throw "pyoh did not use Claude Haiku 5.5 for its primary and smol model."
-        }
-        if ((Resolve-Path $dogfoodCalls[1]).Path -ne (Resolve-Path $dogfoodScript).Path) {
-            throw "pyoh update invoked a temporary copy instead of the installed dogfood binary."
-        }
-    }
-    finally {
-        $pyoBinary = $oldPyoBinary
-        if ($null -eq $oldPyoCallLog) {
-            Remove-Item Env:PYO_TEST_CALL_LOG -ErrorAction SilentlyContinue
-        }
-        else {
-            $env:PYO_TEST_CALL_LOG = $oldPyoCallLog
-        }
-    }
-    Clear-Content -LiteralPath $ompCallLog
-    yos --probe
-    $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
-        throw "yos did not select the medium-effort Codex role models."
-    }
-    Clear-Content -LiteralPath $ompCallLog
-    yot --probe
-    $calls = @(Get-Content -LiteralPath $ompCallLog)
-    if ($calls.Count -ne 1 -or $calls[0] -ne "--auto-approve --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe") {
-        throw "yot did not select the medium-effort Terra role models."
-    }
     Clear-Content -LiteralPath $ompCallLog
     omp-plugin-upgrade
     $calls = @(Get-Content -LiteralPath $ompCallLog)
@@ -320,74 +246,74 @@ Set-Alias -Scope Global -Name pyu-marker -Value Invoke-PyuProfileMarker -Force
             & $pwshPath -NoLogo -NoProfile -NonInteractive -Command "exit 17"
         }
     }
-    Set-Alias -Name pyol -Value Invoke-TestPyol -Force
+    Set-Alias -Name yc -Value Invoke-TestPyol -Force
 
     $missingNameFailed = $false
     try {
-        pyolt
+        yc-t
     }
     catch {
         $missingNameFailed = $true
     }
     if (-not $missingNameFailed) {
-        throw "pyolt accepted a missing project name."
+        throw "yc-t accepted a missing project name."
     }
 
     $traversalFailed = $false
     try {
-        pyolt "..\escape"
+        yc-t "..\escape"
     }
     catch {
         $traversalFailed = $true
     }
     if (-not $traversalFailed) {
-        throw "pyolt accepted a path traversal project name."
+        throw "yc-t accepted a path traversal project name."
     }
 
     $namedParameterFailed = $false
     try {
-        pyolt -Command evil myproj
+        yc-t -Command evil myproj
     }
     catch {
         $namedParameterFailed = $true
     }
     if (-not $namedParameterFailed) {
-        throw "pyolt allowed a user argument to bind the internal command parameter."
+        throw "yc-t allowed a user argument to bind the internal command parameter."
     }
 
-    pyolt myproj --flag value
+    yc-t myproj --flag value
     $calls = @(Get-Content -LiteralPath $callLog)
     if ($calls.Count -ne 2 -or $calls[0] -ne (Join-Path $sourcePath "tmp-myproj") -or $calls[1] -ne "--flag value") {
-        throw "pyolt did not run in the temporary project or forward arguments."
+        throw "yc-t did not run in the temporary project or forward arguments."
     }
     if (-not (Test-Path -LiteralPath (Join-Path $sourcePath "tmp-myproj") -PathType Container)) {
-        throw "pyolt did not create the temporary project."
+        throw "yc-t did not create the temporary project."
     }
     if (Test-Path -LiteralPath (Join-Path $sourcePath "tmp-stale")) {
-        throw "pyolt did not remove the stale temporary project."
+        throw "yc-t did not remove the stale temporary project."
     }
     if (-not (Test-Path -LiteralPath (Join-Path $sourcePath "tmp-fresh") -PathType Container)) {
-        throw "pyolt removed a fresh temporary project."
+        throw "yc-t removed a fresh temporary project."
     }
     $failingStalePath = Join-Path $sourcePath "tmp-failing-stale"
     New-Item -ItemType Directory -Path $failingStalePath -Force | Out-Null
     [System.IO.Directory]::SetLastWriteTimeUtc($failingStalePath, [DateTime]::UtcNow.AddDays(-8))
     $failureExitCode = $null
     try {
-        pyolt failing --fail
+        yc-t failing --fail
     }
     catch {
         $failureExitCode = $LASTEXITCODE
     }
 
     if ($failureExitCode -ne 17) {
-        throw "pyolt did not preserve the wrapped command exit code."
+        throw "yc-t did not preserve the wrapped command exit code."
     }
     if (Test-Path -LiteralPath $failingStalePath) {
-        throw "pyolt did not clean up after a failed wrapped command."
+        throw "yc-t did not clean up after a failed wrapped command."
     }
 
-    if (Get-Command pyolct -ErrorAction SilentlyContinue) {
+    if (Get-Command yc-tc -ErrorAction SilentlyContinue) {
         throw "A continue temporary shortcut was unexpectedly defined."
     }
 

@@ -1,9 +1,9 @@
 providers:
   fetch: auto
 modelRoles:
-  smol: openai-codex/gpt-6-luna:max
-  slow: openai-codex/gpt-6.1-sol:medium
-  plan: openai-codex/gpt-6-astra:high
+  smol: anthropic/claude-haiku-5-5:max
+  slow: anthropic/claude-opus-5-5:medium
+  plan: anthropic/claude-fable-5-2:xhigh
   web: web/exa
   default: anthropic/claude-haiku-5-5
 symbolPreset: unicode
@@ -91,7 +91,6 @@ retry:
       - web/perplexity
       - google/gemini-2.5-flash
       - anthropic/claude-haiku-5-5
-      - openai-codex/gpt-6-luna
       - xai/grok-4.5
       - web/zai
       - web/exa
@@ -111,7 +110,6 @@ retry:
       - web/mojeek
       - web/public
       - google-antigravity/gemini-2.5-flash
-      - openai-codex/gpt-5.6-sol
       - xai-oauth/grok-4.5
       - web/ollama
 update:

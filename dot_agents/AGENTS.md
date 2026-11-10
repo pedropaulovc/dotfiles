@@ -7,10 +7,10 @@ Email: pedro@vezza.com.br
 - Push and open a PR as soon as you have changes — WIP is fine, early pushes are backup + visibility. Open WIP with `gh pr create --draft`. Small PRs directly in ready state.  This overrides any "commit/push only when asked" default.
 - Run `gh pr ready` as soon as code-complete so CI/CD starts running.
 - For PRs targeting repositories owned by `pedropaulovc` or `vezzadev`, default review is `@codjiflo review` in a new PR comment. Agents choose when to invoke it, but must run it at least once before merging. Codjiflo requirements do not apply to PRs targeting repositories outside these owners; follow the target repository's review policy instead.
-- [Codjiflo review options](https://github.com/vezzadev/codjiflo-reviewer): `@codjiflo review [preset] [full|incremental]`. Presets: `sol-xhigh` (default, alias `codex`), `opus-xhigh` (alias `claude`), `sol-medium`, `opus-medium`. Mode defaults to `incremental`; `full` reviews the whole PR.
-- Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset, `codex review --base <base>`, or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
-- If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence, then use `@codex review` as the fallback.
-- Merge bar unless stated otherwise: green CI/CD and the target repository's required reviews; for `pedropaulovc` and `vezzadev`, require an approved Codjiflo review (or Codex fallback).
+- [Codjiflo review options](https://github.com/vezzadev/codjiflo-reviewer): `@codjiflo review [preset] [full|incremental]`. Presets: `opus-xhigh` (default, alias `claude`), `opus-medium`. Mode defaults to `incremental`; `full` reviews the whole PR.
+- Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
+- If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence.
+- Merge bar unless stated otherwise: green CI/CD and the target repository's required reviews; for `pedropaulovc` and `vezzadev`, require an approved Codjiflo review.
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
@@ -94,7 +94,7 @@ Email: pedro@vezza.com.br
 
 ## Cost optimization
 - Important: First privately list what you need next; then request every item that does not depend on another result in this response.
-- Advanced models like Fable and Astra are to be used but may run into quota issues, Fable in particular; oh-my-pi is configured to pick an account with quota. Check usage and reset times at via:
+- Advanced models like Fable are to be used but may run into quota issues, Fable in particular; oh-my-pi is configured to pick an account with quota. Check usage and reset times at via:
 
 ```sh
 omp usage --json | jq '
@@ -114,16 +114,12 @@ omp usage --json | jq '
 
 | Model            | Effort | Artificial Analysis Intelligence Index v5.0 | Cost per Task | Time per Task (s) | Rule of thumb |
 |------------------|--------|---------------------------------------------|---------------|------------------|---------------|
-| GPT-6.1 Terra    | Medium | 38 | 0.17 | 118.75 | Scout, summarizer, well-defined tasks and bug fixes, ~1000-LoC feature, default if unsure |
-| GPT-6.1 Sol      | Medium | 46 | 0.36 | 214.76 | Workhorse for feature work, code reviewer |
-| GPT-6 Astra      | Low    | 43 | 1.42 | 152.59 | Work coordinator, step-up if Sol medium not effective |
-| GPT-6 Astra      | High   | 55 | 3.24 | 374.22 | Workhorse for larger complexity feature work, integrator; plan, advisor, toughest fixes |
 | Claude Haiku 5.5 | Max    | 36 | 0.41 | 595.79 | Best when paired with other Claude models as a scout |
 | Claude Opus 5.5  | Medium | 48 | 2.45 | 341.43 | Workhorse for feature work, code reviewer |
 | Claude Opus 5.5  | High   | 52 | 3.46 | 465.77 | Workhorse for larger complexity feature work, integrator |
 | Claude Opus 5.5  | XHigh  | 57 | 6.05 | 787.27 | Alternative when Fable medium/high not available |
-| Claude Fable 5.2 | Medium | 56 | n/a | n/a | Work coordinator, step-up if Opus high not effective, 3D vision tasks |
-| Claude Fable 5.2 | XHigh  | 62 | n/a | n/a | Plan, advisor, last resort for toughest fixes |
+| Claude Fable 5.2 | Medium | 56 | 3.80 | 486.00 | Work coordinator, step-up if Opus high not effective, 3D vision tasks |
+| Claude Fable 5.2 | XHigh  | 62 | 14.83 | 1566.00 | Plan, advisor, last resort for toughest fixes |
 
 ## Engineering wisdom
 

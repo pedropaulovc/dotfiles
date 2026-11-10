@@ -189,17 +189,6 @@ yct() {
   tmux attach-session -t "$session"
 }
 alias yg="gemini --yolo"
-alias yx="codex --dangerously-bypass-approvals-and-sandbox"
-yxs() { yx --model gpt-6.1-sol -c 'model_reasoning_effort="high"' "$@"; }
-yxt() { yx --model gpt-5.6-terra -c 'model_reasoning_effort="max"' "$@"; }
-yxl() { yx --model gpt-6-luna -c 'model_reasoning_effort="max"' "$@"; }
-yxa() { yx --model gpt-6-astra -c 'model_reasoning_effort="low"' "$@"; }
-yxc() { yx resume --last "$@"; }
-yxsc() { yxs resume --last "$@"; }
-yxtc() { yxt resume --last "$@"; }
-yxlc() { yxl resume --last "$@"; }
-yxac() { yxa resume --last "$@"; }
-yo() { omp --auto-approve "$@"; }
 # Refresh marketplace metadata before upgrading every installed marketplace
 # plugin explicitly; OMP's no-target upgrade can miss stale scoped installs.
 omp-plugin-upgrade() {
@@ -233,23 +222,7 @@ EOF
 
 unset -f yom yomc yomt pyom pyomc pyomt
 
-yof()  { yo  --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-yos()  { yo  --model openai-codex/gpt-6.1-sol:medium   --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yot()  { yo  --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yol()  { yo  --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yoa()  { yo  --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-yoc()  { yo  --continue "$@"; }
-yofc()  { yof  --continue "$@"; }
-yohc()  { yoh --continue "$@"; }
-yooc()  { yoo  --continue "$@"; }
-yosc()  { yos  --continue "$@"; }
-yotc()  { yot  --continue "$@"; }
-yolc()  { yol  --continue "$@"; }
-yoac()  { yoa  --continue "$@"; }
-
-# Use the self-updating fork dogfood binary without changing production omp or yo.
+# Use the self-updating fork dogfood binary without changing production omp.
 PYO_BINARY="$HOME/.bun/bin/omp-dogfood"
 pyo() { "$PYO_BINARY" --auto-approve "$@"; }
 pyu() {
@@ -258,21 +231,6 @@ pyu() {
   pyo update || return
   omp-plugin-upgrade
 }
-pyof() { pyo --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-pyos() { pyo --model openai-codex/gpt-6.1-sol:medium   --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyot() { pyo --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyol() { pyo --model openai-codex/gpt-6-luna:max       --thinking max    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyoa() { pyo --model openai-codex/gpt-6-astra:low      --thinking low    --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high   "$@"; }
-pyoc() { pyo --continue "$@"; }
-pyofc() { pyof --continue "$@"; }
-pyohc() { pyoh --continue "$@"; }
-pyooc() { pyoo --continue "$@"; }
-pyosc() { pyos --continue "$@"; }
-pyotc() { pyot --continue "$@"; }
-pyolc() { pyol --continue "$@"; }
-pyoac() { pyoa --continue "$@"; }
 
 # Run an agent shortcut in a temporary project under ~/src/tmp-<name>.
 # Temporary projects are removed after seven days without any file or
@@ -340,36 +298,13 @@ __tmp_project() {
 }
 
 # The hyphenated base names avoid collisions with existing shortcuts whose
-# t suffix already has another meaning (yct, yot, yxt, and pyot).
+# t suffix already has another meaning (yct).
 yc-t() { __tmp_project "${1-}" yc "${@:2}"; }
 ycft() { __tmp_project "${1-}" ycf "${@:2}"; }
 ycot() { __tmp_project "${1-}" yco "${@:2}"; }
 ycst() { __tmp_project "${1-}" ycs "${@:2}"; }
 
 ygt() { __tmp_project "${1-}" gemini --yolo "${@:2}"; }
-yx-t() { __tmp_project "${1-}" yx "${@:2}"; }
-yxst() { __tmp_project "${1-}" yxs "${@:2}"; }
-yxtt() { __tmp_project "${1-}" yxt "${@:2}"; }
-yxlt() { __tmp_project "${1-}" yxl "${@:2}"; }
-yxat() { __tmp_project "${1-}" yxa "${@:2}"; }
-
-yo-t() { __tmp_project "${1-}" yo "${@:2}"; }
-yoft() { __tmp_project "${1-}" yof "${@:2}"; }
-yoht() { __tmp_project "${1-}" yoh "${@:2}"; }
-yoot() { __tmp_project "${1-}" yoo "${@:2}"; }
-yost() { __tmp_project "${1-}" yos "${@:2}"; }
-yott() { __tmp_project "${1-}" yot "${@:2}"; }
-yolt() { __tmp_project "${1-}" yol "${@:2}"; }
-yoat() { __tmp_project "${1-}" yoa "${@:2}"; }
-
-pyo-t() { __tmp_project "${1-}" pyo "${@:2}"; }
-pyoft() { __tmp_project "${1-}" pyof "${@:2}"; }
-pyoht() { __tmp_project "${1-}" pyoh "${@:2}"; }
-pyoot() { __tmp_project "${1-}" pyoo "${@:2}"; }
-pyost() { __tmp_project "${1-}" pyos "${@:2}"; }
-pyott() { __tmp_project "${1-}" pyot "${@:2}"; }
-pyolt() { __tmp_project "${1-}" pyol "${@:2}"; }
-pyoat() { __tmp_project "${1-}" pyoa "${@:2}"; }
 
 alias findall="find . -type f -name"
 

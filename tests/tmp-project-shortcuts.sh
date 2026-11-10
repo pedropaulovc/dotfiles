@@ -70,30 +70,6 @@ expected_failed_upgrade_calls='plugin marketplace update
 plugin list --json
 plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
-: >"$OMP_CALL_LOG"
-yoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
-cat >"$TMP_PYO_BINARY" <<'PYOP'
-#!/bin/sh
-printf '%s\n' "$*" >>"$OMP_CALL_LOG"
-PYOP
-chmod +x "$TMP_PYO_BINARY"
-PYO_BINARY="$TMP_PYO_BINARY"
-: >"$OMP_CALL_LOG"
-pyoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
-: >"$OMP_CALL_LOG"
-yos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
-: >"$OMP_CALL_LOG"
-pyos --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-sol:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
-: >"$OMP_CALL_LOG"
-yot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
-: >"$OMP_CALL_LOG"
-pyot --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model openai-codex/gpt-6.1-terra:medium --thinking medium --smol openai-codex/gpt-6.1-terra:medium --slow openai-codex/gpt-6.1-sol:medium --plan openai-codex/gpt-6-astra:high --probe' ]
 PYU_CALL_LOG="$HOME/pyu-calls"
 export PYU_CALL_LOG
 cat >"$HOME/.bashrc" <<'BASHRC'
@@ -116,20 +92,8 @@ chezmoi() {
     printf '%s\n' "chezmoi $*" >>"$PYU_CALL_LOG"
     [ "${FAIL_CHEZMOI:-0}" -eq 0 ] || return 17
 }
-yom() { :; }
-yomc() { :; }
-yomt() { :; }
-pyom() { :; }
-pyomc() { :; }
-pyomt() { :; }
 pyu
 [ "${PYU_RELOADED:-0}" -eq 1 ]
-for shortcut in yom yomc yomt pyom pyomc pyomt; do
-    if type "$shortcut" >/dev/null 2>&1; then
-        printf 'Bash profile reload retained retired shortcut: %s\n' "$shortcut" >&2
-        exit 1
-    fi
-done
 expected_pyu_calls='chezmoi update
 reload
 pyo update
@@ -173,31 +137,27 @@ fi
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
-    yx-t yxst yxtt yxlt yxat \
-    yo yof yoh yoo yos yot yol yoa yoc yofc yohc yooc yosc yotc yolc yoac \
-    pyo pyu pyof pyoh pyoo pyos pyot pyol pyoa pyoc pyofc pyohc pyooc pyosc pyotc pyolc pyoac \
-    yo-t yoft yoht yoot yost yott yolt yoat \
-    pyo-t pyoft pyoht pyoot pyost pyott pyolt pyoat; do
+    pyo pyu; do
 
     type "$shortcut" >/dev/null
 done
 
-pyol() {
+yc() {
     printf '%s\n' "$PWD" >"$CALL_LOG"
     printf '%s\n' "$*" >>"$CALL_LOG"
     [ "${1-}" != '--fail' ] || return 17
 }
 
-if pyolt; then
-    printf 'pyolt accepted a missing project name.\n' >&2
+if yc-t; then
+    printf 'yc-t accepted a missing project name.\n' >&2
     exit 1
 else
     status=$?
     [ "$status" -eq 2 ]
 fi
 
-if pyolt ../escape; then
-    printf 'pyolt accepted a path traversal project name.\n' >&2
+if yc-t ../escape; then
+    printf 'yc-t accepted a path traversal project name.\n' >&2
     exit 1
 else
     status=$?
@@ -205,8 +165,8 @@ else
 fi
 mkdir -p "$HOME/outside"
 ln -s "$HOME/outside" "$HOME/src/tmp-linked"
-if pyolt linked; then
-    printf 'pyolt followed a symbolic-link project path.\n' >&2
+if yc-t linked; then
+    printf 'yc-t followed a symbolic-link project path.\n' >&2
     exit 1
 else
     status=$?
@@ -214,7 +174,7 @@ else
 fi
 [ -L "$HOME/src/tmp-linked" ]
 
-pyolt myproj --flag value
+yc-t myproj --flag value
 [ "$(sed -n '1p' "$CALL_LOG")" = "$HOME/src/tmp-myproj" ]
 [ "$(sed -n '2p' "$CALL_LOG")" = '--flag value' ]
 [ -d "$HOME/src/tmp-myproj" ]
@@ -223,8 +183,8 @@ pyolt myproj --flag value
 
 mkdir -p "$HOME/src/tmp-failing-stale"
 touch -d '8 days ago' "$HOME/src/tmp-failing-stale"
-if pyolt failing --fail; then
-    printf 'pyolt hid the wrapped command failure.\n' >&2
+if yc-t failing --fail; then
+    printf 'yc-t hid the wrapped command failure.\n' >&2
 else
     status=$?
     [ "$status" -eq 17 ]
@@ -242,12 +202,12 @@ FIND
 chmod +x "$HOME/fake-bin/find"
 old_path=$PATH
 PATH="$HOME/fake-bin:$PATH"
-pyolt uninspectable
+yc-t uninspectable
 PATH=$old_path
 [ -d "$HOME/src/tmp-uninspectable" ]
 
 
-if type pyolct >/dev/null 2>&1; then
+if type yc-tc >/dev/null 2>&1; then
     printf 'A continue temporary shortcut was unexpectedly defined.\n' >&2
     exit 1
 fi
