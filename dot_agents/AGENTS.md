@@ -41,13 +41,14 @@ Email: pedro@vezza.com.br
 - Don't ask the user to do steps you can run via CLI/API/simple unauthenticated Playwright — run them. Manual intervention is the last resort; exception: irreversible ops (close an account, delete a critical resource).
 - No trailing follow-up questions unless yes/no with high confidence of "yes".
 - Use as many `AskUserQuestion` calls as needed to be fully confident — clarifying up front beats guessing wrong and redoing work. Don't ration them.
+- Do use the ask user question tool provided by the harness. Include the entire question in the tool call.
 - If an `AskUserQuestion` / `ask` times out (user likely asleep), take the maximalist path — full refactor, all edge cases, resolve dependent issues — and keep making progress. **Important**: timeouts in omp are reported as `timedOut: true` with message "auto-selected after timeout" and it auto-selects the recommended option, if available. This may not be the the maximalist path, so be careful to weigh in the options before proceeding.  
 - External-facing docs (README, GitHub issues, PR descriptions, first emails — not internal docs): brevity, drafted for the audience. An issue's maintainer knows their software — show preliminary findings, don't declare the root cause for them; hide detail in `<details>`. Use /humanizer against AI slop.
 - If you are coordinating long-running subagents, check-in on them periodically to understand if they are struggling with a problem or wasting time on repetitive work. For the former, consider dispatching a smarter agent from same family or if still stuck, an agent from a different family. For the latter, dispatch parallel agent to apply empirical skepticism, see below, and investigate how to automate repetitive work and then document the process in a resusable skill 
+- When reporting time, use Seattle local time
 
 ## Coding style
 - Do NOT add backwards-compatibility provisions unless told otherwise. Make sweeping changes toward what vanilla libraries/frameworks expect; git/backups are the rollback.
-- When a bug report contradicts an existing test that deliberately covers that use case, don't rewrite the assertions to close the bug — raise the contradiction to the reporter.
 - Never say something is final or name a file -final. It never is. Use dates, version counters instead etc.
 - Booleans stay function-local; transmit state elsewhere as enums (easy to add states):
 
@@ -86,7 +87,7 @@ Email: pedro@vezza.com.br
 
     return execute();
     ```
-
+- State machines are a great way to structure complex processes
 - Piping console output straight to `tail`, `grep`, etc. is bad practice — information gets lost. Leverage the coding harness's background tasks: they capture the full log to a file automatically; `rg`/grep that file instead. Combine with a Monitor / jobs with async progress notifications to filter out the noise.
 - IMPORTANT: if running via oh-my-pi harness / omp and need to locate file within skill folder run `realpath skill://my-skill-name` first. omp does not support glob in `skill://`.
 - Do not use OMP's read tool with query argument to describe a picture (`?q=`). It's not reliable. Read image yourself or via subagent.
@@ -114,11 +115,11 @@ omp usage --json | jq '
 
 | Model            | Effort | Artificial Analysis Intelligence Index v5.0 | Cost per Task | Time per Task (s) | Rule of thumb |
 |------------------|--------|---------------------------------------------|---------------|------------------|---------------|
-| Claude Haiku 5.5 | Max    | 36 | 0.41 | 595.79 | Best when paired with other Claude models as a scout |
+| Claude Haiku 5.5 | XHigh    | 35 | 0.25 | 576 | Scout, job monitor, summarizer, well defined feature <1000 Loc |
 | Claude Opus 5.5  | Medium | 48 | 2.45 | 341.43 | Workhorse for feature work, code reviewer |
-| Claude Opus 5.5  | High   | 52 | 3.46 | 465.77 | Workhorse for larger complexity feature work, integrator |
+| Claude Opus 5.5  | High   | 52 | 3.46 | 465.77 | Workhorse for larger complexity feature work, integrator, 3D vision tasks |
 | Claude Opus 5.5  | XHigh  | 57 | 6.05 | 787.27 | Alternative when Fable medium/high not available |
-| Claude Fable 5.2 | Medium | 56 | 3.80 | 486.00 | Work coordinator, step-up if Opus high not effective, 3D vision tasks |
+| Claude Fable 5.2 | Medium | 56 | 3.80 | 486.00 | Work coordinator, step-up if Opus high not effective |
 | Claude Fable 5.2 | XHigh  | 62 | 14.83 | 1566.00 | Plan, advisor, last resort for toughest fixes |
 
 ## Engineering wisdom
