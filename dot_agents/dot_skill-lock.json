@@ -35,21 +35,21 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "7cec128b8fdb0a696366d888e63be71fe1d52338",
+      "ref": "5318be8ea572aa00ceae636c71c1d8d334f805b6",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-11-12T03:24:16.551Z"
+      "updatedAt": "2026-11-15T03:24:56.698Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "974284b42eeb4609e94d4ebc1f6e36df400d54ca",
+      "ref": "e03c73ad9fa486f6205cd3c145438d74ee12b8fe",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
       "skillFolderHash": "017171a08f13710496f7c396fc703824433e9be7",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-11-12T03:24:16.551Z"
+      "updatedAt": "2026-11-15T03:24:56.698Z"
     },
     "scrapfly-agent-rules": {
       "source": "scrapfly/skills",
