@@ -151,4 +151,4 @@ omp usage --json | jq '
  * Guard your dev inner loop — compiling, deploying assets, unit tests must be optimized for fast iteration.
  * Nuking the env must be trivial: a couple of commands to wipe caches/binaries/databases and restore a known-good state.
  * Leverage subagents for parallel work but be careful to check-in periodically in case they went idle for too long.
- * The test suite must be trustworthy. Corollary 1: there are no flaky tests, only broken tests. Corollary 2: there are **no unrelated** changes — see something, do something; spin off a subagent in a separate worktree to fix the flake/bad merge.
+ * The test suite must be trustworthy. Corollary 1: there are no flaky tests, only broken tests. Corollary 2: there are **no unrelated** changes — see something, do something; spin off a subagent in a separate worktree to fix the flake/bad merge. At the very least log an issue and add a TODO in the codebase.
