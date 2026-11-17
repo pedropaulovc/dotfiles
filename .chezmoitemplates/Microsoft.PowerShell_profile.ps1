@@ -120,9 +120,9 @@ function global:Invoke-Pyu {
     Invoke-OmpPluginUpgrade
 }
 
-function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
-function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
-function global:Invoke-YoloOmpHaiku { Invoke-YoloOmp --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpFable { Invoke-YoloOmp       --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpOpus  { Invoke-YoloOmp       --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-YoloOmpHaiku { Invoke-YoloOmp --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
 function global:Invoke-YoloOmpContinue      { Invoke-YoloOmp       --continue @args }
 function global:Invoke-YoloOmpFableContinue { Invoke-YoloOmpFable       --continue @args }
 function global:Invoke-YoloOmpHaikuContinue { Invoke-YoloOmpHaiku --continue @args }
@@ -146,9 +146,9 @@ function global:Invoke-PinnedYoloOmp {
 		Remove-Item -LiteralPath $tempBinary -Force -ErrorAction SilentlyContinue
 	}
 }
-function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
-function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
-function global:Invoke-PinnedYoloOmpHaiku { Invoke-PinnedYoloOmp --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpFable { Invoke-PinnedYoloOmp --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpOpus  { Invoke-PinnedYoloOmp --model anthropic/claude-opus-5-5:medium --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
+function global:Invoke-PinnedYoloOmpHaiku { Invoke-PinnedYoloOmp --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh @args }
 function global:Invoke-PinnedYoloOmpContinue      { Invoke-PinnedYoloOmp --continue @args }
 function global:Invoke-PinnedYoloOmpFableContinue { Invoke-PinnedYoloOmpFable --continue @args }
 function global:Invoke-PinnedYoloOmpHaikuContinue { Invoke-PinnedYoloOmpHaiku --continue @args }

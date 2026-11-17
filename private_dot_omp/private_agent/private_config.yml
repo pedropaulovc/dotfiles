@@ -1,7 +1,7 @@
 providers:
   fetch: auto
 modelRoles:
-  smol: anthropic/claude-haiku-5-5:max
+  smol: anthropic/claude-haiku-5-5:xhigh
   slow: anthropic/claude-opus-5-5:medium
   plan: anthropic/claude-fable-5-2:xhigh
   web: web/exa

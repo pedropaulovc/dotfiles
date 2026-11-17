@@ -72,7 +72,7 @@ plugin upgrade watch-pr@agent-plugins --scope user'
 [ "$(cat "$OMP_CALL_LOG")" = "$expected_failed_upgrade_calls" ]
 : >"$OMP_CALL_LOG"
 yoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
 cat >"$TMP_PYO_BINARY" <<'PYOP'
 #!/bin/sh
 printf '%s\n' "$*" >>"$OMP_CALL_LOG"
@@ -81,7 +81,7 @@ chmod +x "$TMP_PYO_BINARY"
 PYO_BINARY="$TMP_PYO_BINARY"
 : >"$OMP_CALL_LOG"
 pyoh --probe
-[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
+[ "$(cat "$OMP_CALL_LOG")" = '--auto-approve --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh --probe' ]
 PYU_CALL_LOG="$HOME/pyu-calls"
 export PYU_CALL_LOG
 cat >"$HOME/.bashrc" <<'BASHRC'

@@ -162,7 +162,7 @@ installed OMP marketplace plugin. The plugin upgrade is separate from
 chezmoi's manifest-based plugin sync.
 
 `yoh` and `pyoh` route Haiku 5.5 directly through Anthropic
-(`anthropic/claude-haiku-5-5`) with max thinking. The Fable (`yof`/`pyof`)
+(`anthropic/claude-haiku-5-5`) with xhigh thinking. The Fable (`yof`/`pyof`)
 and Opus (`yoo`/`pyoo`) shortcuts use the same direct Haiku model as their
-max-effort scout (`anthropic/claude-haiku-5-5:max`) in Bash and PowerShell.
+xhigh-effort scout (`anthropic/claude-haiku-5-5:xhigh`) in Bash and PowerShell.
 

@@ -223,9 +223,9 @@ EOF
 
 unset -f yom yomc yomt pyom pyomc pyomt
 
-yof()  { yo  --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yof()  { yo  --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoo()  { yo  --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+yoh()  { yo  --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
 yoc()  { yo  --continue "$@"; }
 yofc()  { yof  --continue "$@"; }
 yohc()  { yoh --continue "$@"; }
@@ -240,9 +240,9 @@ pyu() {
   pyo update || return
   omp-plugin-upgrade
 }
-pyof() { pyo --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
-pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking max --smol anthropic/claude-haiku-5-5:max --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyof() { pyo --model anthropic/claude-fable-5-2:medium --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoo() { pyo --model anthropic/claude-opus-5-5:medium  --thinking medium --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
+pyoh() { pyo --model anthropic/claude-haiku-5-5 --thinking xhigh --smol anthropic/claude-haiku-5-5:xhigh --slow anthropic/claude-opus-5-5:medium --plan anthropic/claude-fable-5-2:xhigh "$@"; }
 pyoc() { pyo --continue "$@"; }
 pyofc() { pyof --continue "$@"; }
 pyohc() { pyoh --continue "$@"; }
