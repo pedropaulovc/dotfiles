@@ -5,21 +5,21 @@
       "source": "microsoft/playwright-cli",
       "sourceType": "github",
       "sourceUrl": "https://github.com/microsoft/playwright-cli.git",
-      "ref": "99c4eb2566153f37fb104e5dbf894fb9c785e17d",
+      "ref": "c872a33cec77fa03c28fa7c6d1ad99d15d04ce42",
       "skillPath": "skills/playwright-cli/SKILL.md",
-      "skillFolderHash": "cc70f6e5f0cf42b82d3f72f6f1c3a4134694d518",
+      "skillFolderHash": "0cc4729ee620ed1deff6630aa439ace9c0980849",
       "installedAt": "2026-03-30T02:06:57.875Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "humanizer": {
       "source": "blader/humanizer",
       "sourceType": "github",
       "sourceUrl": "https://github.com/blader/humanizer.git",
-      "ref": "b48c832f0f809c1b5658edbb838c2521b72f2413",
+      "ref": "a32f24407364c74c812b43c15926d638bee1e072",
       "skillPath": "SKILL.md",
-      "skillFolderHash": "1fe9a61991dfc2b8906f88bedc0f32f1ef074234",
+      "skillFolderHash": "8ffea9602d08c9138d280bba5a23e77159353f27",
       "installedAt": "2026-05-19T18:11:52.074Z",
-      "updatedAt": "2026-11-12T03:24:16.551Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "hallmark": {
       "source": "nutlope/hallmark",
@@ -35,131 +35,131 @@
       "source": "vectorize-io/hindsight",
       "sourceType": "github",
       "sourceUrl": "https://github.com/vectorize-io/hindsight.git",
-      "ref": "9fb28dbd724dc1ce4da7cb4c49008e601db76c5f",
+      "ref": "80bd005fc2be5c9604a1a0c9741ea93d5ac85156",
       "skillPath": "skills/hindsight-self-hosted/SKILL.md",
       "skillFolderHash": "38a67f1634dc12aa545d1cd0ac1e0f83c1c828d7",
       "installedAt": "2026-09-01T07:31:11.821Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "e-code-review": {
       "source": "jl-cmd/claude-dev-env",
       "sourceType": "github",
       "sourceUrl": "https://github.com/jl-cmd/claude-dev-env.git",
-      "ref": "3ab5949a8ea9c1ad11280e8e9a524bee2587bb8a",
+      "ref": "ea55abbf70727fdf9289098183420d68e3fb70c5",
       "skillPath": "packages/claude-dev-env/.agents/skills/e-code-review/SKILL.md",
       "skillFolderHash": "017171a08f13710496f7c396fc703824433e9be7",
       "installedAt": "2026-09-27T02:54:45.928Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-agent-rules": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-agent-rules/SKILL.md",
-      "skillFolderHash": "94c1f8a6354218d4496a7a60fea8ff8ff46c9042",
+      "skillFolderHash": "27e9ca4fcbbfea9f76c2030849601f447f006b8f",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-alerting": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-alerting/SKILL.md",
       "skillFolderHash": "0cac0a282978fb67f19fa55965528b1ea8b4ffb6",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-browser": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-browser/SKILL.md",
       "skillFolderHash": "85989c5d53cba44d019c7e3ffe1b6b9013656c30",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-cli": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-cli/SKILL.md",
       "skillFolderHash": "215b62ecdc74d77cec9f07aabe90db3730307a81",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-crawler": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-crawler/SKILL.md",
       "skillFolderHash": "7af817e67817699867ea59d8b885a587e9325d0e",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-extraction": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-extraction/SKILL.md",
       "skillFolderHash": "6489e77ffaec5430128da292a5e7fe9172fca8ec",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-scraper": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-scraper/SKILL.md",
       "skillFolderHash": "bfa8aeb4b675feaaf540c7cb8766ce716afa7a58",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-screenshot": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-screenshot/SKILL.md",
       "skillFolderHash": "8b52f9cac538b0206a09a19e0e19a170f43c0882",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-sdk-go": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-sdk-go/SKILL.md",
       "skillFolderHash": "72b40d3af3e12befbede6b0e9a43e120215081f6",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-sdk-rust": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-sdk-rust/SKILL.md",
       "skillFolderHash": "fc658b5fafa5d521fa39ae46f1e454f72d895b20",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     },
     "scrapfly-sdk-typescript": {
       "source": "scrapfly/skills",
       "sourceType": "github",
       "sourceUrl": "https://github.com/scrapfly/skills.git",
-      "ref": "5ee27ef02155b11269d455ab4c324bb278907d9a",
+      "ref": "32c78eb49f91bf5744af85700c0ae91f7a9f547f",
       "skillPath": "skills/scrapfly-sdk-typescript/SKILL.md",
       "skillFolderHash": "69a2ceaad53ee09cf5a607a32003b6cf6cfb1512",
       "installedAt": "2026-11-04T19:14:44.472Z",
-      "updatedAt": "2026-11-18T03:25:29.777Z"
+      "updatedAt": "2026-11-21T03:24:24.365Z"
     }
   },
   "dismissed": {
