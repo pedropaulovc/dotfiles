@@ -166,3 +166,5 @@ chezmoi's manifest-based plugin sync.
 and Opus (`yoo`/`pyoo`) shortcuts use the same direct Haiku model as their
 xhigh-effort scout (`anthropic/claude-haiku-5-5:xhigh`) in Bash and PowerShell.
 
+`ya` and `yan` run Antigravity's `agy` with `--dangerously-skip-permissions` on Gemini 4 Neon (`gemini-4-neon`); `yac` uses Gemini 4 Carbon (`gemini-4-carbon`) and `yah` uses Gemini 4 Hydrogen (`gemini-4-hydrogen`).
+

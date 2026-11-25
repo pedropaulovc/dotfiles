@@ -62,6 +62,11 @@ function global:Invoke-YoloClaudeFableContinue { Invoke-YoloClaudeFable --contin
 function global:Invoke-YoloClaudeOpusContinue { Invoke-YoloClaudeOpus --continue @args }
 function global:Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --continue @args }
 
+# Antigravity CLI (agy): ya and yan default to Gemini 4 Neon.
+function global:Invoke-YoloAgyNeon { & agy --dangerously-skip-permissions --model gemini-4-neon @args }
+function global:Invoke-YoloAgyCarbon { & agy --dangerously-skip-permissions --model gemini-4-carbon @args }
+function global:Invoke-YoloAgyHydrogen { & agy --dangerously-skip-permissions --model gemini-4-hydrogen @args }
+
 
 function global:Invoke-YoloOmp { & omp --auto-approve @args }
 function global:Invoke-OmpPluginUpgrade {
@@ -332,6 +337,10 @@ Set-Alias -Scope Global -Name ycsc -Value Invoke-YoloClaudeSonnetContinue
 Set-Alias -Scope Global -Name yo -Value Invoke-YoloOmp
 Set-Alias -Scope Global -Name omp-plugin-upgrade -Value Invoke-OmpPluginUpgrade
 Set-Alias -Scope Global -Name pyu -Value Invoke-Pyu
+Set-Alias -Scope Global -Name ya -Value Invoke-YoloAgyNeon
+Set-Alias -Scope Global -Name yan -Value Invoke-YoloAgyNeon
+Set-Alias -Scope Global -Name yac -Value Invoke-YoloAgyCarbon
+Set-Alias -Scope Global -Name yah -Value Invoke-YoloAgyHydrogen
 
 Set-Alias -Scope Global -Name yof -Value Invoke-YoloOmpFable
 Set-Alias -Scope Global -Name yoh -Value Invoke-YoloOmpHaiku

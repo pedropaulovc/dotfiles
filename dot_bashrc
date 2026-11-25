@@ -189,6 +189,11 @@ yct() {
   tmux attach-session -t "$session"
 }
 alias yg="gemini --yolo"
+# Antigravity CLI (agy): ya and yan default to Gemini 4 Neon; yac is Carbon; yah is Hydrogen.
+ya() { agy --dangerously-skip-permissions --model gemini-4-neon "$@"; }
+yan() { ya "$@"; }
+yac() { agy --dangerously-skip-permissions --model gemini-4-carbon "$@"; }
+yah() { agy --dangerously-skip-permissions --model gemini-4-hydrogen "$@"; }
 yo() { omp --auto-approve "$@"; }
 # Refresh marketplace metadata before upgrading every installed marketplace
 # plugin explicitly; OMP's no-target upgrade can miss stale scoped installs.

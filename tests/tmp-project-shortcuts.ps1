@@ -20,12 +20,31 @@ try {
     @(
         "omp-plugin-upgrade",
         "yct", "yc-t", "ycft", "ycot", "ycst",
+        "ya", "yan", "yac", "yah",
         "yo", "yof", "yoh", "yoo", "yoc", "yofc", "yohc", "yooc", "yo-t", "yoft", "yoht", "yoot",
         "pyo", "pyof", "pyoh", "pyoo", "pyoc", "pyofc", "pyohc", "pyooc", "pyo-t", "pyoft", "pyoht", "pyoot"
     ) | ForEach-Object {
         if (-not (Get-Command $_ -ErrorAction SilentlyContinue)) {
             throw "Temporary shortcut was not defined: $_"
         }
+    }
+
+    $agyCallLog = Join-Path $tempDir "agy-call-log"
+    function agy {
+        Add-Content -LiteralPath $agyCallLog -Value ($args -join " ")
+    }
+    ya --probe
+    yan --probe
+    yac --probe
+    yah --probe
+    $expectedAgyCalls = @(
+        "--dangerously-skip-permissions --model gemini-4-neon --probe"
+        "--dangerously-skip-permissions --model gemini-4-neon --probe"
+        "--dangerously-skip-permissions --model gemini-4-carbon --probe"
+        "--dangerously-skip-permissions --model gemini-4-hydrogen --probe"
+    ) -join "`n"
+    if (((Get-Content -LiteralPath $agyCallLog) -join "`n") -ne $expectedAgyCalls) {
+        throw "ya shortcuts did not run agy with the expected model and permission flags."
     }
 
     $dogfoodCallLog = Join-Path $tempDir "dogfood-call-log"

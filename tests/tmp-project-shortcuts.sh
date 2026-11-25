@@ -149,11 +149,27 @@ fi
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
+    ya yan yac yah \
     yo yof yoh yoo yoc yofc yohc yooc yo-t yoft yoht yoot \
     pyo pyu pyof pyoh pyoo pyoc pyofc pyohc pyooc pyo-t pyoft pyoht pyoot; do
 
     type "$shortcut" >/dev/null
 done
+
+AGY_CALL_LOG="$HOME/agy-calls"
+agy() {
+    printf '%s\n' "$*" >>"$AGY_CALL_LOG"
+}
+: >"$AGY_CALL_LOG"
+ya --probe
+yan --probe
+yac --probe
+yah --probe
+expected_agy_calls='--dangerously-skip-permissions --model gemini-4-neon --probe
+--dangerously-skip-permissions --model gemini-4-neon --probe
+--dangerously-skip-permissions --model gemini-4-carbon --probe
+--dangerously-skip-permissions --model gemini-4-hydrogen --probe'
+[ "$(cat "$AGY_CALL_LOG")" = "$expected_agy_calls" ]
 
 yc() {
     printf '%s\n' "$PWD" >"$CALL_LOG"
