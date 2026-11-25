@@ -149,7 +149,7 @@ fi
 for shortcut in \
     omp-plugin-upgrade \
     yc-t ycft ycot ycst ygt \
-    ya yan yac yah \
+    ya yan yac yah yanc yacc yahc ya-t yant yact yaht \
     yo yof yoh yoo yoc yofc yohc yooc yo-t yoft yoht yoot \
     pyo pyu pyof pyoh pyoo pyoc pyofc pyohc pyooc pyo-t pyoft pyoht pyoot; do
 
@@ -165,11 +165,31 @@ ya --probe
 yan --probe
 yac --probe
 yah --probe
+yanc --probe
+yacc --probe
+yahc --probe
 expected_agy_calls='--dangerously-skip-permissions --model gemini-4-neon --probe
 --dangerously-skip-permissions --model gemini-4-neon --probe
 --dangerously-skip-permissions --model gemini-4-carbon --probe
---dangerously-skip-permissions --model gemini-4-hydrogen --probe'
+--dangerously-skip-permissions --model gemini-4-hydrogen --probe
+--dangerously-skip-permissions --model gemini-4-neon --continue --probe
+--dangerously-skip-permissions --model gemini-4-carbon --continue --probe
+--dangerously-skip-permissions --model gemini-4-hydrogen --continue --probe'
 [ "$(cat "$AGY_CALL_LOG")" = "$expected_agy_calls" ]
+
+agy() {
+    printf '%s %s\n' "$PWD" "$*" >>"$AGY_CALL_LOG"
+}
+: >"$AGY_CALL_LOG"
+ya-t myproj --probe
+yant myproj --probe
+yact myproj --probe
+yaht myproj --probe
+expected_agy_temp_calls="$HOME/src/tmp-myproj --dangerously-skip-permissions --model gemini-4-neon --probe
+$HOME/src/tmp-myproj --dangerously-skip-permissions --model gemini-4-neon --probe
+$HOME/src/tmp-myproj --dangerously-skip-permissions --model gemini-4-carbon --probe
+$HOME/src/tmp-myproj --dangerously-skip-permissions --model gemini-4-hydrogen --probe"
+[ "$(cat "$AGY_CALL_LOG")" = "$expected_agy_temp_calls" ]
 
 yc() {
     printf '%s\n' "$PWD" >"$CALL_LOG"

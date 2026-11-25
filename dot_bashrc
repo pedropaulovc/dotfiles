@@ -194,6 +194,11 @@ ya() { agy --dangerously-skip-permissions --model gemini-4-neon "$@"; }
 yan() { ya "$@"; }
 yac() { agy --dangerously-skip-permissions --model gemini-4-carbon "$@"; }
 yah() { agy --dangerously-skip-permissions --model gemini-4-hydrogen "$@"; }
+# Continue the latest Antigravity conversation for this workspace. There is no
+# bare-ya continue: ya + c is yac, which is Carbon.
+yanc() { yan --continue "$@"; }
+yacc() { yac --continue "$@"; }
+yahc() { yah --continue "$@"; }
 yo() { omp --auto-approve "$@"; }
 # Refresh marketplace metadata before upgrading every installed marketplace
 # plugin explicitly; OMP's no-target upgrade can miss stale scoped installs.
@@ -326,6 +331,11 @@ ycot() { __tmp_project "${1-}" yco "${@:2}"; }
 ycst() { __tmp_project "${1-}" ycs "${@:2}"; }
 
 ygt() { __tmp_project "${1-}" gemini --yolo "${@:2}"; }
+
+ya-t() { __tmp_project "${1-}" ya "${@:2}"; }
+yant() { __tmp_project "${1-}" yan "${@:2}"; }
+yact() { __tmp_project "${1-}" yac "${@:2}"; }
+yaht() { __tmp_project "${1-}" yah "${@:2}"; }
 
 yo-t() { __tmp_project "${1-}" yo "${@:2}"; }
 yoft() { __tmp_project "${1-}" yof "${@:2}"; }

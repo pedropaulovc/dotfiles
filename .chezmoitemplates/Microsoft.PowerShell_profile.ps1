@@ -66,6 +66,11 @@ function global:Invoke-YoloClaudeSonnetContinue { Invoke-YoloClaudeSonnet --cont
 function global:Invoke-YoloAgyNeon { & agy --dangerously-skip-permissions --model gemini-4-neon @args }
 function global:Invoke-YoloAgyCarbon { & agy --dangerously-skip-permissions --model gemini-4-carbon @args }
 function global:Invoke-YoloAgyHydrogen { & agy --dangerously-skip-permissions --model gemini-4-hydrogen @args }
+# Continue the latest Antigravity conversation for this workspace. There is no
+# bare-ya continue: ya + c is yac, which is Carbon.
+function global:Invoke-YoloAgyNeonContinue { Invoke-YoloAgyNeon --continue @args }
+function global:Invoke-YoloAgyCarbonContinue { Invoke-YoloAgyCarbon --continue @args }
+function global:Invoke-YoloAgyHydrogenContinue { Invoke-YoloAgyHydrogen --continue @args }
 
 
 function global:Invoke-YoloOmp { & omp --auto-approve @args }
@@ -287,6 +292,11 @@ function global:Invoke-YoloOmpFableTemporary { Invoke-TemporaryProject 'yof' @ar
 function global:Invoke-YoloOmpHaikuTemporary { Invoke-TemporaryProject 'yoh' @args }
 function global:Invoke-YoloOmpOpusTemporary { Invoke-TemporaryProject 'yoo' @args }
 
+function global:Invoke-YoloAgyTemporary { Invoke-TemporaryProject 'ya' @args }
+function global:Invoke-YoloAgyNeonTemporary { Invoke-TemporaryProject 'yan' @args }
+function global:Invoke-YoloAgyCarbonTemporary { Invoke-TemporaryProject 'yac' @args }
+function global:Invoke-YoloAgyHydrogenTemporary { Invoke-TemporaryProject 'yah' @args }
+
 function global:Invoke-PinnedYoloOmpTemporary { Invoke-TemporaryProject 'pyo' @args }
 function global:Invoke-PinnedYoloOmpFableTemporary { Invoke-TemporaryProject 'pyof' @args }
 function global:Invoke-PinnedYoloOmpHaikuTemporary { Invoke-TemporaryProject 'pyoh' @args }
@@ -341,6 +351,9 @@ Set-Alias -Scope Global -Name ya -Value Invoke-YoloAgyNeon
 Set-Alias -Scope Global -Name yan -Value Invoke-YoloAgyNeon
 Set-Alias -Scope Global -Name yac -Value Invoke-YoloAgyCarbon
 Set-Alias -Scope Global -Name yah -Value Invoke-YoloAgyHydrogen
+Set-Alias -Scope Global -Name yanc -Value Invoke-YoloAgyNeonContinue
+Set-Alias -Scope Global -Name yacc -Value Invoke-YoloAgyCarbonContinue
+Set-Alias -Scope Global -Name yahc -Value Invoke-YoloAgyHydrogenContinue
 
 Set-Alias -Scope Global -Name yof -Value Invoke-YoloOmpFable
 Set-Alias -Scope Global -Name yoh -Value Invoke-YoloOmpHaiku
@@ -371,6 +384,11 @@ Set-Alias -Scope Global -Name yo-t -Value Invoke-YoloOmpTemporary
 Set-Alias -Scope Global -Name yoft -Value Invoke-YoloOmpFableTemporary
 Set-Alias -Scope Global -Name yoht -Value Invoke-YoloOmpHaikuTemporary
 Set-Alias -Scope Global -Name yoot -Value Invoke-YoloOmpOpusTemporary
+
+Set-Alias -Scope Global -Name ya-t -Value Invoke-YoloAgyTemporary
+Set-Alias -Scope Global -Name yant -Value Invoke-YoloAgyNeonTemporary
+Set-Alias -Scope Global -Name yact -Value Invoke-YoloAgyCarbonTemporary
+Set-Alias -Scope Global -Name yaht -Value Invoke-YoloAgyHydrogenTemporary
 
 Set-Alias -Scope Global -Name pyo-t -Value Invoke-PinnedYoloOmpTemporary
 Set-Alias -Scope Global -Name pyoft -Value Invoke-PinnedYoloOmpFableTemporary

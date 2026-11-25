@@ -20,7 +20,7 @@ try {
     @(
         "omp-plugin-upgrade",
         "yct", "yc-t", "ycft", "ycot", "ycst",
-        "ya", "yan", "yac", "yah",
+        "ya", "yan", "yac", "yah", "yanc", "yacc", "yahc", "ya-t", "yant", "yact", "yaht",
         "yo", "yof", "yoh", "yoo", "yoc", "yofc", "yohc", "yooc", "yo-t", "yoft", "yoht", "yoot",
         "pyo", "pyof", "pyoh", "pyoo", "pyoc", "pyofc", "pyohc", "pyooc", "pyo-t", "pyoft", "pyoht", "pyoot"
     ) | ForEach-Object {
@@ -37,14 +37,39 @@ try {
     yan --probe
     yac --probe
     yah --probe
+    yanc --probe
+    yacc --probe
+    yahc --probe
     $expectedAgyCalls = @(
         "--dangerously-skip-permissions --model gemini-4-neon --probe"
         "--dangerously-skip-permissions --model gemini-4-neon --probe"
         "--dangerously-skip-permissions --model gemini-4-carbon --probe"
         "--dangerously-skip-permissions --model gemini-4-hydrogen --probe"
+        "--dangerously-skip-permissions --model gemini-4-neon --continue --probe"
+        "--dangerously-skip-permissions --model gemini-4-carbon --continue --probe"
+        "--dangerously-skip-permissions --model gemini-4-hydrogen --continue --probe"
     ) -join "`n"
     if (((Get-Content -LiteralPath $agyCallLog) -join "`n") -ne $expectedAgyCalls) {
         throw "ya shortcuts did not run agy with the expected model and permission flags."
+    }
+
+    function agy {
+        Add-Content -LiteralPath $agyCallLog -Value ("{0} {1}" -f (Get-Location).Path, ($args -join " "))
+    }
+    Clear-Content -LiteralPath $agyCallLog
+    ya-t myproj --probe
+    yant myproj --probe
+    yact myproj --probe
+    yaht myproj --probe
+    $tempProjectPath = Join-Path $sourcePath "tmp-myproj"
+    $expectedTempAgyCalls = @(
+        "$tempProjectPath --dangerously-skip-permissions --model gemini-4-neon --probe"
+        "$tempProjectPath --dangerously-skip-permissions --model gemini-4-neon --probe"
+        "$tempProjectPath --dangerously-skip-permissions --model gemini-4-carbon --probe"
+        "$tempProjectPath --dangerously-skip-permissions --model gemini-4-hydrogen --probe"
+    ) -join "`n"
+    if (((Get-Content -LiteralPath $agyCallLog) -join "`n") -ne $expectedTempAgyCalls) {
+        throw "ya temporary shortcuts did not run agy in the temporary project with the expected arguments."
     }
 
     $dogfoodCallLog = Join-Path $tempDir "dogfood-call-log"
