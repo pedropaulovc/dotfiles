@@ -19,6 +19,7 @@ the source tree renders byte-identical to what's already installed on each OS.
 | `~/.gitconfig`                              | `dot_gitconfig.tmpl`                                              | both (templated) |
 | `~/.agents/AGENTS.md`                       | `dot_agents/AGENTS.md`                                            | both             |
 | `~/.codex/AGENTS.md`                        | `dot_codex/AGENTS.md.tmpl`                                        | both             |
+| `~/.gemini/AGENTS.md`                       | `dot_gemini/AGENTS.md.tmpl`                                       | both             |
 | `~/.config/opencode/AGENTS.md`              | `private_dot_config/opencode/AGENTS.md.tmpl`                      | both             |
 | `~/.config/opencode/tui.json`               | `private_dot_config/opencode/tui.json`                            | both             |
 | `~/.config/opencode/plugins/statusline.tsx` | `private_dot_config/opencode/plugins/statusline.tsx`              | both             |
@@ -31,8 +32,8 @@ the one file whose content legitimately differs per OS (credential-helper path,
 `autocrlf`, `hooksPath`), so it's a template that emits each platform's exact
 bytes. `settings.json` has one canonical copy shared by both homes. `AGENTS.md`
 is the canonical instruction file; chezmoi copies its contents to Codex's
-`AGENTS.md`, opencode's global `AGENTS.md`, and Claude Code's `CLAUDE.md`
-targets. `.gitattributes` pins all
+`AGENTS.md`, Antigravity/Gemini's `~/.gemini/AGENTS.md`, opencode's global
+`AGENTS.md`, and Claude Code's `CLAUDE.md` targets. `.gitattributes` pins all
 files to LF so Windows clones stay byte-identical to the source (chezmoi apply
 noop survives `core.autocrlf=true`).
 

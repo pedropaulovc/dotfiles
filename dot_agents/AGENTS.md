@@ -10,7 +10,7 @@ Email: pedro@vezza.com.br
 - [Codjiflo review options](https://github.com/vezzadev/codjiflo-reviewer): `@codjiflo review [preset] [full|incremental]`. Presets: `opus-xhigh` (default, alias `claude`), `opus-medium`. Mode defaults to `incremental`; `full` reviews the whole PR.
 - Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
 - If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence.
-- Merge bar unless stated otherwise: green CI/CD and the target repository's required reviews; for `pedropaulovc` and `vezzadev`, require an approved Codjiflo review.
+- Merge PRs autonomously unless stated otherwise: do not stop at opening a PR or wait for the user's approval to merge. Wait for CI/CD and reviews, address feedback, and merge yourself as soon as the merge bar is met — green CI/CD and the target repository's required reviews (for `pedropaulovc` and `vezzadev`, an approved Codjiflo review). Only pause to ask the user if something is ambiguous, blocked, or a draft/review-only PR was requested.
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
