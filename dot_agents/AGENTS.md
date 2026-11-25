@@ -11,6 +11,7 @@ Email: pedro@vezza.com.br
 - Simpler reviews are optional and useful for mid-work checks while another job runs: use a medium Codjiflo preset or `claude -p '/code-review medium <base>...HEAD'`. No required local/remote sequence.
 - If Codjiflo is down or has an issue, file a GitHub issue in `vezzadev/codjiflo-reviewer` with failure evidence.
 - Merge PRs autonomously unless stated otherwise: do not stop at opening a PR or wait for the user's approval to merge. Wait for CI/CD and reviews, address feedback, and merge yourself as soon as the merge bar is met — green CI/CD and the target repository's required reviews (for `pedropaulovc` and `vezzadev`, an approved Codjiflo review). Only pause to ask the user if something is ambiguous, blocked, or a draft/review-only PR was requested.
+- After two review rounds, any P2 or lower findings can be dismissed regardless if the PR state is still "Changes Requested"
 - Use `<scope>: <description>` for commit titles, be descriptive in your commit messages: why/context first (what was broken, which merge or review raised it), then what changed, then verification evidence.
 - Force-push feature branches (not main/master) without asking; use `--force-with-lease`.
 - No squash merges.
