@@ -368,3 +368,6 @@ export PATH="/usr/local/go/bin:$HOME/go/bin:$PATH"
 
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
+
+# Added by Antigravity CLI installer
+export PATH="/home/pedro/.local/bin:$PATH"
