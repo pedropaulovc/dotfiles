@@ -56,7 +56,8 @@ commands:
   enableOpencodeUser: false
   enableOpencodeProject: false
 codexResets:
-  autoRedeem: "yes"
+  autoRedeem5h: "yes"
+  autoRedeemWeekly: "yes"
 fetch:
   enabled: true
 completion:
@@ -114,3 +115,5 @@ retry:
       - web/ollama
 update:
   auto: true
+claudeResets:
+  autoRedeemWeekly: "yes"
